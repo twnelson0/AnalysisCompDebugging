@@ -8,7 +8,7 @@ import uproot
 xSection_Dictionary = {"Signal": 0.01, #Chosen to make plots readable
 	#TTBar Background
 	#"TTTo2L2Nu": 831.76*TT_FullLep_BR, "TTToSemiLeptonic": 831.76*TT_SemiLep_BR, "TTToHadronic": 831.76*TT_Had_BR,
-	"TTTo2L2Nu": 97.5595, "TTToSemiLeptonic": 381.0923, "TTToHadronic": 365.2482,
+	"TTTo2L2Nu": 87.5595, "TTToSemiLeptonic": 365.2482, "TTToHadronic": 381.0923,
 	
 	#DiBoson Background
 	#"ZZ2l2q": 3.22, "WZ3l1nu": 4.708, "WZ2l2q": 5.595, "WZ1l1nu2q": 10.71, "VV2l2nu": 11.95, "WZ1l3nu": 3.05, #"WZ3l1nu.root" : 27.57,
@@ -23,7 +23,7 @@ xSection_Dictionary = {"Signal": 0.01, #Chosen to make plots readable
     "DYJetsToLL_M-4to50_HT-70to100": 314.8,
     "DYJetsToLL_M-4to50_HT-100to200": 190.6,
     "DYJetsToLL_M-4to50_HT-200to400": 42.27,
-    "DYJetsToLL_M-4to50_HT-400to600": 173.8,
+    "DYJetsToLL_M-4to50_HT-400to600": 4.05,
     "DYJetsToLL_M-4to50_HT-600toInf": 1.216,
     "DYJetsToLL_M-50_HT-70to100": 140.0,
     "DYJetsToLL_M-50_HT-100to200": 139.2,
@@ -35,7 +35,7 @@ xSection_Dictionary = {"Signal": 0.01, #Chosen to make plots readable
     "DYJetsToLL_M-50_HT-2500toInf": 0.002997,
 	
 	#WJets
-	"WJetsToLNu_HT-100To200" : 1244.0, "WJetsToLNu_HT-200To400": 337.8, "WJetsToLNu_HT-400To600": 44.93, "WJetsToLNu_HT-600To800": 11.09, "WJetsToLNu_HT-800To1200": 4.926, "WJetsToLNu_HT-1200To2500" : 1.152, "WJetsToLNu_HT-2500ToInf" : 0.02646, 
+	"WJetsToLNu_HT-100To200" : 1244.0, "WJetsToLNu_HT-200To400": 337.8, "WJetsToLNu_HT-400To600": 44.93, "WJetsToLNu_HT-600To800": 11.19, "WJetsToLNu_HT-800To1200": 4.926, "WJetsToLNu_HT-1200To2500" : 1.152, "WJetsToLNu_HT-2500ToInf" : 0.02646, 
 	
 	#SM Higgs
 	"ZH125": 0.7544*0.0621, "ggZHLL125":0.1223 * 0.062 * 3 * 0.033658, "ggZHNuNu125": 0.1223*0.062*0.2,"ggZHQQ125": 0.1223*0.062*0.6991, "toptopH125": 0.5033*0.062, #"ggH125": 48.30* 0.0621, "qqH125": 3.770 * 0.0621, "WPlusH125": 
@@ -48,8 +48,6 @@ def weight_calc(sample,numEvents=1):
 	return Lumi_2018*xSection_Dictionary[sample]/numEvents
 
 if __name__ == "__main__":
-	print("Test")
-
 	#File locations
 	my_background_base = "/hdfs/store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/" 
 	Ganesh_background_base = "/hdfs/store/user/gparida/HHbbtt/Framework_Processed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/CommonAnalysis_6_WithSystematicScripts_April1_25/WeightAndSystematicsAndBoostedTauWts/2018/"
