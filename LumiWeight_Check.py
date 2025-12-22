@@ -1,7 +1,8 @@
-import nump as np
+import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import awkward as ak
+import uproot
 
 #Dictionary of cross sections 
 xSection_Dictionary = {"Signal": 0.01, #Chosen to make plots readable
@@ -51,20 +52,20 @@ if __name__ == "__main__":
 
 	#File locations
 	my_background_base = "/hdfs/store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/" 
-	Ganesh_background_base = "/hdfs/store/user/gparida/HHbbtt/Framework_Processed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/CommonAnalysis_6_WithSystematicScripts_April1_25/WeightAndSystematicsAndBoostedTauWts/2018"
+	Ganesh_background_base = "/hdfs/store/user/gparida/HHbbtt/Framework_Processed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/CommonAnalysis_6_WithSystematicScripts_April1_25/WeightAndSystematicsAndBoostedTauWts/2018/"
 
 	my_background_dict = {
 		"TTToSemiLeptonic": [my_background_base + "TTToSemiLeptonic_35August25_0448_skim_Newskim/TTToSemiLeptonic" + str(j) + ".root" for j in range(10)], 
 		"TTTo2L2Nu": [my_background_base + "TTTo2L2Nu_26August25_0719_skim_Newskim/TTTo2L2Nu.root"], 
 		"TTToHadronic": [my_background_base + "TTToHadronic_25October25_0813_skim_Newskim/TTToHadronic" + str(j) + ".root" for j in range(10)],
-		"ZZ4l": [my_background_base + "/ZZTo4L.root"], 
+		"ZZ4l": [my_background_base + "ZZTo4L_26August25_0757_skim_Newskim/ZZTo4L.root"], 
 		"VV2l2nu": [my_background_base + "WWTo2L2Nu_26August25_1040_skim_Newskim/WWTo2L2Nu.root"], 
 		"WZ1l3nu": [my_background_base + "WZTo1L3Nu_4f_26August25_1016_skim_Newskim/WZTo1L3Nu_4f.root"], 
 		"ZZ2l2q": [my_background_base + "ZZTo2Q2L_26August25_1034_skim_Newskim/ZZTo2Q2L.root"],
 		"WZ2l2q": [my_background_base + "WZTo2L2Q_26August25_0926_skim_Newskim/WZTo2L2Q.root"],
 		"WZ1l1nu2q" : [my_background_base + "WZTo1L1Nu2Q_26August25_0840_skim_Newskim/WZTo1L1Nu2Q.root"],
-        "DYJetsToLL_M-4to50_HT-70to100": [my_background_base + "DYJetsToLL_M-4to50_HT-70to100_12December25_0352_skim_Newskim/DYJetsToLL_M-4to50_HT-70to100.root"],
-        "DYJetsToLL_M-4to50_HT-100to200": [my_background_base + "DYJetsToLL_M-4to50_HT-100to200_12December25_0350_skim_Newskim/DYJetsToLL_M-4to50_HT-100to200.root"],
+        #"DYJetsToLL_M-4to50_HT-70to100": [my_background_base + "DYJetsToLL_M-4to50_HT-70to100_12December25_0352_skim_Newskim/DYJetsToLL_M-4to50_HT-70to100.root"],
+        #"DYJetsToLL_M-4to50_HT-100to200": [my_background_base + "DYJetsToLL_M-4to50_HT-100to200_12December25_0350_skim_Newskim/DYJetsToLL_M-4to50_HT-100to200.root"],
         "DYJetsToLL_M-4to50_HT-200to400": [my_background_base + "DYJetsToLL_M-4to50_HT-200to400_12December25_0325_skim_Newskim/DYJetsToLL_M-4to50_HT-200to400.root"],
         "DYJetsToLL_M-4to50_HT-400to600": [my_background_base + "DYJetsToLL_M-4to50_HT-400to600_12December25_0335_skim_Newskim/DYJetsToLL_M-4to50_HT-400to600.root"],
         "DYJetsToLL_M-4to50_HT-600toInf": [my_background_base + "DYJetsToLL_M-4to50_HT-600toInf_12December25_0354_skim_Newskim/DYJetsToLL_M-4to50_HT-600toInf.root"],
@@ -90,60 +91,63 @@ if __name__ == "__main__":
 	}
 
 	Ganesh_background_dict = {
-		"TTToSemiLeptonic": [ganesh_background_base + "TTToSemiLeptonic.root",ganesh_background_base + "TTToSemiLeptonic_2.root"], 
-		"TTTo2L2Nu": [ganesh_background_base + "TTTo2L2Nu.root",ganesh_background_base + "TTTo2L2Nu_2.root",ganesh_background_base + "TTTo2L2Nu_3.root",ganesh_background_base + "TTTo2L2Nu_4.root",], 
-		"TTToHadronic": [ganesh_background_base + "TTToHadronic"],
-		"ZZ4l": [ganesh_background_base + "ZZTo4L.root"], 
-		"VV2l2nu": [ganesh_background_base + "WWTo2L2Nu.root"], 
-		"WZ1l3nu": [ganesh_background_base + "WZTo1L3Nu_4f.root"], 
-		"ZZ2l2q": [ganesh_background_base + "ZZTo2Q2L_mllmin4p0.root"],
-		"WZ2l2q": [ganesh_background_base + "WZTo2L2Q.root"],
-		"WZ1l1nu2q" : [ganesh_background_base + "WZTo1L1Nu2Q.root"],
-        "DYJetsToLL_M-4to50_HT-70to100": [ganesh_background_base + "DYJetsToLL_M-4to50_HT-70to100.root"],
-        "DYJetsToLL_M-4to50_HT-100to200": [ganesh_background_base + "DYJetsToLL_M-4to50_HT-100to200.root"],
-        "DYJetsToLL_M-4to50_HT-200to400": [ganesh_background_base + "DYJetsToLL_M-4to50_HT-200to400.root"],
-        "DYJetsToLL_M-4to50_HT-400to600": [ganesh_background_base + "DYJetsToLL_M-4to50_HT-400to600.root"],
-        "DYJetsToLL_M-4to50_HT-600toInf": [ganesh_background_base + "DYJetsToLL_M-4to50_HT-600toInf.root"],
-        "DYJetsToLL_M-50_HT-70to100": [ganesh_background_base + "DYJetsToLL_M-50_HT-70to100.root"],
-        "DYJetsToLL_M-50_HT-100to200": [ganesh_background_base + "DYJetsToLL_M-50_HT-100to200.root"],
-        "DYJetsToLL_M-50_HT-200to400": [ganesh_background_base + "DYJetsToLL_M-50_HT-200to400.root"],
-        "DYJetsToLL_M-50_HT-400to600": [ganesh_background_base + "DYJetsToLL_M-50_HT-400to600.root"],
-        "DYJetsToLL_M-50_HT-600to800": [ganesh_background_base + "DYJetsToLL_M-50_HT-600to800.root"],
-        "DYJetsToLL_M-50_HT-800to1200": [ganesh_background_base + "DYJetsToLL_M-50_HT-800to1200.root"],
-        "DYJetsToLL_M-50_HT-1200to2500": [ganesh_background_base + "DYJetsToLL_M-50_HT-1200to2500.root"],
-        "DYJetsToLL_M-50_HT-2500toInf": [ganesh_background_base + "DYJetsToLL_M-50_HT-2500toInf.root"],
-		"T-tchan": [ganesh_background_base + "ST_t-channel_top_4f_InclusiveDecays.root"], 
-		"Tbar-tchan": [ganesh_background_base + "ST_t-channel_antitop_4f_InclusiveDecays.root"], 
-		"T-tW": [ganesh_background_base + "ST_tW_top_5f_inclusiveDecays.root"], 
-		"Tbar-tW": [ganesh_background_base + "ST_tW_antitop_5f_inclusiveDecays.root"],
-		"WJetsToLNu_HT-100To200": [ganesh_background_base + "WJetsToLNu_HT-100To200.root"],
-		"WJetsToLNu_HT-200To400": [ganesh_background_base + "WJetsToLNu_HT-200To400.root"], 
-		"WJetsToLNu_HT-400To600": [ganesh_background_base + "WJetsToLNu_HT-400To600.root", ganesh_background_base +"WJetsToLNu_HT-400To600_2.root"], 
-		"WJetsToLNu_HT-600To800": [ganesh_background_base + "WJetsToLNu_HT-600To800.root", ganesh_background_base + "WJetsToLNu_HT-600To800_2.root"],
-		"WJetsToLNu_HT-800To1200": [ganesh_background_base + "WJetsToLNu_HT-800To1200.root", ganesh_background_base + "WJetsToLNu_HT-800To1200_2.root"],
-		"WJetsToLNu_HT-1200To2500": [ganesh_background_base + "WJetsToLNu_HT-1200To2500.root", ganesh_background_base + "WJetsToLNu_HT-1200To2500_2.root"],
-		"WJetsToLNu_HT-2500ToInf": [ganesh_background_base + "WJetsToLNu_HT-2500ToInf.root", ganesh_background_base + "WJetsToLNu_HT-2500ToInf_2.root"]
+		"TTToSemiLeptonic": [Ganesh_background_base + "TTToSemiLeptonic.root",Ganesh_background_base + "TTToSemiLeptonic_2.root",Ganesh_background_base + "TTToSemiLeptonic_3.root",Ganesh_background_base + "TTToSemiLeptonic_4.root"], 
+		"TTTo2L2Nu": [Ganesh_background_base + "TTTo2L2Nu.root",Ganesh_background_base + "TTTo2L2Nu_2.root"], 
+		"TTToHadronic": [Ganesh_background_base + "TTToHadronic.root"],
+		"ZZ4l": [Ganesh_background_base + "ZZTo4L.root"], 
+		"VV2l2nu": [Ganesh_background_base + "WWTo2L2Nu.root"], 
+		"WZ1l3nu": [Ganesh_background_base + "WZTo1L3Nu_4f.root"], 
+		"ZZ2l2q": [Ganesh_background_base + "ZZTo2Q2L_mllmin4p0.root"],
+		"WZ2l2q": [Ganesh_background_base + "WZTo2Q2L_mllmin4p0.root"],
+		"WZ1l1nu2q" : [Ganesh_background_base + "WZTo1L1Nu2Q_4f.root"],
+        #"DYJetsToLL_M-4to50_HT-70to100": [Ganesh_background_base + "DYJetsToLL_M-4to50_HT-70to100.root"], Can't access this info, 0 events
+        #"DYJetsToLL_M-4to50_HT-100to200": [Ganesh_background_base + "DYJetsToLL_M-4to50_HT-100to200.root"],
+        "DYJetsToLL_M-4to50_HT-200to400": [Ganesh_background_base + "DYJetsToLL_M-4to50_HT-200to400.root"],
+        "DYJetsToLL_M-4to50_HT-400to600": [Ganesh_background_base + "DYJetsToLL_M-4to50_HT-400to600.root"],
+        "DYJetsToLL_M-4to50_HT-600toInf": [Ganesh_background_base + "DYJetsToLL_M-4to50_HT-600toInf.root"],
+        "DYJetsToLL_M-50_HT-70to100": [Ganesh_background_base + "DYJetsToLL_M-50_HT-70to100.root"],
+        "DYJetsToLL_M-50_HT-100to200": [Ganesh_background_base + "DYJetsToLL_M-50_HT-100to200.root"],
+        "DYJetsToLL_M-50_HT-200to400": [Ganesh_background_base + "DYJetsToLL_M-50_HT-200to400.root"],
+        "DYJetsToLL_M-50_HT-400to600": [Ganesh_background_base + "DYJetsToLL_M-50_HT-400to600.root"],
+        "DYJetsToLL_M-50_HT-600to800": [Ganesh_background_base + "DYJetsToLL_M-50_HT-600to800.root"],
+        "DYJetsToLL_M-50_HT-800to1200": [Ganesh_background_base + "DYJetsToLL_M-50_HT-800to1200.root"],
+        "DYJetsToLL_M-50_HT-1200to2500": [Ganesh_background_base + "DYJetsToLL_M-50_HT-1200to2500.root"],
+        "DYJetsToLL_M-50_HT-2500toInf": [Ganesh_background_base + "DYJetsToLL_M-50_HT-2500toInf.root"],
+		"T-tchan": [Ganesh_background_base + "ST_t-channel_top_4f_InclusiveDecays.root"], 
+		"Tbar-tchan": [Ganesh_background_base + "ST_t-channel_antitop_4f_InclusiveDecays.root"], 
+		"T-tW": [Ganesh_background_base + "ST_tW_top_5f_inclusiveDecays.root"], 
+		"Tbar-tW": [Ganesh_background_base + "ST_tW_antitop_5f_inclusiveDecays.root"],
+		"WJetsToLNu_HT-100To200": [Ganesh_background_base + "WJetsToLNu_HT-100To200.root"],
+		"WJetsToLNu_HT-200To400": [Ganesh_background_base + "WJetsToLNu_HT-200To400.root"], 
+		"WJetsToLNu_HT-400To600": [Ganesh_background_base + "WJetsToLNu_HT-400To600.root", Ganesh_background_base +"WJetsToLNu_HT-400To600_2.root"], 
+		"WJetsToLNu_HT-600To800": [Ganesh_background_base + "WJetsToLNu_HT-600To800.root", Ganesh_background_base + "WJetsToLNu_HT-600To800_2.root"],
+		"WJetsToLNu_HT-800To1200": [Ganesh_background_base + "WJetsToLNu_HT-800To1200.root", Ganesh_background_base + "WJetsToLNu_HT-800To1200_2.root"],
+		"WJetsToLNu_HT-1200To2500": [Ganesh_background_base + "WJetsToLNu_HT-1200To2500.root", Ganesh_background_base + "WJetsToLNu_HT-1200To2500_2.root"],
+		"WJetsToLNu_HT-2500ToInf": [Ganesh_background_base + "WJetsToLNu_HT-2500ToInf.root", Ganesh_background_base + "WJetsToLNu_HT-2500ToInf_2.root"]
 	}
 
 	#Produce cutflow csv table
 	csv_file_fields = ["Sample", "My_LumiWeight","Ganesh_LumiWeight","Relative_Difference"]
 	table_array = []
-	for file_name in file_dict.keys():
-		sample_dict = dict.fromKeys(csv_file_fields)
+	for file_name in my_background_dict.keys():
+		sample_dict = dict.fromkeys(csv_file_fields)
 		sample_dict["Sample"] = file_name
 		#Obtain my value of the lumi weight
 		sum_GenWeights = 0
 		for file in my_background_dict[file_name]:
-			with uproot.open(file):
-				sum_GenWeights += np.sum(file['Runs/genEventSum2'].array())
-		myWeight = weight_calc(xSection_Dictionary[file],sum_GenWeights)
+			with uproot.open(file) as tempFile:
+				sum_GenWeights += np.sum(tempFile['Runs/genEventSumw'].array())
+		myWeight = weight_calc(file_name,sum_GenWeights)
 		sample_dict["My_LumiWeight"] = myWeight
 
 		#Obtain Ganesh's value of the lumi weight
 		ganeshWeight = 0
 		for file in Ganesh_background_dict[file_name]:
-			with uproot.open(file):
-				ganeshWeight += file["Events/xsWeight"].array()[0]/file["Events/genWeight"].array()[0]
+			with uproot.open(file) as tempFile:
+				print(file_name)
+				print(tempFile["Events/xsWeight"].array()[0])
+				print(tempFile["Events/genWeight"].array()[0])
+				ganeshWeight += tempFile["Events/xsWeight"].array()[0]/tempFile["Events/genWeight"].array()[0]
 		sample_dict["Ganesh_LumiWeight"] = ganeshWeight
 
 		#Obtain relative difference between the two
@@ -152,6 +156,7 @@ if __name__ == "__main__":
 		table_array.append(sample_dict)
 		#cutflow_table_array.append(fourtau_out[file]["cutflow_dict"])
 	
+	#Output table	
 	with open("LumiWeight_Comp.csv", mode = "w", newline = '') as file:	
 		writer = csv.DictWriter(file,fieldnames=csv_file_fields)
 		writer.writeheader()
