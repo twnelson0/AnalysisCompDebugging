@@ -5,3 +5,7 @@ __pycache__/
 
 #Output files
 *.csv
+*.png
+
+#Shell file
+shell

@@ -124,6 +124,9 @@ if __name__ == "__main__":
 		"WJetsToLNu_HT-2500ToInf": [Ganesh_background_base + "WJetsToLNu_HT-2500ToInf.root", Ganesh_background_base + "WJetsToLNu_HT-2500ToInf_2.root"]
 	}
 
+	#Look in more detail at the problem samples
+	problem_samples = ["TTToSemiLeptonic","TTToHadronic","TTTo2L2Nu","WJetsToLNu_HT-400To600","WJetsToLNu_HT-600To800","WJetsToLNu_HT-800To1200","WJetsToLNu_HT-1200To2500","WJetsToLNu_HT-2500ToInf"]
+
 	#Produce cutflow csv table
 	csv_file_fields = ["Sample", "My_LumiWeight","Ganesh_LumiWeight","Relative_Difference"]
 	table_array = []
@@ -134,6 +137,8 @@ if __name__ == "__main__":
 		sum_GenWeights = 0
 		for file in my_background_dict[file_name]:
 			with uproot.open(file) as tempFile:
+				if (file_name in problem_samples):
+					print("Sum of weights in " + file + ": %.3f"%np.sum(tempFile['Runs/genEventSumw'].array()))
 				sum_GenWeights += np.sum(tempFile['Runs/genEventSumw'].array())
 		myWeight = weight_calc(file_name,sum_GenWeights)
 		sample_dict["My_LumiWeight"] = myWeight
@@ -142,9 +147,9 @@ if __name__ == "__main__":
 		ganeshWeight = 0
 		for file in Ganesh_background_dict[file_name]:
 			with uproot.open(file) as tempFile:
-				print(file_name)
-				print(tempFile["Events/xsWeight"].array()[0])
-				print(tempFile["Events/genWeight"].array()[0])
+				#print(file_name)
+				#print(tempFile["Events/xsWeight"].array()[0])
+				#print(tempFile["Events/genWeight"].array()[0])
 				ganeshWeight += tempFile["Events/xsWeight"].array()[0]/tempFile["Events/genWeight"].array()[0]
 		sample_dict["Ganesh_LumiWeight"] = ganeshWeight
 
@@ -155,7 +160,7 @@ if __name__ == "__main__":
 		#cutflow_table_array.append(fourtau_out[file]["cutflow_dict"])
 	
 	#Output table	
-	with open("LumiWeight_Comp.csv", mode = "w", newline = '') as file:	
+	with open("Weight_CompTable.csv", mode = "w", newline = '') as file:	
 		writer = csv.DictWriter(file,fieldnames=csv_file_fields)
 		writer.writeheader()
 		writer.writerows(table_array)
