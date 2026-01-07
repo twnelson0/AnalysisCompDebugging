@@ -127,21 +127,28 @@ if __name__ == "__main__":
 	#Look in more detail at the problem samples
 	problem_samples = ["TTToSemiLeptonic","TTToHadronic","TTTo2L2Nu","WJetsToLNu_HT-400To600","WJetsToLNu_HT-600To800","WJetsToLNu_HT-800To1200","WJetsToLNu_HT-1200To2500","WJetsToLNu_HT-2500ToInf"]
 
-	#Produce cutflow csv table
+	#Produce cutflow csv tables
 	csv_file_fields = ["Sample", "My_LumiWeight","Ganesh_LumiWeight","Relative_Difference"]
+	csv_sumweight_fields = ["Sample", "My_SumGenWeights","Ganesh_SumGenWeights","Relative_Difference"]
 	table_array = []
+	GenWeightSum_array = []
 	for file_name in my_background_dict.keys():
 		sample_dict = dict.fromkeys(csv_file_fields)
+		weight_dict = dict.fromkeys(csv_sumweight_fields)
 		sample_dict["Sample"] = file_name
+		weight_dict["Sample"] = file_name
+		
 		#Obtain my value of the lumi weight
 		sum_GenWeights = 0
 		for file in my_background_dict[file_name]:
 			with uproot.open(file) as tempFile:
-				if (file_name in problem_samples):
-					print("Sum of weights in " + file + ": %.3f"%np.sum(tempFile['Runs/genEventSumw'].array()))
+			#	if (file_name in problem_samples):
+			#		print("Sum of weights in " + file + ": %.3f"%np.sum(tempFile['Runs/genEventSumw'].array()))
 				sum_GenWeights += np.sum(tempFile['Runs/genEventSumw'].array())
 		myWeight = weight_calc(file_name,sum_GenWeights)
+		weight_dict["My_SumGenWeights"] = sum_GenWeights
 		sample_dict["My_LumiWeight"] = myWeight
+		#print("My weight for " + file_name + ": " + str(myWeight))
 
 		#Obtain Ganesh's value of the lumi weight
 		ganeshWeight = 0
@@ -150,18 +157,27 @@ if __name__ == "__main__":
 				#print(file_name)
 				#print(tempFile["Events/xsWeight"].array()[0])
 				#print(tempFile["Events/genWeight"].array()[0])
-				ganeshWeight += tempFile["Events/xsWeight"].array()[0]/tempFile["Events/genWeight"].array()[0]
+				ganeshWeight = tempFile["Events/xsWeight"].array()[0]/tempFile["Events/genWeight"].array()[0]
 		sample_dict["Ganesh_LumiWeight"] = ganeshWeight
+		weight_dict["Ganesh_SumGenWeights"] = (Lumi_2018*xSection_Dictionary[file_name])/ganeshWeight
+		#print("My Ganesh's weight for " + file_name + ": " + str(ganeshWeight))
 
 		#Obtain relative difference between the two
 		rel_diff = (myWeight - ganeshWeight)/ganeshWeight * 100
 		sample_dict["Relative_Difference"] = rel_diff
+		weight_dict["Relative_Difference"] = (weight_dict["My_SumGenWeights"] - weight_dict["Ganesh_SumGenWeights"])/weight_dict["Ganesh_SumGenWeights"] * 100
 		table_array.append(sample_dict)
+		GenWeightSum_array.append(weight_dict)
 		#cutflow_table_array.append(fourtau_out[file]["cutflow_dict"])
 	
-	#Output table	
+	#Output table of calculated weights	
 	with open("Weight_CompTable.csv", mode = "w", newline = '') as file:	
 		writer = csv.DictWriter(file,fieldnames=csv_file_fields)
 		writer.writeheader()
 		writer.writerows(table_array)
-	print("Table Out")
+	
+	#Output table of sum of gen weights	
+	with open("GenWeights_CompTable.csv", mode = "w", newline = '') as file:	
+		writer = csv.DictWriter(file,fieldnames=csv_sumweight_fields)
+		writer.writeheader()
+		writer.writerows(GenWeightSum_array)

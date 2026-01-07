@@ -440,7 +440,11 @@ if __name__ == "__main__":
 	#Diretory for files
 	Skimmed_Ganesh_base = "root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/"
 	
-	file_dict = {
+	file_dict_test = {
+			"ZZ4l": [Skimmed_Ganesh_base + "ZZTo4L.root"],
+			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root"]
+        }
+	file_dict_full = {
 			"TTToSemiLeptonic": list(np.append([Skimmed_Ganesh_base + "TTToSemiLeptonic_" + str(j) + ".root" for j in range(2,5)], Skimmed_Ganesh_base + "TTToSemiLeptonic.root")),
 			"TTTo2L2Nu": [Skimmed_Ganesh_base + "TTTo2L2Nu.root", Skimmed_Ganesh_base + "TTTo2L2Nu_2.root"],
 			"TTToHadronic": [Skimmed_Ganesh_base + "TTToHadronic.root"],
@@ -484,6 +488,8 @@ if __name__ == "__main__":
                 Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
         }
 
+	file_dict = file_dict_full
+
 	for key_name, file_array in file_dict.items(): 
 		print(key_name)
 		if (key_name != "Data_MET" ): 
@@ -501,7 +507,31 @@ if __name__ == "__main__":
 			sumWEvents_Dict[key_name] = 1
 
 	#Full background list
-	background_list = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"]
+	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"]
+	background_list_test = [r"$ZZ \rightarrow 4l$"]
+	background_list = background_list_full
+	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
+			r"$t\bar{t}$ 2L2Nu" : "_ttbar2L2Nu_", r"Drell-Yan+Jets": "_DYJets_", "Di-Bosons" : "_DiBosons_", "Single Top": "_SingleTop_", "QCD" : "_QCD_", 
+			"W+Jets" : "_WJets_", r"$ZZ \rightarrow 4l$" : "_ZZ4l_", r"$ZZ \rightarrow 4l$ Test": "_ZZ4lTest_", r"$ZZ \rightarrow 4l$ Control": "_ZZ4lControl_",
+			"W+Jets HT 100-200 GeV" : "_WJetsHT100-200_","W+Jets HT 200-400 GeV" : "_WJetsHT200-400_","W+Jets HT 400-600 GeV" : "_WJetsHT400-600_",
+			"W+Jets HT 600-800 GeV" : "_WJetsHT600-800_","W+Jets HT 800-1200 GeV" : "_WJetsHT800-1200_","W+Jets HT 1200-2500 GeV" : "_WJetsHT1200-2500_",
+			"W+Jets HT 2500-Inf GeV" : "_WJetsHT2500-Inf_"} #For file names
+	
+	background_dict = {r"$t\bar{t}$" : ["TTToSemiLeptonic","TTTo2L2Nu","TTToHadronic"], r"$t\bar{t}$ Hadronic" : ["TTToHadronic"], 
+			r"$t\bar{t}$ Semileptonic" : ["TTToSemiLeptonic"], r"$t\bar{t}$ 2L2Nu" : ["TTTo2L2Nu"],
+			r"Drell-Yan+Jets": ["DYJetsToLL_M-4to50_HT-70to100","DYJetsToLL_M-4to50_HT-100to200","DYJetsToLL_M-4to50_HT-200to400","DYJetsToLL_M-4to50_HT-400to600",
+			"DYJetsToLL_M-4to50_HT-600toInf","DYJetsToLL_M-50_HT-70to100","DYJetsToLL_M-50_HT-100to200","DYJetsToLL_M-50_HT-200to400",
+			"DYJetsToLL_M-50_HT-400to600","DYJetsToLL_M-50_HT-600to800","DYJetsToLL_M-50_HT-800to1200","DYJetsToLL_M-50_HT-1200to2500","DYJetsToLL_M-50_HT-2500toInf"], 
+			#"Di-Bosons": ["WZ3l1nu","WZ2l2q","WZ1l1nu2q","ZZ2l2q", "WZ1l3nu", "VV2l2nu"], "Single Top": ["Tbar-tchan","T-tchan","Tbar-tW","T-tW"], 
+			"Di-Bosons": ["WZ2l2q","WZ1l1nu2q","ZZ2l2q", "WZ1l3nu", "VV2l2nu"], "Single Top": ["Tbar-tchan","T-tchan","Tbar-tW","T-tW"], 
+			"W+Jets": ["WJetsToLNu_HT-100To200","WJetsToLNu_HT-200To400","WJetsToLNu_HT-400To600","WJetsToLNu_HT-600To800","WJetsToLNu_HT-800To1200","WJetsToLNu_HT-1200To2500","WJetsToLNu_HT-2500ToInf"],
+			"W+Jets HT 100-200 GeV": ["WJetsToLNu_HT-100To200"],"W+Jets HT 200-400 GeV": ["WJetsToLNu_HT-200To400"],"W+Jets HT 400-600 GeV": ["WJetsToLNu_HT-400To600"],
+			"W+Jets HT 600-800 GeV": ["WJetsToLNu_HT-600To800"],"W+Jets HT 800-1200 GeV": ["WJetsToLNu_HT-800To1200"],
+			"W+Jets HT 1200-2500 GeV": ["WJetsToLNu_HT-1200To2500"], "W+Jets HT 2500-Inf GeV": ["WJetsToLNu_HT-2500ToInf"],
+			r"$ZZ \rightarrow 4l$" : ["ZZ4l"],
+			#r"$ZZ \rightarrow 4l$ Test": ["ZZ4l_Test"],
+			#r"$ZZ \rightarrow 4l$ Control": ["ZZ4l_Control"],
+	}
 
 	#Dictinary with file names
 	trigger_name = "MET_Trigger"
@@ -528,6 +558,10 @@ if __name__ == "__main__":
 
 	fourtau_out = iterative_runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor()) #Modified for NanoAOD (changd treename)
 
+	#Dictionaries of histograms for background, signal and data
+	hist_dict_background = dict.fromkeys(four_tau_hist_list)
+	hist_dict_signal = dict.fromkeys(four_tau_hist_list)
+	hist_dict_data = dict.fromkeys(four_tau_hist_list)
 
 	for hist_name in four_tau_hist_list: #Loop over all histograms
 
@@ -541,7 +575,7 @@ if __name__ == "__main__":
 			#Loop over all backgrounds
 			for background in backgrounds:
 				print("%s"%background)
-				if (mass == "2000"): #Only need to generate single background once
+				if (True): #Only need to generate single background once
 					
 					#Plot the cutflow for each background
 					if (hist_name == "cutflow_table"):
