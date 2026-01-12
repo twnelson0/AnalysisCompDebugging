@@ -286,20 +286,37 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#if (not(self.isData)):
 		#else:
 		#HLT Trigger
-		tau = tau[event_level.MET_trigger]
-		AK8Jet = AK8Jet[event_level.MET_trigger]
-		Jet = Jet[event_level.MET_trigger]
-		electron = electron[event_level.MET_trigger]
-		muon = muon[event_level.MET_trigger]
-		event_level = event_level[event_level.MET_trigger]
+		tau = tau[event_level.Mu_Trigger]
+		AK8Jet = AK8Jet[event_level.Mu_Trigger]
+		Jet = Jet[event_level.Mu_Trigger]
+		electron = electron[event_level.Mu_Trigger]
+		muon = muon[event_level.Mu_Trigger]
+		event_level = event_level[event_level.Mu_Trigger]
+						
+		#Muon ID selection
+		#id_cond = muon.IDSelec
+		#d0_cond = np.abs(muon.D0) < 0.045
+		#dz_cond = np.abs(muon.Dz) < 0.2
+		#good_muon_cond = np.bitwise_and(id_cond, np.bitwise_and(d0_cond, dz_cond))
+		#muon = muon[good_muon_cond]
 		
 		#Offline selection
-		tau = tau[event_level.pfMET > 180]
-		AK8Jet = AK8Jet[event_level.pfMET > 180]
-		Jet = Jet[event_level.pfMET > 180]
-		electron = electron[event_level.pfMET > 180]
-		muon = muon[event_level.pfMET > 180]
-		event_level = event_level[event_level.pfMET > 180]
+		#Apply offline Single Muon Cut
+		#if (np.exp(1) != np.pi):
+		tau = tau[ak.any(muon.nMu > 0, axis = 1)]
+		AK8Jet = AK8Jet[ak.any(muon.nMu > 0, axis = 1)]
+		Jet = Jet[ak.any(muon.nMu > 0, axis = 1)]
+		event_level = event_level[ak.any(muon.nMu > 0, axis = 1)]
+		electron = electron[ak.any(muon.nMu > 0, axis = 1)]
+		muon = muon[ak.any(muon.nMu > 0, axis = 1)]
+			
+		#pT
+		tau = tau[ak.any(muon.pt > 52, axis = 1)]
+		AK8Jet = AK8Jet[ak.any(muon.pt > 52, axis = 1)]
+		Jet = Jet[ak.any(muon.pt > 52, axis = 1)]
+		event_level = event_level[ak.any(muon.pt > 52, axis = 1)]
+		electron = electron[ak.any(muon.pt > 52, axis = 1)]
+		muon = muon[ak.any(muon.pt > 52, axis = 1)]
 
 		#Fill histograms after to trigger and all selections
 		#Taus
@@ -500,12 +517,57 @@ if __name__ == "__main__":
                 Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
                 Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
         }
+		
+	#Grand Unified Background + Signal + Data Dictionary links file name to location of root file
+	background_base = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/" #ZZTo4L_25February25_0413_skim__skim_Feb25/ #NanoAOD files
+	data_base = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/Data/" 
+	
+	file_dict = {
+		"TTToSemiLeptonic": [background_base + "TTToSemiLeptonic_35August25_0448_skim_Newskim/TTToSemiLeptonic" + str(j) + ".root" for j in range(10)], 
+		"TTTo2L2Nu": [background_base + "TTTo2L2Nu_26August25_0719_skim_Newskim/TTTo2L2Nu.root"], 
+		"TTToHadronic": [background_base + "TTToHadronic_25October25_0813_skim_Newskim/TTToHadronic" + str(j) + ".root" for j in range(10)],
+		"ZZ4l": [background_base + "ZZTo4L_26August25_0757_skim_Newskim/ZZTo4L.root"], 
+		"VV2l2nu": [background_base + "WWTo2L2Nu_26August25_1040_skim_Newskim/WWTo2L2Nu.root"], 
+		"WZ1l3nu": [background_base + "WZTo1L3Nu_4f_26August25_1016_skim_Newskim/WZTo1L3Nu_4f.root"], 
+		#"WZ3l1nu": [background_base + "WZTo3L1Nu_4f_26August25_1032_skim_Newskim/WZTo3L1Nu_4f.root"],  
+		"ZZ2l2q": [background_base + "ZZTo2Q2L_26August25_1034_skim_Newskim/ZZTo2Q2L.root"],
+		"WZ2l2q": [background_base + "WZTo2L2Q_26August25_0926_skim_Newskim/WZTo2L2Q.root"],
+		"WZ1l1nu2q" : [background_base + "WZTo1L1Nu2Q_26August25_0840_skim_Newskim/WZTo1L1Nu2Q.root"],
+        "DYJetsToLL_M-4to50_HT-70to100": [background_base + "DYJetsToLL_M-4to50_HT-70to100_12December25_1606_skim_Oldskim/DYJetsToLL_M-4to50_HT-70to100.root"],
+        "DYJetsToLL_M-4to50_HT-100to200": [background_base + "DYJetsToLL_M-4to50_HT-100to200_12December25_1604_skim_Oldskim/DYJetsToLL_M-4to50_HT-100to200.root"],
+        "DYJetsToLL_M-4to50_HT-200to400": [background_base + "DYJetsToLL_M-4to50_HT-200to400_12December25_1544_skim_Oldskim/DYJetsToLL_M-4to50_HT-200to400.root"],
+        "DYJetsToLL_M-4to50_HT-400to600": [background_base + "DYJetsToLL_M-4to50_HT-400to600_12December25_1552_skim_Oldskim/DYJetsToLL_M-4to50_HT-400to600.root"],
+        "DYJetsToLL_M-4to50_HT-600toInf": [background_base + "DYJetsToLL_M-4to50_HT-600toInf_12December25_1608_skim_Oldskim/DYJetsToLL_M-4to50_HT-600toInf.root"],
+        "DYJetsToLL_M-50_HT-70to100": [background_base + "DYJetsToLL_M-50_HT-70to100_12December25_1556_skim_Oldskim/DYJetsToLL_M-50_HT-70to100.root"],
+        "DYJetsToLL_M-50_HT-100to200": [background_base + "DYJetsToLL_M-50_HT-100to200_12December25_1548_skim_Oldskim/DYJetsToLL_M-50_HT-100to200.root"],
+        "DYJetsToLL_M-50_HT-200to400": [background_base + "DYJetsToLL_M-50_HT-200to400_12December25_1559_skim_Oldskim/DYJetsToLL_M-50_HT-200to400.root"],
+        "DYJetsToLL_M-50_HT-400to600": [background_base + "DYJetsToLL_M-50_HT-400to600_12December25_1546_skim_Oldskim/DYJetsToLL_M-50_HT-400to600.root"],
+        "DYJetsToLL_M-50_HT-600to800": [background_base + "DYJetsToLL_M-50_HT-600to800_12December25_1555_skim_Oldskim/DYJetsToLL_M-50_HT-600to800.root"],
+        "DYJetsToLL_M-50_HT-800to1200": [background_base + "DYJetsToLL_M-50_HT-800to1200_12December25_1602_skim_Oldskim/DYJetsToLL_M-50_HT-800to1200.root"],
+        "DYJetsToLL_M-50_HT-1200to2500": [background_base + "DYJetsToLL_M-50_HT-1200to2500_12December25_1547_skim_Oldskim/DYJetsToLL_M-50_HT-1200to2500.root"],
+        "DYJetsToLL_M-50_HT-2500toInf": [background_base + "DYJetsToLL_M-50_HT-2500toInf_12December25_1554_skim_Oldskim/DYJetsToLL_M-50_HT-2500toInf.root"],
+		"T-tchan": [background_base + "ST_t-channel_top_4f_InclusiveDecays_26August25_0843_skim_Newskim/ST_t-channel_top_4f_InclusiveDecays.root"], 
+		"Tbar-tchan": [background_base + "ST_t-channel_antitop_4f_InclusiveDecays_26August25_0821_skim_Newskim/ST_t-channel_antitop_4f_InclusiveDecays.root"], 
+		"T-tW": [background_base + "ST_tW_top_5f_inclusiveDecays_26August25_0753_skim_Newskim/ST_tW_top_5f_inclusiveDecays.root"], 
+		"Tbar-tW": [background_base + "ST_tW_antitop_5f_inclusiveDecays_26August25_1030_skim_Newskim/ST_tW_antitop_5f_inclusiveDecays.root"],
+		"WJetsToLNu_HT-100To200": [background_base + "WJetsToLNu_HT-100To200_26August25_0810_skim_Newskim/WJetsToLNu_HT-100To200.root"],
+		"WJetsToLNu_HT-200To400": [background_base + "WJetsToLNu_HT-200To400_26August25_0709_skim_Newskim/WJetsToLNu_HT-200To400.root"], 
+		"WJetsToLNu_HT-400To600": [background_base + "WJetsToLNu_HT-400To600_26August25_1014_skim_Newskim/WJetsToLNu_HT-400To600.root", background_base +"WJetsToLNu_HT-400To600_OtherPart_26August25_1032_skim_Newskim/WJetsToLNu_HT-400To600_OtherPart.root"], 
+		"WJetsToLNu_HT-600To800": [background_base + "WJetsToLNu_HT-600To800_26August25_0755_skim_Newskim/WJetsToLNu_HT-600To800.root", background_base + "WJetsToLNu_HT-600To800_OtherPart_26August25_0752_skim_Newskim/WJetsToLNu_HT-600To800_OtherPart.root"],
+		"WJetsToLNu_HT-800To1200": [background_base + "WJetsToLNu_HT-800To1200_26August25_0708_skim_Newskim/WJetsToLNu_HT-800To1200.root", background_base + "WJetsToLNu_HT-800To1200_OtherPart_26August25_0925_skim_Newskim/WJetsToLNu_HT-800To1200_OtherPart.root"],
+		"WJetsToLNu_HT-1200To2500": [background_base + "WJetsToLNu_HT-1200To2500_26August25_1016_skim_Newskim/WJetsToLNu_HT-1200To2500.root", background_base + "WJetsToLNu_HT-1200To2500_OtherPart_26August25_1041_skim_Newskim/WJetsToLNu_HT-1200To2500_OtherPart.root"],
+		"WJetsToLNu_HT-2500ToInf": [background_base + "WJetsToLNu_HT-2500ToInf_26August25_1047_skim_Newskim/WJetsToLNu_HT-2500ToInf.root", background_base + "WJetsToLNu_HT-2500ToInf_OtherPart_26August25_1043_skim_Newskim/WJetsToLNu_HT-2500ToInf_OtherPart.root"],
+		"Data_SingleMuon": [data_base + "SingleMu_Run2018A_27August25_0551_skim_Newskim/SingleMu_Run2018A.root", 
+			data_base + "SingleMu_Run2018B_27August25_0529_skim_Newskim/SingleMu_Run2018B.root",
+			data_base + "SingleMu_Run2018C_27August25_0540_skim_Newskim/SingleMu_Run2018C.root", 
+			data_base + "SingleMu_Run2018D_27August25_0613_skim_Newskim/SingleMu_Run2018D.root"],
+	}
 
-	file_dict = file_dict_full
+	#file_dict = file_dict_full
 
 	for key_name, file_array in file_dict.items(): 
 		print(key_name)
-		if (key_name != "Data_MET" ): 
+		if (key_name != "Data_SingleMuon"): 
 			numEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
 			sumWEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
 			for file in file_array:
@@ -535,10 +597,12 @@ if __name__ == "__main__":
 			r"Drell-Yan+Jets": ["DYJetsToLL_M-4to50_HT-70to100","DYJetsToLL_M-4to50_HT-100to200","DYJetsToLL_M-4to50_HT-200to400","DYJetsToLL_M-4to50_HT-400to600",
 			"DYJetsToLL_M-4to50_HT-600toInf","DYJetsToLL_M-50_HT-70to100","DYJetsToLL_M-50_HT-100to200","DYJetsToLL_M-50_HT-200to400",
 			"DYJetsToLL_M-50_HT-400to600","DYJetsToLL_M-50_HT-600to800","DYJetsToLL_M-50_HT-800to1200","DYJetsToLL_M-50_HT-1200to2500","DYJetsToLL_M-50_HT-2500toInf"], 
-			#"Di-Bosons": ["WZ3l1nu","WZ2l2q","WZ1l1nu2q","ZZ2l2q", "WZ1l3nu", "VV2l2nu"], "Single Top": ["Tbar-tchan","T-tchan","Tbar-tW","T-tW"], 
-			"Di-Bosons": ["WZ2l2q","WZ1l1nu2q","ZZ2l2q", "WZ1l3nu", "VV2l2nu", "WWTo1L1Nu2Q", "WWTo4Q", "ZZTo4Q", "ZZTo2L2Nu", "ZZTo2Nu2Q"], 
-			"Single Top": ["Tbar-tchan","T-tchan","Tbar-tW","T-tW","ST_s-channel_4f_leptonDecays", "ST_s-channel_4f_hadronicDecays"], 
-			"W+Jets": ["WJetsToLNu_HT-70To100","WJetsToLNu_HT-100To200","WJetsToLNu_HT-200To400","WJetsToLNu_HT-400To600","WJetsToLNu_HT-600To800","WJetsToLNu_HT-800To1200","WJetsToLNu_HT-1200To2500","WJetsToLNu_HT-2500ToInf"],
+			"Di-Bosons": ["WZ2l2q","WZ1l1nu2q","ZZ2l2q", "WZ1l3nu", "VV2l2nu"], "Single Top": ["Tbar-tchan","T-tchan","Tbar-tW","T-tW"], 
+			"W+Jets": ["WJetsToLNu_HT-100To200","WJetsToLNu_HT-200To400","WJetsToLNu_HT-400To600","WJetsToLNu_HT-600To800","WJetsToLNu_HT-800To1200","WJetsToLNu_HT-1200To2500","WJetsToLNu_HT-2500ToInf"],
+            #For Ganesh's files only
+			#"Di-Bosons": ["WZ2l2q","WZ1l1nu2q","ZZ2l2q", "WZ1l3nu", "VV2l2nu", "WWTo1L1Nu2Q", "WWTo4Q", "ZZTo4Q", "ZZTo2L2Nu", "ZZTo2Nu2Q"], 
+			#"Single Top": ["Tbar-tchan","T-tchan","Tbar-tW","T-tW","ST_s-channel_4f_leptonDecays", "ST_s-channel_4f_hadronicDecays"], 
+			#"W+Jets": ["WJetsToLNu_HT-70To100","WJetsToLNu_HT-100To200","WJetsToLNu_HT-200To400","WJetsToLNu_HT-400To600","WJetsToLNu_HT-600To800","WJetsToLNu_HT-800To1200","WJetsToLNu_HT-1200To2500","WJetsToLNu_HT-2500ToInf"],
 			"W+Jets HT 100-200 GeV": ["WJetsToLNu_HT-100To200"],"W+Jets HT 200-400 GeV": ["WJetsToLNu_HT-200To400"],"W+Jets HT 400-600 GeV": ["WJetsToLNu_HT-400To600"],
 			"W+Jets HT 600-800 GeV": ["WJetsToLNu_HT-600To800"],"W+Jets HT 800-1200 GeV": ["WJetsToLNu_HT-800To1200"],
 			"W+Jets HT 1200-2500 GeV": ["WJetsToLNu_HT-1200To2500"], "W+Jets HT 2500-Inf GeV": ["WJetsToLNu_HT-2500ToInf"],
@@ -548,7 +612,8 @@ if __name__ == "__main__":
 	}
 
 	#Dictinary with file names
-	trigger_name = "MET_Trigger"
+	#trigger_name = "MET_Trigger"
+	trigger_name = "Muon_Trigger"
 	four_tau_names = {
 		"tau_pt_Trigg": "Tau_pT_Trigger" + "-" + trigger_name,
 		"tau_eta_Trigg": "Tau_eta_Trigger" + "-" + trigger_name,
@@ -562,8 +627,7 @@ if __name__ == "__main__":
 		"muon_phi_Trigg": "Muon_phi_Trigger" + "-" + trigger_name,
 		"Jet_pt_Trigg": "Jet_pT_Trigger" + "-" + trigger_name,
 		"Jet_eta_Trigg": "Jet_eta_Trigger" + "-" + trigger_name,
-		"Jet_phi_Trigg": "Jet_phi_Trigger" + "-" + trigger_name,
-			
+		"Jet_phi_Trigg": "Jet_phi_Trigger" + "-" + trigger_name,		
 		"AK8Jet_pt_Trigg": "AK8Jet_pT_Trigger" + "-" + trigger_name,
 		"AK8Jet_eta_Trigg": "AK8Jet_eta_Trigger" + "-" + trigger_name,
 		"AK8Jet_phi_Trigg": "AK8Jet_phi_Trigger" + "-" + trigger_name,
@@ -661,7 +725,7 @@ if __name__ == "__main__":
 		
 		#Obtain data distributions
 		print("==================Hist %s================"%hist_name)
-		hist_dict_data[hist_name] = fourtau_out["Data_MET"][hist_name] #.fill("Data",fourtau_out["Data_SingleMuon"][hist_name]) 
+		hist_dict_data[hist_name] = fourtau_out["Data_SingleMuon"][hist_name] #.fill("Data",fourtau_out["Data_SingleMuon"][hist_name]) 
 						
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")

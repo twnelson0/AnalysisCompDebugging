@@ -152,12 +152,15 @@ if __name__ == "__main__":
 
 		#Obtain Ganesh's value of the lumi weight
 		ganeshWeight = 0
+		nGanesh_files = 0
 		for file in Ganesh_background_dict[file_name]:
+			nGanesh_files += 1
 			with uproot.open(file) as tempFile:
 				#print(file_name)
 				#print(tempFile["Events/xsWeight"].array()[0])
 				#print(tempFile["Events/genWeight"].array()[0])
-				ganeshWeight = tempFile["Events/xsWeight"].array()[0]/tempFile["Events/genWeight"].array()[0]
+				ganeshWeight += tempFile["Events/xsWeight"].array()[0]/tempFile["Events/genWeight"].array()[0]
+		ganeshWeight = ganeshWeight/nGanesh_files
 		sample_dict["Ganesh_LumiWeight"] = ganeshWeight
 		weight_dict["Ganesh_SumGenWeights"] = (Lumi_2018*xSection_Dictionary[file_name])/ganeshWeight
 		#print("My Ganesh's weight for " + file_name + ": " + str(ganeshWeight))
