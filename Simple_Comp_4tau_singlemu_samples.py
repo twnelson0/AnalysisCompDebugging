@@ -294,11 +294,11 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level = event_level[event_level.Mu_Trigger]
 						
 		#Muon ID selection
-		#id_cond = muon.IDSelec
-		#d0_cond = np.abs(muon.D0) < 0.045
-		#dz_cond = np.abs(muon.Dz) < 0.2
-		#good_muon_cond = np.bitwise_and(id_cond, np.bitwise_and(d0_cond, dz_cond))
-		#muon = muon[good_muon_cond]
+		id_cond = muon.IDSelec
+		d0_cond = np.abs(muon.D0) < 0.045
+		dz_cond = np.abs(muon.Dz) < 0.2
+		good_muon_cond = np.bitwise_and(id_cond, np.bitwise_and(d0_cond, dz_cond))
+		muon = muon[good_muon_cond]
 		
 		#Offline selection
 		#Apply offline Single Muon Cut

@@ -214,7 +214,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"pt": events.FatJet_pt,
 				"eta": events.FatJet_eta,
 				"phi": events.FatJet_phi,
-				"nAK8Jet": events.nFatJet, 
+				"nAK8Jet": events.nFatJet 
 			},
 			with_name="AK8JetArray",
 			behavior=candidate.behavior,

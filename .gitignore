@@ -8,5 +8,9 @@ __pycache__/
 *.csv
 *.png
 
+#Note files not needed to be saved
+Simple_CrossSec.txt
+Full_CrossSecDict.txt
+
 #Shell file
 shell

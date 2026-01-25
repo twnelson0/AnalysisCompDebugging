@@ -117,8 +117,10 @@ def crossClean(particle, crossclean_part, limitVal):
 	crossclean_part = crossclean_part[ak.num(crossclean_part,axis=1) > 0]
 
 	#Set up the four vectors
-	part_4vec = ak.zip({"t": particle_cc.E, "x": particle_cc.Px ,"y": particle_cc.Py ,"z": particle_cc.Pz},with_name="Momentum4D")
-	crossclean_4vec = ak.zip({"t": crossclean_part.E, "x": crossclean_part.Px ,"y": crossclean_part.Py ,"z": crossclean_part.Pz},with_name="Momentum4D")
+    #part_4vec = ak.zip({"t": particle_cc.E, "x": particle_cc.Px ,"y": particle_cc.Py ,"z": particle_cc.Pz},with_name="Momentum4D")
+	part_4vec = ak.zip({"rho": particle_cc.pt, "phi": particle_cc.phi, "eta": particle_cc.eta ,"tau": particle_cc.mass},with_name="Momentum4D")
+	#crossclean_4vec = ak.zip({"t": crossclean_part.E, "x": crossclean_part.Px ,"y": crossclean_part.Py ,"z": crossclean_part.Pz},with_name="Momentum4D")
+	crossclean_4vec = ak.zip({"rho": crossclean_part.pt, "phi": crossclean_part.phi, "eta": crossclean_part.eta, "tau": crossclean_part.mass},with_name="Momentum4D")
 	parts,crossclean = ak.unzip(ak.cartesian([part_4vec,crossclean_4vec],axis=1,nested=True))
 	deltaR_Arr = parts.deltaR(crossclean)
 
@@ -132,9 +134,25 @@ def crossClean(particle, crossclean_part, limitVal):
 
 	return particle_crosscleaned
 
+def lead_crossClean(particle, crossclean_part, limitVal):
+	#Set up the four vectors
+	#part_4vec = ak.zip({"t": particle.E, "x": particle.Px ,"y": particle.Py ,"z": particle.Pz},with_name="Momentum4D")
+	part_4vec = ak.zip({"rho": particle_cc.pt, "phi": particle_cc.phi, "eta": particle_cc.eta ,"tau": particle_cc.mass},with_name="Momentum4D")
+	#crossclean_4vec = ak.zip({"t": crossclean_part.E, "x": crossclean_part.Px ,"y": crossclean_part.Py ,"z": crossclean_part.Pz},with_name="Momentum4D")
+	crossclean_4vec = ak.zip({"rho": crossclean_part.pt, "phi": crossclean_part.phi, "eta": crossclean_part.eta, "tau": crossclean_part.mass},with_name="Momentum4D")
+	parts,crossclean = ak.unzip(ak.cartesian([part_4vec,crossclean_4vec],axis=1,nested=True))
+	deltaR_Arr = parts.deltaR(crossclean)
+
+	#Get the selection and apply it
+	selec = deltaR_Arr <= limitVal
+	selec = ak.all(selec,axis=2)
+	particle = particle[selec]
+
+	return particle
+
 def reorder(to_reorder, template_object):
 	to_reorder_cc = to_reorder[ak.num(template_object,axis=1)>0]
-	to_reoder_conv = to_reorder[ak.num(template_object,axis=1) == 0]
+	to_reorder_conv = to_reorder[ak.num(template_object,axis=1) == 0]
 
 	return ak.concatenate((to_reorder_cc,to_reorder_conv))
 
@@ -226,6 +244,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Py": events.Electron_pt*np.sin(events.Electron_phi),
 				"Pz": events.Electron_pt*np.tan(2*np.arctan(np.exp(-events.Electron_eta)))**-1,
 				"E": np.sqrt(events.Electron_pt**2 + (events.Electron_pt/np.tan(2*np.arctan(np.exp(-events.Electron_eta))))**2 + events.Electron_mass**2),
+                "mass": events.Electron_mass, 
 				#"SCEta": events.Electron_SCEta,
 				"SCEta": events.Electron_deltaEtaSC,
 				#"IDMVANoIso": events.Electron_IDMVANoIso,
@@ -249,6 +268,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Pz": events.Muon_pt*np.tan(2*np.arctan(np.exp(-events.Muon_eta)))**-1,
 				"E": np.sqrt(events.Muon_pt**2 + (events.Muon_pt/np.tan(2*np.arctan(np.exp(-events.Muon_eta))))**2 + events.Muon_mass**2),
 				"nMu": events.nMuon,
+                "mass": events.Muon_mass, 
 				#"IDbit": events.muIDbit, #No idea what the nanoAOD analog is for this 
 				#"IDbit": events.Muon_IDbit,
 				"IDSelec": events.Muon_mediumId,
@@ -403,6 +423,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		AK8Jet = AK8Jet[AK8Jet.softDropM < 30]
 		AK8Jet = AK8Jet[AK8Jet.Id > 1]
 
+		#Require only events with atleast 1 AK8 Jet
+		tau = tau[ak.num(AK8Jet,axis=1) > 0]
+		boostedtau = boostedtau[ak.num(AK8Jet,axis=1) > 0]
+		Jet = Jet[ak.num(AK8Jet,axis=1) > 0]
+		electron = electron[ak.num(AK8Jet,axis=1) > 0]
+		muon = muon[ak.num(AK8Jet,axis=1) > 0]
+		event_level = event_level[ak.num(AK8Jet,axis=1) > 0]				
+		AK8Jet = AK8Jet[ak.num(AK8Jet,axis=1) > 0]
+
+
 		#Force AK8Jet to be pT ordered
 		AK8Jet = AK8Jet[ak.argsort(-AK8Jet.pt,axis=1)]
 
@@ -437,7 +467,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level = reorder(event_level,electron)
 		electron = reorder(electron,electron)
 		
-		boostedtau = crossClean(boostedtau,AK8Jet[:,0],1.5)
+		boostedtau = lead_crossClean(boostedtau,AK8Jet[:,0],1.5)
 
 
 		#print(ak.num(test_deltaR,axis=1))
@@ -467,14 +497,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level = reorder(event_level,electron)
 		electron = reorder(electron,electron)
 		
-		tau = crossClean(tau,AK8Jet[:,0],1.5)
+		tau = lead_crossClean(tau,AK8Jet[:,0],1.5)
 
 		#Electrons
 		electron = electron[electron.pt > 10]
 		electron = electron[np.abs(electron.eta) < 2.5]
 		
 		#Electron Cross Cleaning
-		electron = crossClean(electron,AK8Jet[:,0],0.8)
+		electron = lead_crossClean(electron,AK8Jet[:,0],0.8)
 
 		#Muons
 		muon = muon[muon.pt > 15]
@@ -482,7 +512,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		muon = muon[muon.LooseId]
 		
 		#Muon Cross Cleaning
-		muon = crossClean(muon,AK8Jet[:,0],0.8)
+		muon = lead_crossClean(muon,AK8Jet[:,0],0.8)
 
 		#Jets (AK4)
 		Jet = Jet[Jet.pt > 30]
@@ -490,7 +520,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = Jet[Jet.JetId > 1]
 
 		#Jet Cross Cleaning
-		Jet = crossClean(Jet,AK8Jet[:,0],1.2)
+		Jet = lead_crossClean(Jet,AK8Jet[:,0],1.2)
 		
 		Jet = crossClean(Jet,electron,0.4)
 		boostedtau = reorder(boostedtau,electron)
