@@ -7,6 +7,7 @@ __pycache__/
 #Output files
 *.csv
 *.png
+*.coffea
 
 #Note files not needed to be saved
 Simple_CrossSec.txt

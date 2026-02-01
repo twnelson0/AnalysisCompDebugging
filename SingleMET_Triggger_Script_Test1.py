@@ -107,56 +107,6 @@ working_dir = os.getcwd()
 def weight_calc(sample,numEvents=1):
 	return Lumi_2018*xSection_Dictionary[sample]/numEvents
 
-#def cleaning_func(vec_1, vec_2, limit: float) -> bool:
-#	return vec_1.deltaR(vec_2) <= limit
-
-def crossClean(particle, crossclean_part, limitVal):
-	#Split up particle and cross clean particle
-	particle_cc = particle[ak.num(crossclean_part,axis=1) > 0]
-	particle_conv = particle[ak.num(crossclean_part,axis=1) == 0]
-	crossclean_part = crossclean_part[ak.num(crossclean_part,axis=1) > 0]
-
-	#Set up the four vectors
-    #part_4vec = ak.zip({"t": particle_cc.E, "x": particle_cc.Px ,"y": particle_cc.Py ,"z": particle_cc.Pz},with_name="Momentum4D")
-	part_4vec = ak.zip({"rho": particle_cc.pt, "phi": particle_cc.phi, "eta": particle_cc.eta ,"tau": particle_cc.mass},with_name="Momentum4D")
-	#crossclean_4vec = ak.zip({"t": crossclean_part.E, "x": crossclean_part.Px ,"y": crossclean_part.Py ,"z": crossclean_part.Pz},with_name="Momentum4D")
-	crossclean_4vec = ak.zip({"rho": crossclean_part.pt, "phi": crossclean_part.phi, "eta": crossclean_part.eta, "tau": crossclean_part.mass},with_name="Momentum4D")
-	parts,crossclean = ak.unzip(ak.cartesian([part_4vec,crossclean_4vec],axis=1,nested=True))
-	deltaR_Arr = parts.deltaR(crossclean)
-
-	#Get the selection and apply it
-	selec = deltaR_Arr <= limitVal
-	selec = ak.all(selec,axis=2)
-	particle_cc = particle_cc[selec]
-
-	#Recombine and return cross cleaned particles
-	particle_crosscleaned = ak.concatenate((particle_cc,particle_conv))
-
-	return particle_crosscleaned
-
-def lead_crossClean(particle, crossclean_part, limitVal):
-	#Set up the four vectors
-	#part_4vec = ak.zip({"t": particle.E, "x": particle.Px ,"y": particle.Py ,"z": particle.Pz},with_name="Momentum4D")
-	part_4vec = ak.zip({"rho": particle.pt, "phi": particle.phi, "eta": particle.eta ,"tau": particle.mass},with_name="Momentum4D")
-	#crossclean_4vec = ak.zip({"t": crossclean_part.E, "x": crossclean_part.Px ,"y": crossclean_part.Py ,"z": crossclean_part.Pz},with_name="Momentum4D")
-	crossclean_4vec = ak.zip({"rho": crossclean_part.pt, "phi": crossclean_part.phi, "eta": crossclean_part.eta, "tau": crossclean_part.mass},with_name="Momentum4D")
-	parts,crossclean = ak.unzip(ak.cartesian([part_4vec,crossclean_4vec],axis=1,nested=True))
-	deltaR_Arr = parts.deltaR(crossclean)
-
-	#Get the selection and apply it
-	selec = deltaR_Arr <= limitVal
-	selec = ak.all(selec,axis=2)
-	particle = particle[selec]
-
-	return particle
-
-def reorder(to_reorder, template_object):
-	to_reorder_cc = to_reorder[ak.num(template_object,axis=1)>0]
-	to_reorder_conv = to_reorder[ak.num(template_object,axis=1) == 0]
-
-	return ak.concatenate((to_reorder_cc,to_reorder_conv))
-
-
 class PlottingScriptProcessor(processor.ProcessorABC):
 	def __init__(self): #Additional arguements can be added later
 		self.isData = False #Default assumption is MC
@@ -174,7 +124,6 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			{
 				"METHTMHT_Trigger": events.HLT_PFHT500_PFMET100_PFMHT100_IDTight,
 				"Mu_Trigger": events.HLT_Mu50,
-				#"MET_trigger": events.HLT_MET120_IsoTrk50,
 				"MET_trigger1": events.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight,
 				"MET_trigger2": events.HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight,
 				"pfMET": events.MET_pt,
@@ -193,7 +142,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			with_name="EventArray",
 			behavior=candidate.behavior,
 		)
-		boostedtau = ak.zip( 
+		tau = ak.zip( 
 			{
 				"pt": events.boostedTau_pt,
 				"Px": events.boostedTau_pt*np.cos(events.boostedTau_phi),
@@ -211,26 +160,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				#"decay": events.boostedTaupfTausDiscriminationByDecayModeFinding,
 				"decay": events.boostedTau_idDecayModeOldDMs,
 			},
-			with_name="BoostedTauArray",
-			behavior=candidate.behavior,
-		)
-		tau = ak.zip( 
-			{
-				"pt": events.Tau_pt,
-				"Px": events.Tau_pt*np.cos(events.Tau_phi),
-				"Py": events.Tau_pt*np.sin(events.Tau_phi),
-				"Pz": (events.Tau_pt/np.sin(2*np.arctan(np.exp(-events.Tau_eta))))*np.cos(2*np.arctan(np.exp(-events.Tau_eta))),
-				"E": np.sqrt((events.Tau_pt/np.sin(2*np.arctan(np.exp(-events.Tau_eta))))**2 + events.Tau_mass**2),
-				"mass": events.Tau_mass,
-				"eta": events.Tau_eta,
-				"phi": events.Tau_phi,
-				"nBoostedTau": events.nTau,
-				"charge": events.Tau_charge,
-				"IDVsJets": events.Tau_idDeepTau2018v2p5VSjet,
-				"IDVsEle": events.Tau_idDeepTau2018v2p5VSe,
-				"IDVsMu": events.Tau_idDeepTau2018v2p5VSmu,
-			},
-			with_name="BoostedTauArray",
+			with_name="TauArray",
 			behavior=candidate.behavior,
 		)
 		electron = ak.zip(
@@ -244,12 +174,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Py": events.Electron_pt*np.sin(events.Electron_phi),
 				"Pz": events.Electron_pt*np.tan(2*np.arctan(np.exp(-events.Electron_eta)))**-1,
 				"E": np.sqrt(events.Electron_pt**2 + (events.Electron_pt/np.tan(2*np.arctan(np.exp(-events.Electron_eta))))**2 + events.Electron_mass**2),
-                "mass": events.Electron_mass, 
 				#"SCEta": events.Electron_SCEta,
 				"SCEta": events.Electron_deltaEtaSC,
 				#"IDMVANoIso": events.Electron_IDMVANoIso,
 				"IDMVANoIso": events.Electron_mvaNoIso,
-				#"Id": events.Electron_looseId,
 					
 			},
 			with_name="ElectronArray",
@@ -268,13 +196,11 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Pz": events.Muon_pt*np.tan(2*np.arctan(np.exp(-events.Muon_eta)))**-1,
 				"E": np.sqrt(events.Muon_pt**2 + (events.Muon_pt/np.tan(2*np.arctan(np.exp(-events.Muon_eta))))**2 + events.Muon_mass**2),
 				"nMu": events.nMuon,
-                "mass": events.Muon_mass, 
 				#"IDbit": events.muIDbit, #No idea what the nanoAOD analog is for this 
 				#"IDbit": events.Muon_IDbit,
 				"IDSelec": events.Muon_mediumId,
 				"D0": events.Muon_dxy,
-				"Dz": events.Muon_dz,
-				"LooseId": events.Muon_looseId,
+				"Dz": events.Muon_dz
 					
 			},
 			with_name="MuonArray",
@@ -289,10 +215,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"pt": events.FatJet_pt,
 				"eta": events.FatJet_eta,
 				"phi": events.FatJet_phi,
-				"nAK8Jet": events.nFatJet,
-				"softDropM": events.FatJet_msoftdrop,
-				"Id": events.FatJet_jetId,
-				"mass": events.FatJet_mass, 
+				"nAK8Jet": events.nFatJet 
 			},
 			with_name="AK8JetArray",
 			behavior=candidate.behavior,
@@ -302,10 +225,9 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			{
 				"pt": events.Jet_pt,
 				#"PFLooseId": events.JetPFLooseId,
-				"JetId": events.Jet_jetId, #Not sure that this is correct
+				"PFLooseId": events.Jet_jetId, #Not sure that this is correct
 				"eta": events.Jet_eta,
 				"phi": events.Jet_phi,
-				"mass": events.Jet_mass,
 				"nJet": events.nJet,
 				#"DeepCSVTags_b": events.Jet_DeepCSVTags_b
 				"DeepCSVTags_b": events.Jet_btagCSVV2,
@@ -320,14 +242,13 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		print(dataset)
 
 		if not(self.isData):
-			print("Is MC events are equal to gen weights")
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
 
 		#Basic Kinematic histograms Boosted tau
-		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
-		h_boostedtau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$").Double()
-		h_boostedtau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$").Double()
-		h_boostedtau_raw_iso_Trigger = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score").Double()
+		h_tau_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"$\tau$ $p_T$ [GeV]").Double()
+		h_tau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\tau$ $\eta$").Double()
+		h_tau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$").Double()
+		h_tau_raw_iso_Trigger = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score").Double()
 
 		#Basic Kinematic histograms leptons (muons and electrons)
 		h_electron_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
@@ -338,29 +259,17 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$").Double()
 
 		#Basic Kinematic histograms Jets (check which Jets most useful based on 
-		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
-		h_Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$").Double()
-		h_Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$").Double()
-		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
-		h_AK8Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double()
-		h_AK8Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double()
-
-        #Add MET histogram
-		h_MET_Trigger = hist.Hist.new.Regular(10,0,500,label=r"MET [GeV]").Double()
-
-
-		cutflow_dict = dict.fromkeys(["Sample","PreSkimming","Skimming","Trigger","Tau_pT","Tau_eta","decay","deepboosted","Mass_Cut","Higgs_dR"])
-		#cutflow_dict = dict.fromkeys(["Sample","PreSkimming","Skimming","Trigger","Tau_pT","Tau_eta","decay","mva","Mass_Cut","Higgs_dR"])
-		cutflow_dict["Sample"] = dataset
-		cutflow_dict["PreSkimming"] = numEvents_Dict[dataset] 
-		cutflow_dict["Skimming"] = ak.num(boostedtau,axis=0)
+		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double() 
+		h_Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$").Double() 
+		h_Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$").Double() 
+		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double() 
+		h_AK8Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double() 
+		h_AK8Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double() 
 		
 		#Obtain the cross section scale factor	
 		if (self.isData):
-			print("Is data, cross section weight is unitary")
 			CrossSec_Weight = 1 
 		else:
-			print("Is not data, non unitary cross section weight")
 			CrossSec_Weight = weight_calc(dataset,sumWEvents_Dict[dataset])
 		
 		#Fill histograms prior to trigger and all selections (excluding skimming) 
@@ -370,196 +279,28 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#Apply the trigger
 		#if (not(self.isData)):
 		#else:
+		#HLT Trigger
+		tau = tau[event_level.MET_trigger1]
+		AK8Jet = AK8Jet[event_level.MET_trigger1]
+		Jet = Jet[event_level.MET_trigger1]
+		electron = electron[event_level.MET_trigger1]
+		muon = muon[event_level.MET_trigger1]
+		event_level = event_level[event_level.MET_trigger1]
 		
-		#HLT Triggers
-		boostedtau_1 = boostedtau[event_level.MET_trigger1]
-		tau_1 = tau[event_level.MET_trigger1]
-		AK8Jet_1 = AK8Jet[event_level.MET_trigger1]
-		Jet_1 = Jet[event_level.MET_trigger1]
-		electron_1 = electron[event_level.MET_trigger1]
-		muon_1 = muon[event_level.MET_trigger1]
-		event_level_1 = event_level[event_level.MET_trigger1]
-		
-		boostedtau_noPass = boostedtau[np.bitwise_not(event_level.MET_trigger1)]
-		tau_noPass = tau[np.bitwise_not(event_level.MET_trigger1)]
-		AK8Jet_noPass = AK8Jet[np.bitwise_not(event_level.MET_trigger1)]
-		Jet_noPass = Jet[np.bitwise_not(event_level.MET_trigger1)]
-		electron_noPass = electron[np.bitwise_not(event_level.MET_trigger1)]
-		muon_noPass = muon[np.bitwise_not(event_level.MET_trigger1)]
-		event_level_noPass = event_level[np.bitwise_not(event_level.MET_trigger1)]
-		
-		boostedtau_2 = boostedtau_noPass[event_level_noPass.MET_trigger2]
-		tau_2 = tau_noPass[event_level_noPass.MET_trigger2]
-		AK8Jet_2 = AK8Jet_noPass[event_level_noPass.MET_trigger2]
-		Jet_2 = Jet_noPass[event_level_noPass.MET_trigger2]
-		electron_2 = electron_noPass[event_level_noPass.MET_trigger2]
-		muon_2 = muon_noPass[event_level_noPass.MET_trigger2]
-		event_level_2 = event_level_noPass[event_level_noPass.MET_trigger2]
-		
-		#Recombine data
-		boostedtau = ak.concatenate((boostedtau_1,boostedtau_2))
-		tau = ak.concatenate((tau_1,tau_2))
-		AK8Jet = ak.concatenate((AK8Jet_1,AK8Jet_2))
-		Jet = ak.concatenate((Jet_1,Jet_2))
-		electron = ak.concatenate((electron_1,electron_2))
-		muon = ak.concatenate((muon_1,muon_2))
-		event_level = ak.concatenate((event_level_1,event_level_2))
-
-	#	print("Expected Num Events: %d"%ak.num(event_level,axis=0))
-	#	print("AK8Jet Events: %d"%ak.num(AK8Jet,axis=0))
-	#	print("Muon Events: %d"%ak.num(muon,axis=0))
-		
-		#Trigger Offline selection
+		#Offline selection
 		tau = tau[event_level.pfMET > 180]
-		boostedtau = boostedtau[event_level.pfMET > 180]
 		AK8Jet = AK8Jet[event_level.pfMET > 180]
 		Jet = Jet[event_level.pfMET > 180]
 		electron = electron[event_level.pfMET > 180]
 		muon = muon[event_level.pfMET > 180]
-		event_level = event_level[event_level.pfMET > 180]				
-		
-		#print("Expected Num Events: %d"%ak.num(event_level,axis=0))
-		#print("AK8Jet Events: %d"%ak.num(AK8Jet,axis=0))
-		#print("Muon Events: %d"%ak.num(muon,axis=0))
-			
-		#PreSelection Cuts
-		if (True == False):
-			#AK8Jets
-			AK8Jet = AK8Jet[AK8Jet.pt > 200]
-			AK8Jet = AK8Jet[np.abs(AK8Jet.eta) < 2.5]
-			AK8Jet = AK8Jet[AK8Jet.softDropM < 30]
-			AK8Jet = AK8Jet[AK8Jet.Id > 1]
+		event_level = event_level[event_level.pfMET > 180]
 
-			#Require only events with atleast 1 AK8 Jet
-			tau = tau[ak.num(AK8Jet,axis=1) > 0]
-			boostedtau = boostedtau[ak.num(AK8Jet,axis=1) > 0]
-			Jet = Jet[ak.num(AK8Jet,axis=1) > 0]
-			electron = electron[ak.num(AK8Jet,axis=1) > 0]
-			muon = muon[ak.num(AK8Jet,axis=1) > 0]
-			event_level = event_level[ak.num(AK8Jet,axis=1) > 0]				
-			AK8Jet = AK8Jet[ak.num(AK8Jet,axis=1) > 0]
-
-
-			#Force AK8Jet to be pT ordered
-			AK8Jet = AK8Jet[ak.argsort(-AK8Jet.pt,axis=1)]
-
-			#Boosted Tau
-			boostedtau = boostedtau[boostedtau.pt > 20]
-			boostedtau = boostedtau[np.abs(boostedtau.eta) < 2.5]
-			boostedtau = boostedtau[boostedtau.DBT >= 0.85]
-
-			#Dump all events with 0 boosted taus(?)
-			tau = tau[ak.num(boostedtau,axis=1) != 0]
-			muon = muon[ak.num(boostedtau,axis=1) != 0]
-			electron = electron[ak.num(boostedtau,axis=1) != 0]
-			AK8Jet = AK8Jet[ak.num(boostedtau,axis=1) != 0]
-			Jet = Jet[ak.num(boostedtau,axis=1) != 0]
-			event_level = event_level[ak.num(boostedtau,axis=1) != 0]
-			boostedtau = boostedtau[ak.num(boostedtau,axis=1) != 0]
-
-			#Boosted Tau Cross Cleaning
-			boostedtau = crossClean(boostedtau,muon,0.05)	
-			tau = reorder(tau,muon)
-			electron = reorder(electron,muon)
-			Jet = reorder(Jet,muon)
-			AK8Jet = reorder(AK8Jet,muon)
-			event_level = reorder(event_level,muon)
-			muon = reorder(muon,muon)
-
-			boostedtau = crossClean(boostedtau,electron,0.05)	
-			tau = reorder(tau,electron)
-			muon = reorder(muon,electron)
-			Jet = reorder(Jet,electron)
-			AK8Jet = reorder(AK8Jet,electron)
-			event_level = reorder(event_level,electron)
-			electron = reorder(electron,electron)
-			
-			boostedtau = lead_crossClean(boostedtau,AK8Jet[:,0],1.5)
-
-
-			#print(ak.num(test_deltaR,axis=1))
-			
-			
-			#Tau
-			tau = tau[tau.pt > 20]
-			tau = tau[np.abs(tau.eta) < 2.5]
-			tau = tau[tau.IDVsJets > 1]
-			tau = tau[tau.IDVsEle > 1 ]
-			tau = tau[tau.IDVsMu > 1 ]
-			
-			#Tau Cross Cleaning
-			tau = crossClean(tau,muon,0.05)	
-			boostedtau = reorder(boostedtau,muon)
-			electron = reorder(electron,muon)
-			Jet = reorder(Jet,muon)
-			AK8Jet = reorder(AK8Jet,muon)
-			event_level = reorder(event_level,muon)
-			muon = reorder(muon,muon)
-
-			tau = crossClean(tau,electron,0.05)	
-			boostedtau = reorder(boostedtau,electron)
-			muon = reorder(muon,electron)
-			Jet = reorder(Jet,electron)
-			AK8Jet = reorder(AK8Jet,electron)
-			event_level = reorder(event_level,electron)
-			electron = reorder(electron,electron)
-			
-			tau = lead_crossClean(tau,AK8Jet[:,0],1.5)
-
-			#Electrons
-			electron = electron[electron.pt > 10]
-			electron = electron[np.abs(electron.eta) < 2.5]
-			
-			#Electron Cross Cleaning
-			electron = lead_crossClean(electron,AK8Jet[:,0],0.8)
-
-			#Muons
-			muon = muon[muon.pt > 15]
-			muon = muon[np.abs(muon.eta) < 2.4]
-			muon = muon[muon.LooseId]
-			
-			#Muon Cross Cleaning
-			muon = lead_crossClean(muon,AK8Jet[:,0],0.8)
-
-			#Jets (AK4)
-			Jet = Jet[Jet.pt > 30]
-			Jet = Jet[np.abs(Jet.eta) < 2.5]
-			Jet = Jet[Jet.JetId > 1]
-
-			#Jet Cross Cleaning
-			Jet = lead_crossClean(Jet,AK8Jet[:,0],1.2)
-			
-			Jet = crossClean(Jet,electron,0.4)
-			boostedtau = reorder(boostedtau,electron)
-			muon = reorder(muon,electron)
-			tau = reorder(tau,electron)
-			AK8Jet = reorder(AK8Jet,electron)
-			event_level = reorder(event_level,electron)
-			electron = reorder(electron,electron)
-
-			Jet = crossClean(Jet,muon,0.4)
-			boostedtau = reorder(boostedtau,muon)
-			electron = reorder(electron,muon)
-			tau = reorder(tau,muon)
-			AK8Jet = reorder(AK8Jet,muon)
-			event_level = reorder(event_level,muon)
-			muon = reorder(muon,muon)
-
-			Jet = crossClean(Jet,tau,0.4)
-			boostedtau = reorder(boostedtau,tau)
-			electron = reorder(electron,tau)
-			muon = reorder(muon,tau)
-			AK8Jet = reorder(AK8Jet,tau)
-			event_level = reorder(event_level,tau)
-			tau = reorder(tau,tau)
-
-		
 		#Fill histograms after to trigger and all selections
 		#Taus
-		h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.pt))[0]))
-		h_boostedtau_eta_Trigger.fill(ak.ravel(boostedtau.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.eta))[0]))
-		h_boostedtau_phi_Trigger.fill(ak.ravel(boostedtau.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.phi))[0]))
-		h_boostedtau_raw_iso_Trigger.fill(ak.ravel(boostedtau.iso),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.iso))[0]))
+		h_tau_pT_Trigger.fill(ak.ravel(tau.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(tau.pt))[0]))
+		h_tau_eta_Trigger.fill(ak.ravel(tau.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(tau.eta))[0]))
+		h_tau_phi_Trigger.fill(ak.ravel(tau.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(tau.phi))[0]))
+		h_tau_raw_iso_Trigger.fill(ak.ravel(tau.iso),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(tau.iso))[0]))
 
 		#Electrons
 		h_electron_pT_Trigger.fill(ak.ravel(electron.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(electron.pt))[0]))
@@ -572,7 +313,6 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_muon_phi_Trigger.fill(ak.ravel(muon.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.phi))[0]))
 
 		#Jets 
-		print("Size of the other one: %d"%ak.num(ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(Jet.pt))[0]),axis=0))
 		h_Jet_pT_Trigger.fill(ak.ravel(Jet.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(Jet.pt))[0]))
 		h_Jet_eta_Trigger.fill(ak.ravel(Jet.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(Jet.eta))[0]))
 		h_Jet_phi_Trigger.fill(ak.ravel(Jet.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(Jet.phi))[0]))
@@ -588,10 +328,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Weight_Val": CrossSec_Weight,
 				"Weight": ak.to_list(event_level.event_weight*CrossSec_Weight), 
 				#Tau kineamtic distirubtions
-				"tau_pt_Trigg": h_boostedtau_pT_Trigger,
-				"tau_eta_Trigg": h_boostedtau_eta_Trigger,
-				"tau_phi_Trigg": h_boostedtau_phi_Trigger,
-				"tau_iso_Trigg": h_boostedtau_raw_iso_Trigger,
+				"tau_pt_Trigg": h_tau_pT_Trigger,
+				"tau_eta_Trigg": h_tau_eta_Trigger,
+				"tau_phi_Trigg": h_tau_phi_Trigger,
+				"tau_iso_Trigg": h_tau_raw_iso_Trigger,
 				#Electron kineamtic distirubtions
 				"electron_pt_Trigg": h_electron_pT_Trigger,
 				"electron_eta_Trigg": h_electron_eta_Trigger,
@@ -608,8 +348,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"AK8Jet_pt_Trigg": h_AK8Jet_pT_Trigger,
 				"AK8Jet_eta_Trigg": h_AK8Jet_eta_Trigger,
 				"AK8Jet_phi_Trigg": h_AK8Jet_phi_Trigger,
-                #Number of objects of interest
-				"Num_tau": ak.sum(ak.num(boostedtau.pt,axis=1)),
+				#Number of objects of interest
+				"Num_tau": ak.sum(ak.num(tau.pt,axis=1)),
 				"Num_electron": ak.sum(ak.num(electron.pt,axis=1)),
 				"Num_muon": ak.sum(ak.num(muon.pt,axis=1)),
 				"Num_Jet": ak.sum(ak.num(Jet.pt,axis=1)),
@@ -709,16 +449,9 @@ if __name__ == "__main__":
 			"ZZ4l": [Skimmed_Ganesh_base + "ZZTo4L.root"],
 			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root"]
         }
-	
-	file_dict_data = {
-			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root",Skimmed_Ganesh_base + "MET/MET_Run2018B.root",Skimmed_Ganesh_base + "MET/MET_Run2018C.root",
-                Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
-                Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
-        }
 	file_dict_data_test = {
 			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root"]
         }
-	
 	file_dict_full = {
 			"TTToSemiLeptonic": list(np.append([Skimmed_Ganesh_base + "TTToSemiLeptonic_" + str(j) + ".root" for j in range(2,5)], Skimmed_Ganesh_base + "TTToSemiLeptonic.root")),
 			"TTTo2L2Nu": [Skimmed_Ganesh_base + "TTTo2L2Nu.root", Skimmed_Ganesh_base + "TTTo2L2Nu_2.root"],
@@ -934,14 +667,14 @@ if __name__ == "__main__":
 		print("==================Hist %s================"%hist_name)
 		hist_dict_data[hist_name] = fourtau_out["Data_MET"][hist_name] #.fill("Data",fourtau_out["Data_SingleMuon"][hist_name]) 
 		#background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
-		
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
+		
 		data_stack = hist_dict_data[hist_name] #.stack("data")    
 		#signal_array = [signal_stack["Signal"]]
 		data_array = [data_stack] #["Data"]]
 				
 	#	for background in background_list:
-	#		background_array.append(background_stack[background]) 
+	#		background_array.append(background_stack[background]) #Is this line fucking up your scaling??
 	#		print("Background: " + background)
 	#		print("Sum of stacked histogram: %f"%background_stack[background].sum())
 					
@@ -954,7 +687,6 @@ if __name__ == "__main__":
 		#ax.set_title(hist_name_dict[hist_name],loc = "right")
 		ax.set_title("2018 Data",loc = "right")
 		ax.legend(fontsize=10, loc='upper right')
-		#ax.legend(fontsize=10, loc=(1.04,1))
 		plt.savefig(four_tau_names[hist_name])
 		plt.close()
 
