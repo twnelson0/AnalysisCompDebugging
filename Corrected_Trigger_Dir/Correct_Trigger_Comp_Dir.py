@@ -294,23 +294,42 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			CrossSec_Weight = weight_calc(dataset,sumWEvents_Dict[dataset])
 		
 		#Fill histograms prior to trigger and all selections (excluding skimming) 
+		
 		print("Number of events before selection + Trigger: %d"%ak.num(tau,axis=0))
 		
-		#Count number of events prior to triggers being applied
-		if (self.isData):
-			pre_trigger_event_num = ak.num(event_level,axis=0)
-		else:
-			pre_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
-		
 		#Apply the trigger
-		#HLT Trigger
-		tau = tau[event_level.MET_trigger]
-		boostedtau = boostedtau[event_level.MET_trigger]
-		AK8Jet = AK8Jet[event_level.MET_trigger]
-		Jet = Jet[event_level.MET_trigger]
-		electron = electron[event_level.MET_trigger]
-		muon = muon[event_level.MET_trigger]
-		event_level = event_level[event_level.MET_trigger]
+		boostedtau_1 = boostedtau[event_level.MET_trigger1]
+		tau_1 = tau[event_level.MET_trigger1]
+		AK8Jet_1 = AK8Jet[event_level.MET_trigger1]
+		Jet_1 = Jet[event_level.MET_trigger1]
+		electron_1 = electron[event_level.MET_trigger1]
+		muon_1 = muon[event_level.MET_trigger1]
+		event_level_1 = event_level[event_level.MET_trigger1]
+		
+		boostedtau_noPass = boostedtau[np.bitwise_not(event_level.MET_trigger1)]
+		tau_noPass = tau[np.bitwise_not(event_level.MET_trigger1)]
+		AK8Jet_noPass = AK8Jet[np.bitwise_not(event_level.MET_trigger1)]
+		Jet_noPass = Jet[np.bitwise_not(event_level.MET_trigger1)]
+		electron_noPass = electron[np.bitwise_not(event_level.MET_trigger1)]
+		muon_noPass = muon[np.bitwise_not(event_level.MET_trigger1)]
+		event_level_noPass = event_level[np.bitwise_not(event_level.MET_trigger1)]
+		
+		boostedtau_2 = boostedtau_noPass[event_level_noPass.MET_trigger2]
+		tau_2 = tau_noPass[event_level_noPass.MET_trigger2]
+		AK8Jet_2 = AK8Jet_noPass[event_level_noPass.MET_trigger2]
+		Jet_2 = Jet_noPass[event_level_noPass.MET_trigger2]
+		electron_2 = electron_noPass[event_level_noPass.MET_trigger2]
+		muon_2 = muon_noPass[event_level_noPass.MET_trigger2]
+		event_level_2 = event_level_noPass[event_level_noPass.MET_trigger2]
+		
+		#Recombine data
+		boostedtau = ak.concatenate((boostedtau_1,boostedtau_2))
+		tau = ak.concatenate((tau_1,tau_2))
+		AK8Jet = ak.concatenate((AK8Jet_1,AK8Jet_2))
+		Jet = ak.concatenate((Jet_1,Jet_2))
+		electron = ak.concatenate((electron_1,electron_2))
+		muon = ak.concatenate((muon_1,muon_2))
+		event_level = ak.concatenate((event_level_1,event_level_2))
 		
 		#Offline selection
 		tau = tau[event_level.pfMET > 180]
@@ -320,13 +339,6 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		electron = electron[event_level.pfMET > 180]
 		muon = muon[event_level.pfMET > 180]
 		event_level = event_level[event_level.pfMET > 180]
-		
-		#Count number of events after triggers applied
-		if (self.isData):
-			post_trigger_event_num = ak.num(event_level,axis=0)
-		else:
-			post_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
-
 
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
@@ -473,7 +485,7 @@ if __name__ == "__main__":
 			"muon_pt_Trigg","muon_eta_Trigg","muon_phi_Trigg",
 			"Jet_pt_Trigg","Jet_eta_Trigg","Jet_phi_Trigg",
 			"AK8Jet_pt_Trigg","AK8Jet_eta_Trigg","AK8Jet_phi_Trigg","MET",
-			] 
+	] 
 
 	#Diretory for files
 	Skimmed_Ganesh_base = "root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/"
@@ -715,14 +727,14 @@ if __name__ == "__main__":
 		#signal_array = [signal_stack["Signal"]]
 		data_array = [data_stack] #["Data"]]
 				
-	#	for background in background_list:
-	#		background_array.append(background_stack[background]) #Is this line fucking up your scaling??
-	#		print("Background: " + background)
-	#		print("Sum of stacked histogram: %f"%background_stack[background].sum())
+		for background in background_list:
+			background_array.append(background_stack[background]) #Is this line fucking up your scaling??
+			print("Background: " + background)
+			print("Sum of stacked histogram: %f"%background_stack[background].sum())
 					
 		#Stack background distributions and plot signal + data distribution
 		fig,ax = plt.subplots()
-		#hep.histplot(background_array,ax=ax,stack=True,histtype="fill",label=background_list,facecolor=TABLEAU_COLORS[:len(background_list)],edgecolor=TABLEAU_COLORS[:len(background_list)])
+		hep.histplot(background_array,ax=ax,stack=True,histtype="fill",label=background_list,facecolor=TABLEAU_COLORS[:len(background_list)],edgecolor=TABLEAU_COLORS[:len(background_list)])
 		#hep.histplot(signal_array,ax=ax,stack=True,histtype="step",label=signal_list,edgecolor=TABLEAU_COLORS[len(background_list)+1],linewidth=2.95)
 		hep.histplot(data_array,ax=ax,stack=False,histtype="errorbar", yerr=True,label=["Data"],marker="o",color = "k") #,facecolor='black',edgecolor='black') #,mec='k')
 		hep.cms.text("Preliminary",loc=0,fontsize=13)
@@ -731,26 +743,9 @@ if __name__ == "__main__":
 		plt.savefig(four_tau_names[hist_name])
 		plt.close()
 
-	print("Number of boosted taus: %d"%fourtau_out["Data_MET"]["Num_tau"])
-	print("Number of electrons: %d"%fourtau_out["Data_MET"]["Num_electron"])
-	print("Number of muons: %d"%fourtau_out["Data_MET"]["Num_muon"])
-	print("Number of Jets: %d"%fourtau_out["Data_MET"]["Num_Jet"])
-	print("Number of AK8Jets: %d"%fourtau_out["Data_MET"]["Num_AK8Jet"])
-
-	
-	#Output table of counts
-	fields = ["data_set", "number before trigger", "number after trigger"]
-	event_num_array = []
-
-	for samples in list(file_dict.keys()):
-		temp_dict = dict.formkeys(fields)
-		temp_dict["data_set"] = background 
-		temp_dict["number before trigger"] = fourtau_out[background]["Num_Events_PreTrigger"]
-		temp_dict["number after trigger"] = fourtau_out[background]["Num_Events_PostTrigger"]
-		event_num_array.append(temp_dict)
-
-	with open("","w",newline = '') as csvfile:
-		writer = csv.DicWriter(csvfile,fieldnames=fields)
-		writer.writeheader()
-		writer.writerows(data_dict)
+		print("Number of boosted taus: %d"%fourtau_out["Data_MET"]["Num_tau"])
+		print("Number of electrons: %d"%fourtau_out["Data_MET"]["Num_electron"])
+		print("Number of muons: %d"%fourtau_out["Data_MET"]["Num_muon"])
+		print("Number of Jets: %d"%fourtau_out["Data_MET"]["Num_Jet"])
+		print("Number of AK8Jets: %d"%fourtau_out["Data_MET"]["Num_AK8Jet"])
 

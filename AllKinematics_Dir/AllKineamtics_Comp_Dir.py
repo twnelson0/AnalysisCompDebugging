@@ -186,6 +186,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"pt": events.Electron_pt,
 				"eta": events.Electron_eta,
 				"phi": events.Electron_phi,
+                "mass": events.Electron_mass,
 				"charge": events.Electron_charge,
 				"nElectron": events.nElectron,
 				"Px": events.Electron_pt*np.cos(events.Electron_phi),
@@ -207,6 +208,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"pt": events.Muon_pt,
 				"eta": events.Muon_eta,
 				"phi": events.Muon_phi,
+                "mass": events.Muon_mass,
 				"charge": events.Muon_charge,
 				"nMuon": events.nMuon,
 				"Px": events.Muon_pt*np.cos(events.Muon_phi),
@@ -246,6 +248,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = ak.zip(
 			{
 				"pt": events.Jet_pt,
+                "mass": events.Jet_mass,
 				#"PFLooseId": events.JetPFLooseId,
 				"JetId": events.Jet_jetId, #Not sure that this is correct
 				"eta": events.Jet_eta,

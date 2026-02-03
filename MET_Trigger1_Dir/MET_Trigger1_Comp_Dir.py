@@ -136,7 +136,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"event_num": events.event,
 				"run": events.run,
 				"Lumi" : events.luminosityBlock,
-				#"genWeight": events.genWeight
+				"genWeight": events.genWeight
 			},
 			with_name="EventArray",
 			behavior=candidate.behavior,
@@ -293,24 +293,23 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		else:
 			CrossSec_Weight = weight_calc(dataset,sumWEvents_Dict[dataset])
 		
-		#Fill histograms prior to trigger and all selections (excluding skimming) 
 		print("Number of events before selection + Trigger: %d"%ak.num(tau,axis=0))
-		
+	    
 		#Count number of events prior to triggers being applied
 		if (self.isData):
 			pre_trigger_event_num = ak.num(event_level,axis=0)
 		else:
 			pre_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
-		
+
 		#Apply the trigger
 		#HLT Trigger
-		tau = tau[event_level.MET_trigger]
-		boostedtau = boostedtau[event_level.MET_trigger]
-		AK8Jet = AK8Jet[event_level.MET_trigger]
-		Jet = Jet[event_level.MET_trigger]
-		electron = electron[event_level.MET_trigger]
-		muon = muon[event_level.MET_trigger]
-		event_level = event_level[event_level.MET_trigger]
+		tau = tau[event_level.MET_trigger1]
+		boostedtau = boostedtau[event_level.MET_trigger1]
+		AK8Jet = AK8Jet[event_level.MET_trigger1]
+		Jet = Jet[event_level.MET_trigger1]
+		electron = electron[event_level.MET_trigger1]
+		muon = muon[event_level.MET_trigger1]
+		event_level = event_level[event_level.MET_trigger1]
 		
 		#Offline selection
 		tau = tau[event_level.pfMET > 180]
@@ -326,7 +325,6 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			post_trigger_event_num = ak.num(event_level,axis=0)
 		else:
 			post_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
-
 
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
@@ -400,6 +398,9 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Num_muon": ak.sum(ak.num(muon.pt,axis=1)),
 				"Num_Jet": ak.sum(ak.num(Jet.pt,axis=1)),
 				"Num_AK8Jet": ak.sum(ak.num(AK8Jet.pt,axis=1)),
+                #Event Counts
+                "Num_Events_PreTrigger": pre_trigger_event_num,
+                "Num_Events_PostTrigger": post_trigger_event_num,
 				#MET
 				"MET": h_MET_Trigger,
 			}
@@ -409,8 +410,6 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		pass
 
 if __name__ == "__main__":
-	print("Test Stuff")
-	
 	#Condor related stuff
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	#Xrootd crap
@@ -715,14 +714,14 @@ if __name__ == "__main__":
 		#signal_array = [signal_stack["Signal"]]
 		data_array = [data_stack] #["Data"]]
 				
-	#	for background in background_list:
-	#		background_array.append(background_stack[background]) #Is this line fucking up your scaling??
-	#		print("Background: " + background)
-	#		print("Sum of stacked histogram: %f"%background_stack[background].sum())
+		for background in background_list:
+			background_array.append(background_stack[background]) #Is this line fucking up your scaling??
+			print("Background: " + background)
+			print("Sum of stacked histogram: %f"%background_stack[background].sum())
 					
 		#Stack background distributions and plot signal + data distribution
 		fig,ax = plt.subplots()
-		#hep.histplot(background_array,ax=ax,stack=True,histtype="fill",label=background_list,facecolor=TABLEAU_COLORS[:len(background_list)],edgecolor=TABLEAU_COLORS[:len(background_list)])
+		hep.histplot(background_array,ax=ax,stack=True,histtype="fill",label=background_list,facecolor=TABLEAU_COLORS[:len(background_list)],edgecolor=TABLEAU_COLORS[:len(background_list)])
 		#hep.histplot(signal_array,ax=ax,stack=True,histtype="step",label=signal_list,edgecolor=TABLEAU_COLORS[len(background_list)+1],linewidth=2.95)
 		hep.histplot(data_array,ax=ax,stack=False,histtype="errorbar", yerr=True,label=["Data"],marker="o",color = "k") #,facecolor='black',edgecolor='black') #,mec='k')
 		hep.cms.text("Preliminary",loc=0,fontsize=13)
@@ -737,7 +736,6 @@ if __name__ == "__main__":
 	print("Number of Jets: %d"%fourtau_out["Data_MET"]["Num_Jet"])
 	print("Number of AK8Jets: %d"%fourtau_out["Data_MET"]["Num_AK8Jet"])
 
-	
 	#Output table of counts
 	fields = ["data_set", "number before trigger", "number after trigger"]
 	event_num_array = []

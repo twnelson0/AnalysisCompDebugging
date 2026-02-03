@@ -238,6 +238,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Py": events.Electron_pt*np.sin(events.Electron_phi),
 				"Pz": events.Electron_pt*np.tan(2*np.arctan(np.exp(-events.Electron_eta)))**-1,
 				"E": np.sqrt(events.Electron_pt**2 + (events.Electron_pt/np.tan(2*np.arctan(np.exp(-events.Electron_eta))))**2 + events.Electron_mass**2),
+				"mass": events.Electron_mass,
 				#"SCEta": events.Electron_SCEta,
 				"SCEta": events.Electron_deltaEtaSC,
 				#"IDMVANoIso": events.Electron_IDMVANoIso,
@@ -259,6 +260,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Py": events.Muon_pt*np.sin(events.Muon_phi),
 				"Pz": events.Muon_pt*np.tan(2*np.arctan(np.exp(-events.Muon_eta)))**-1,
 				"E": np.sqrt(events.Muon_pt**2 + (events.Muon_pt/np.tan(2*np.arctan(np.exp(-events.Muon_eta))))**2 + events.Muon_mass**2),
+				"mass": events.Muon_mass,
 				"nMu": events.nMuon,
 				#"IDbit": events.muIDbit, #No idea what the nanoAOD analog is for this 
 				#"IDbit": events.Muon_IDbit,
@@ -293,7 +295,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			{
 				"pt": events.Jet_pt,
 				#"PFLooseId": events.JetPFLooseId,
-				"PFLooseId": events.Jet_jetId, #Not sure that this is correct
+				"JetId": events.Jet_jetId, #Not sure that this is correct
 				"eta": events.Jet_eta,
 				"phi": events.Jet_phi,
 				"nJet": events.nJet,
@@ -404,6 +406,15 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		
 		#Force AK8Jet to be pT ordered
 		AK8Jet = AK8Jet[ak.argsort(-AK8Jet.pt,axis=1)]
+			
+		#Require only events with atleast 1 AK8 Jet
+		tau = tau[ak.num(AK8Jet,axis=1) > 0]
+		boostedtau = boostedtau[ak.num(AK8Jet,axis=1) > 0]
+		Jet = Jet[ak.num(AK8Jet,axis=1) > 0]
+		electron = electron[ak.num(AK8Jet,axis=1) > 0]
+		muon = muon[ak.num(AK8Jet,axis=1) > 0]
+		event_level = event_level[ak.num(AK8Jet,axis=1) > 0]				
+		AK8Jet = AK8Jet[ak.num(AK8Jet,axis=1) > 0]
 			
 		#Boosted Tau
 		boostedtau = boostedtau[boostedtau.pt > 20]
