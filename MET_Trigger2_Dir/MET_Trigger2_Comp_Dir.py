@@ -136,7 +136,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"event_num": events.event,
 				"run": events.run,
 				"Lumi" : events.luminosityBlock,
-				"genWeight": events.genWeight
+				#"genWeight": events.genWeight
 			},
 			with_name="EventArray",
 			behavior=candidate.behavior,
@@ -296,10 +296,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		print("Number of events before selection + Trigger: %d"%ak.num(tau,axis=0))
 	    
 		#Count number of events prior to triggers being applied
-		if (self.isData):
-			pre_trigger_event_num = ak.num(event_level,axis=0)
-		else:
-			pre_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
+	#	if (self.isData):
+	#		pre_trigger_event_num = ak.num(event_level,axis=0)
+	#	else:
+	#		pre_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
 
 		#Apply the trigger
 		#HLT Trigger
@@ -321,10 +321,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level = event_level[event_level.pfMET > 180]
 		
 		#Count number of events after triggers applied
-		if (self.isData):
-			post_trigger_event_num = ak.num(event_level,axis=0)
-		else:
-			post_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
+	#	if (self.isData):
+	#		post_trigger_event_num = ak.num(event_level,axis=0)
+	#	else:
+	#		post_trigger_event_num = ak.sum(event_level.event_weight*CrossSec_Weight)
 
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
@@ -399,8 +399,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Num_Jet": ak.sum(ak.num(Jet.pt,axis=1)),
 				"Num_AK8Jet": ak.sum(ak.num(AK8Jet.pt,axis=1)),
                 #Event Counts
-                "Num_Events_PreTrigger": pre_trigger_event_num,
-                "Num_Events_PostTrigger": post_trigger_event_num,
+               # "Num_Events_PreTrigger": pre_trigger_event_num,
+               # "Num_Events_PostTrigger": post_trigger_event_num,
 				#MET
 				"MET": h_MET_Trigger,
 			}
@@ -415,51 +415,46 @@ if __name__ == "__main__":
 	#Xrootd crap
 	_x509_path = move_X509()
 	print(f"x509 path: {_x509_path}")
-	#htc_log_err_dir = "/scratch/twnelson/ControlPlot_HTC/Run_" + str(time.localtime()[0]) + "_" + str(time.localtime()[1]) + "_" + str(time.localtime()[2]) + "_" + str(time.localtime()[3]) + f".{time.localtime()[4]:02d}"
-	#os.makedirs(htc_log_err_dir)
+	htc_log_err_dir = "/scratch/twnelson/ControlPlot_HTC/Run_" + str(time.localtime()[0]) + "_" + str(time.localtime()[1]) + "_" + str(time.localtime()[2]) + "_" + str(time.localtime()[3]) + f".{time.localtime()[4]:02d}"
+	os.makedirs(htc_log_err_dir)
 
     #DO NOT DELETE THESE LINES CONDOR BROKEN???
 	#cluster = ""
-#	cluster = HTCondorCluster(
-#            cores=1,
-#			 memory="5 GB",
-#            disk="1.5 GB",
-#            death_timeout = '60',
-#            job_extra_directives={
-#                "+JobFlavour": '"tomorrow"',
-#                "log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
-#                "output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
-#                "error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
-#                "should_transfer_files": "yes",
-#                "when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
-#                "transfer_executable": "false",
-#                "+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
-#                #"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
-#                "Requirements": "HasSingularityJobStart",
-#                "InitialDir": f'/scratch/{os.environ["USER"]}',
-#                'transfer_input_files': f"{_x509_path}",
-#
-#            },
-#            job_script_prologue = [
-#                "export XRD_RUNFORKHANDLER=1",
-#                f"export X509_USER_PROXY={_x509_path}",
-#            ]
-#    )
-#	cluster.adapt(minimum=1, maximum=500)
+	cluster = HTCondorCluster(
+            cores=1,
+			 memory="5 GB",
+            disk="1.5 GB",
+            death_timeout = '60',
+            job_extra_directives={
+                "+JobFlavour": '"tomorrow"',
+                "log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
+                "output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
+                "error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
+                "should_transfer_files": "yes",
+                "when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
+                "transfer_executable": "false",
+                "+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
+                "Requirements": "HasSingularityJobStart",
+                "InitialDir": f'/scratch/{os.environ["USER"]}',
+                'transfer_input_files': f"{_x509_path}",
 
-	run_on_condor = False
+            },
+            job_script_prologue = [
+                "export XRD_RUNFORKHANDLER=1",
+                f"export X509_USER_PROXY={_x509_path}",
+            ]
+    )
+	cluster.adapt(minimum=1, maximum=500)
+
+	run_on_condor = True
 	
 	if (run_on_condor):
 		print("Run on Condor")
 		iterative_runner = processor.Runner(
-			#executor = processor.DaskExecutor(client=Client(cluster)),
 			executor = processor.DaskExecutor(client=Client(cluster),status=False),
 			schema=BaseSchema,
 			skipbadfiles=True,
 			xrootdtimeout=1000,
-			#executor = processor.DaskExecutor(client=cowtools.GetCondorClient(container_image="/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10")),
-			#executor = processor.DaskExecutor(client=cowtools.GetCondorClient(cluster,container_image="/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10")),
-		#executor = processor.IterativeExecutor(compression=None), #This needs to be changed
 		)
 	else:
 		#iterative_runner = processor.Runner(executor = processor.FuturesExecutor(), schema=BaseSchema)
@@ -737,19 +732,19 @@ if __name__ == "__main__":
 		print("Number of AK8Jets: %d"%fourtau_out["Data_MET"]["Num_AK8Jet"])
 
 	#Output table of counts
-	fields = ["data_set", "number before trigger", "number after trigger"]
-	event_num_array = []
-	data_dict = dict.fromkeys(fields)
-
-	for samples in list(file_dict.keys()):
-		temp_dict = dict.formkeys(fields)
-		temp_dict["data_set"] = background 
-		temp_dict["number before trigger"] = fourtau_out[background]["Num_Events_PreTrigger"]
-		temp_dict["number after trigger"] = fourtau_out[background]["Num_Events_PostTrigger"]
-		event_num_array.append(temp_dict)
-
-	with open("","w",newline = '') as csvfile:
-		writer = csv.DicWriter(csvfile,fieldnames=fields)
-		writer.writeheader()
-		writer.writerows(data_dict)
+#	fields = ["data_set", "number before trigger", "number after trigger"]
+#	event_num_array = []
+#	data_dict = dict.fromkeys(fields)
+#
+#	for samples in list(file_dict.keys()):
+#		temp_dict = dict.formkeys(fields)
+#		temp_dict["data_set"] = background 
+#		temp_dict["number before trigger"] = fourtau_out[background]["Num_Events_PreTrigger"]
+#		temp_dict["number after trigger"] = fourtau_out[background]["Num_Events_PostTrigger"]
+#		event_num_array.append(temp_dict)
+#
+#	with open("","w",newline = '') as csvfile:
+#		writer = csv.DicWriter(csvfile,fieldnames=fields)
+#		writer.writeheader()
+#		writer.writerows(data_dict)
 

@@ -416,39 +416,38 @@ if __name__ == "__main__":
 	#Xrootd crap
 	_x509_path = move_X509()
 	print(f"x509 path: {_x509_path}")
-	#htc_log_err_dir = "/scratch/twnelson/ControlPlot_HTC/Run_" + str(time.localtime()[0]) + "_" + str(time.localtime()[1]) + "_" + str(time.localtime()[2]) + "_" + str(time.localtime()[3]) + f".{time.localtime()[4]:02d}"
-	#os.makedirs(htc_log_err_dir)
+	htc_log_err_dir = "/scratch/twnelson/ControlPlot_HTC/Run_" + str(time.localtime()[0]) + "_" + str(time.localtime()[1]) + "_" + str(time.localtime()[2]) + "_" + str(time.localtime()[3]) + f".{time.localtime()[4]:02d}"
+	os.makedirs(htc_log_err_dir)
 
     #DO NOT DELETE THESE LINES CONDOR BROKEN???
-	#cluster = ""
-#	cluster = HTCondorCluster(
-#            cores=1,
-#			 memory="5 GB",
-#            disk="1.5 GB",
-#            death_timeout = '60',
-#            job_extra_directives={
-#                "+JobFlavour": '"tomorrow"',
-#                "log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
-#                "output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
-#                "error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
-#                "should_transfer_files": "yes",
-#                "when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
-#                "transfer_executable": "false",
-#                "+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
-#                #"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
-#                "Requirements": "HasSingularityJobStart",
-#                "InitialDir": f'/scratch/{os.environ["USER"]}',
-#                'transfer_input_files': f"{_x509_path}",
-#
-#            },
-#            job_script_prologue = [
-#                "export XRD_RUNFORKHANDLER=1",
-#                f"export X509_USER_PROXY={_x509_path}",
-#            ]
-#    )
-#	cluster.adapt(minimum=1, maximum=500)
+	cluster = HTCondorCluster(
+            cores=1,
+			memory="5 GB",
+            disk="1.5 GB",
+            death_timeout = '60',
+            job_extra_directives={
+                "+JobFlavour": '"tomorrow"',
+                "log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
+                "output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
+                "error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
+                "should_transfer_files": "yes",
+                "when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
+                "transfer_executable": "false",
+                "+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
+                #"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
+                "Requirements": "HasSingularityJobStart",
+                "InitialDir": f'/scratch/{os.environ["USER"]}',
+                'transfer_input_files': f"{_x509_path}",
 
-	run_on_condor = False
+            },
+            job_script_prologue = [
+                "export XRD_RUNFORKHANDLER=1",
+                f"export X509_USER_PROXY={_x509_path}",
+            ]
+    )
+	cluster.adapt(minimum=1, maximum=500)
+
+	run_on_condor = True
 	
 	if (run_on_condor):
 		print("Run on Condor")
@@ -463,7 +462,6 @@ if __name__ == "__main__":
 		#executor = processor.IterativeExecutor(compression=None), #This needs to be changed
 		)
 	else:
-		#iterative_runner = processor.Runner(executor = processor.FuturesExecutor(), schema=BaseSchema)
 		iterative_runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
 	
 	four_tau_hist_list = [
@@ -608,8 +606,11 @@ if __name__ == "__main__":
 		"AK8Jet_phi_Trigg": "AK8Jet_phi_Trigger" + "-" + trigger_name,
 		"MET": "MET_Trigger" + "-" + trigger_name,
 	}
-
+	start_time = time.time()
 	fourtau_out = iterative_runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor()) #Modified for NanoAOD (changd treename)
+	end_time = time.time()
+
+	print("Running time: " + str(end_time - start_time) + "s")
 
 	#Dictionaries of histograms for background, signal and data
 	hist_dict_background = dict.fromkeys(four_tau_hist_list)
@@ -627,7 +628,7 @@ if __name__ == "__main__":
 		temp_hist_dict = dict.fromkeys(background_list) # create dictionary of histograms for each background type
 				
 		for background_type in background_list:
-			print("Background type %s"%background_type)
+			#print("Background type %s"%background_type)
 			background_array = []
 			backgrounds = background_dict[background_type]
 						
@@ -675,19 +676,19 @@ if __name__ == "__main__":
 					if (hist_name != "Electron_tau_dR_Arr" and hist_name != "Muon_tau_dR_Arr"):
 						if (background == backgrounds[0]):
 							crnt_hist = fourtau_out[background][hist_name]
-							print("Background: " + background)
-							print("Sum of entries: %f"%fourtau_out[background][hist_name].sum())
+							#print("Background: " + background)
+							#print("Sum of entries: %f"%fourtau_out[background][hist_name].sum())
 						else:
 							crnt_hist += fourtau_out[background][hist_name]
-							print("Background: " + background)
-							print("Sum of entries: %f"%fourtau_out[background][hist_name].sum())
+							#print("Background: " + background)
+							#print("Sum of entries: %f"%fourtau_out[background][hist_name].sum())
 						if (background == backgrounds[-1]):
 							fig2, ax2 = plt.subplots()
 							temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
 							crnt_hist.plot1d(ax=ax2)
 							#if (hist_name == "FourTau_Mass_Arr"):
-							print("Background: " + background_type)
-							print("Sum of entries: %f"%crnt_hist.sum())
+							#print("Background: " + background_type)
+							#print("Sum of entries: %f"%crnt_hist.sum())
 							#print("Number of Entries: %d"%fourtau_out[background]["num_events"])
 							plt.title(background_type)
 							plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
@@ -706,7 +707,7 @@ if __name__ == "__main__":
 		hist_dict_background[hist_name] = hist.Stack.from_dict(temp_hist_dict) #This could be causing the problems 
 		
 		#Obtain data distributions
-		print("==================Hist %s================"%hist_name)
+		#print("==================Hist %s================"%hist_name)
 		hist_dict_data[hist_name] = fourtau_out["Data_MET"][hist_name] #.fill("Data",fourtau_out["Data_SingleMuon"][hist_name]) 
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
@@ -731,11 +732,11 @@ if __name__ == "__main__":
 		plt.savefig(four_tau_names[hist_name])
 		plt.close()
 
-	print("Number of boosted taus: %d"%fourtau_out["Data_MET"]["Num_tau"])
-	print("Number of electrons: %d"%fourtau_out["Data_MET"]["Num_electron"])
-	print("Number of muons: %d"%fourtau_out["Data_MET"]["Num_muon"])
-	print("Number of Jets: %d"%fourtau_out["Data_MET"]["Num_Jet"])
-	print("Number of AK8Jets: %d"%fourtau_out["Data_MET"]["Num_AK8Jet"])
+#	print("Number of boosted taus: %d"%fourtau_out["Data_MET"]["Num_tau"])
+#	print("Number of electrons: %d"%fourtau_out["Data_MET"]["Num_electron"])
+#	print("Number of muons: %d"%fourtau_out["Data_MET"]["Num_muon"])
+#	print("Number of Jets: %d"%fourtau_out["Data_MET"]["Num_Jet"])
+#	print("Number of AK8Jets: %d"%fourtau_out["Data_MET"]["Num_AK8Jet"])
 
 	
 	#Output table of counts
