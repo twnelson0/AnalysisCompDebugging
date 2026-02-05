@@ -300,7 +300,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Py": events.Electron_pt*np.sin(events.Electron_phi),
 				"Pz": events.Electron_pt*np.tan(2*np.arctan(np.exp(-events.Electron_eta)))**-1,
 				"E": np.sqrt(events.Electron_pt**2 + (events.Electron_pt/np.tan(2*np.arctan(np.exp(-events.Electron_eta))))**2 + events.Electron_mass**2),
-                "mass": events.Electron_mass, 
+				"mass": events.Electron_mass, 
 				#"SCEta": events.Electron_SCEta,
 				"SCEta": events.Electron_deltaEtaSC,
 				#"IDMVANoIso": events.Electron_IDMVANoIso,
@@ -325,7 +325,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Pz": events.Muon_pt*np.tan(2*np.arctan(np.exp(-events.Muon_eta)))**-1,
 				"E": np.sqrt(events.Muon_pt**2 + (events.Muon_pt/np.tan(2*np.arctan(np.exp(-events.Muon_eta))))**2 + events.Muon_mass**2),
 				"nMu": events.nMuon,
-                "mass": events.Muon_mass, 
+				"mass": events.Muon_mass, 
 				#"IDbit": events.muIDbit, #No idea what the nanoAOD analog is for this 
 				#"IDbit": events.Muon_IDbit,
 				"IDSelec": events.Muon_mediumId,
@@ -472,7 +472,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_AK8Jet_eta_Trigger_m = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double()
 		h_AK8Jet_phi_Trigger_m = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double()
 
-        #Add MET histogram
+		#Add MET histogram
 		h_MET_Trigger_h = hist.Hist.new.Regular(10,0,500,label=r"MET [GeV]").Double()
 		h_MET_Trigger_e = hist.Hist.new.Regular(10,0,500,label=r"MET [GeV]").Double()
 		h_MET_Trigger_m = hist.Hist.new.Regular(10,0,500,label=r"MET [GeV]").Double()
@@ -552,12 +552,12 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		AK8Jet = AK8Jet[ak.argsort(-AK8Jet.pt,axis=1)]
 
 		
-        #Boosted Tau selections
+		#Boosted Tau selections
 		boostedtau = boostedtau[boostedtau.pt > 20]
 		boostedtau = boostedtau[np.abs(boostedtau.eta) < 2.5]
 		boostedtau = boostedtau[boostedtau.DBT >= 0.85]
 		
-        #Tau
+		#Tau
 		tau = tau[tau.pt > 20]
 		tau = tau[np.abs(tau.eta) < 2.5]
 		tau = tau[tau.IDVsJets > 1]
@@ -565,23 +565,23 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		tau = tau[tau.IDVsMu > 1 ]
 
 		#Handle events with differing numbers of taus without loosing anything
-        tau_1 = tau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+		tau_1 = tau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		muon_1 = muon[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		electron_1 = electron[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		AK8Jet_1 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		Jet_1 = Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		event_level_1 = event_level[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		boostedtau_1 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-        
-        tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+		
+		tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		muon_2 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		electron_2 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		Jet_2 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		event_level_2 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		boostedtau_2 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-        
-        tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		
+		tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 		muon_3 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 		electron_3 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 		AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
@@ -590,36 +590,36 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		boostedtau_3 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 
 		#Boosted Tau Cross Cleaning
-		boostedtau_1 = boostedtau[crossClean(boostedtau_1, muon_1, 0.05)]
-		boostedtau_1 = boostedtau[crossClean(boostedtau_1, electron_1, 0.05)]
-		boostedtau_1 = boostedtau[crossClean_PartJet(boostedtau_1, AK8Jet_1[:,0], 1.5)]
+		boostedtau_1 = boostedtau_1[crossClean(boostedtau_1, muon_1, 0.05)]
+		boostedtau_1 = boostedtau_1[crossClean(boostedtau_1, electron_1, 0.05)]
+		boostedtau_1 = boostedtau_1[crossClean_PartJet(boostedtau_1, AK8Jet_1[:,0], 1.5)]
 		
-		boostedtau_3 = boostedtau[crossClean(boostedtau_3, muon_3, 0.05)]
-		boostedtau_3 = boostedtau[crossClean(boostedtau_3, electron_3, 0.05)]
-		boostedtau_3 = boostedtau[crossClean_PartJet(boostedtau_3, AK8Jet_3[:,0], 1.5)]
+		boostedtau_3 = boostedtau_3[crossClean(boostedtau_3, muon_3, 0.05)]
+		boostedtau_3 = boostedtau_3[crossClean(boostedtau_3, electron_3, 0.05)]
+		boostedtau_3 = boostedtau_3[crossClean_PartJet(boostedtau_3, AK8Jet_3[:,0], 1.5)]
 		
 		#Tau Cross Cleaning
 		tau_2 = tau_2[crossClean(tau_2, muon_2, 0.05)]
 		tau_2 = tau_2[crossClean(tau_2, electron_2, 0.05)]
 		tau_2 = tau_2[crossClean_PartJet(tau_2, AK8Jet_2[:,0], 1.5)]
 		
-        tau_3 = tau_3[crossClean(tau_3, muon_3, 0.05)]
+		tau_3 = tau_3[crossClean(tau_3, muon_3, 0.05)]
 		tau_3 = tau_3[crossClean(tau_3, electron_3, 0.05)]
 		tau_3 = tau_3[crossClean_PartJet(tau_3, AK8Jet_3[:,0], 1.5)]
 
-        #Recombine everything
-        tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,tau_3])])
-        muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,muon_3])])
-        electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,electron_3])])
-        AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
-        Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
-        event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
-        boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
+		#Recombine everything
+		tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,tau_3])])
+		muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,muon_3])])
+		electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,electron_3])])
+		AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
+		Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
+		event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
+		boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
 
 		#Electrons
 		electron = electron[electron.pt > 10]
 		electron = electron[np.abs(electron.eta) < 2.5]
-		iso_cond1 = np.bitwise_and(electron.RelIso < 0.112*ak.ones_like(electron.pt) + (0.506/electron.pt),np.abs(electron.eta) <= 1.479) 		
+		iso_cond1 = np.bitwise_and(electron.RelIso < 0.112*ak.ones_like(electron.pt) + (0.506/electron.pt),np.abs(electron.eta) <= 1.479)		
 		iso_cond2 = np.bitwise_and(electron.RelIso < 0.108*ak.ones_like(electron.pt) + 0.963/electron.pt,np.bitwise_and(np.abs(electron.eta) > 1.479, np.abs(electron.eta) <= 2.5))
 		iso_cond_e = np.bitwise_or(iso_cond1,iso_cond2)
 		electron = electron[iso_cond_e]
@@ -685,14 +685,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet_2 = Jet_2[crossClean_JetPart(Jet_2,muon_2[:,0],0.4)]
 		Jet_3 = Jet_3[crossClean_JetPart(Jet_3,muon_3[:,0],0.4)]
 
-        #Recombine everything
-        tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,ak.concatenate([tau_3,tau_4])])])
-        muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,ak.concatenate([muon_3,muon_4])])])
-        electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,ak.concatenate([electron_3,electron_4])])])
-        AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,ak.concatenate([AK8Jet_3,AK8Jet_4])])])
-        Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,ak.concatenate([Jet_3,Jet_4])])])
-        event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,ak.concatenate([event_level_3,event_level_4])])])
-        boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,ak.concatenate([boostedtau_3,boostedtau_4])])])
+		#Recombine everything
+		tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,ak.concatenate([tau_3,tau_4])])])
+		muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,ak.concatenate([muon_3,muon_4])])])
+		electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,ak.concatenate([electron_3,electron_4])])])
+		AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,ak.concatenate([AK8Jet_3,AK8Jet_4])])])
+		Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,ak.concatenate([Jet_3,Jet_4])])])
+		event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,ak.concatenate([event_level_3,event_level_4])])])
+		boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,ak.concatenate([boostedtau_3,boostedtau_4])])])
 
 		#Split objects for lepton cross cleaning of taus
 		tau_1 = tau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
@@ -702,16 +702,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet_1 = Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		event_level_1 = event_level[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
 		boostedtau_1 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-        
-        tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+		
+		tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		muon_2 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		electron_2 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		Jet_2 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		event_level_2 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
 		boostedtau_2 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-        
-        tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		
+		tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 		muon_3 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 		electron_3 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 		AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
@@ -726,33 +726,66 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet_3 = Jet_3[crossClean_JetPart(Jet_3,tau_3[:,0],0.4)]
 
 		#Recombine everything
-        tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,tau_3])])
-        muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,muon_3])])
-        electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,electron_3])])
-        AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
-        Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
-        event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
-        boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
+		tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,tau_3])])
+		muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,muon_3])])
+		electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,electron_3])])
+		AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
+		Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
+		event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
+		boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
 		
 
 		#Split output channels
 		#Fully Hadronic Channel
-		tau_h_dR_cond = deltaR_Selec(tau[:,0],tau[:,1],1.5) 
-		tau_h_mass_cond = dimass_Selec(tau[:,0],tau[:,1],20)
+		#Split into hps taus and boosted taus
+		tau_hps = tau[ak.num(tau,axis=1) > 1]
+		muon_hps = muon[ak.num(tau,axis=1) > 1]
+		electron_hps = electron[ak.num(tau,axis=1) > 1]
+		AK8Jet_hps = AK8Jet[ak.num(tau,axis=1) > 1]
+		Jet_hps = Jet[ak.num(tau,axis=1) > 1]
+		event_level_hps = event_level[ak.num(tau,axis=1) > 1]
+		boostedtau_hps = boostedtau[ak.num(tau,axis=1) > 1]
+		
+		tau_boost = tau[ak.num(boostedtau,axis=1) > 1]
+		muon_boost = muon[ak.num(boostedtau,axis=1) > 1]
+		electron_boost = electron[ak.num(boostedtau,axis=1) > 1]
+		AK8Jet_boost = AK8Jet[ak.num(boostedtau,axis=1) > 1]
+		Jet_boost = Jet[ak.num(boostedtau,axis=1) > 1]
+		event_level_boost = event_level[ak.num(boostedtau,axis=1) > 1]
+		boostedtau_boost = boostedtau[ak.num(boostedtau,axis=1) > 1]
+
+		#HPS taus
+		tau_h_dR_cond = deltaR_Selec(tau_hps[:,0],tau_hps[:,1],1.5) 
+		tau_h_mass_cond = dimass_Selec(tau_hps[:,0],tau_hps[:,1],20)
 		tau_h_cond = np.bitwise_and(tau_h_dR_cond, tau_h_mass_cond)
 	
-		boostedtau_h_dR_cond = deltaR_Selec(boostedtau[:,0],boostedtau[:,1],1.5)
-		boostedtau_h_mass_cond = dimass_Selec(boostedtau[:,0],boostedtau[:,1],20)
+		boostedtau_h_dR_cond = deltaR_Selec(boostedtau_boost[:,0],boostedtau_boost[:,1],1.5)
+		boostedtau_h_mass_cond = dimass_Selec(boostedtau_boost[:,0],boostedtau_boost[:,1],20)
 		boostedtau_h_cond = np.bitwise_and(boostedtau_h_dR_cond,boosted_tau_h_mass_cond)
 		
-		hadron_Cond = np.bitwise_or(tau_h_cond,boostedtau_h_cond)
-		boostedtau_h = boostedtau[hadron_Cond]
-		tau_h = tau[hadron_Cond]
-		electron_h = electron[hadron_Cond]
-		muon_h = muon[hadron_Cond]
-		Jet_h = Jet[hadron_Cond]
-		AK8Jet_h = AK8Jet[hadron_Cond]
-		event_level_h = event_level[hadron_Cond]
+		tau_hps = tau_hps[tau_h_cond]
+		muon_hps = muon_hps[tau_h_cond]
+		electron_hps = electron_hps[tau_h_cond]
+		AK8Jet_hps = AK8Jet_hps[tau_h_cond]
+		Jet_hps = Jet_hps[tau_h_cond]
+		event_level_hps = event_level_hps[tau_h_cond]
+		boostedtau_hps = boostedtau_hps[tau_h_cond]
+
+		tau_boost = tau_boost[boostedtau_h_cond]
+		muon_boost = muon_boost[boostedtau_h_cond]
+		electron_boost = electron_boost[boostedtau_h_cond]
+		AK8Jet_boost = AK8Jet_boost[boostedtau_h_cond]
+		Jet_boost = Jet_boost[boostedtau_h_cond]
+		event_level_boost = event_level_boost[boostedtau_h_cond]
+		boostedtau_boost = boostedtau_boost[boostedtau_h_cond]
+		
+		boostedtau_h = ak.concatenate([boostedtau_hps,boostedtau_boost])
+		tau_h = ak.concatenate([tau_hps,tau_boost])
+		electron_h = ak.concatenate([electron_hps,electron_boost])
+		muon_h = ak.concatenate([muon_hps,muon_boost])
+		Jet_h = ak.concatenate([Jet_hps,Jet_boost])
+		AK8Jet_h = ak.concatenate([AK8Jet_hps,AK8Jet_boost])
+		event_level_h = ak.concatenate([event_level_hps,event_level_boost])
 
 		#MET Phi selection
 		deltaPhiMET_Cond_h = deltaPhi_METSelec(AK8Jet_h[:,0],event_level,1)
@@ -765,22 +798,32 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level_h = event_level[deltaPhiMET_Cond_h]
 		
 		#Electron Channel
-		tau_e_dR_cond = deltaR_Selec(tau[:,0],electron[:,0],1.5)  
-		tau_e_mass_cond = dimass_Selec(tau[:,0],electron[:,0],20)
+		#Split into only canidate events for e tau channel
+		tau_e = tau[ak.num(electron,axis=1) > 0]
+		muon_e = muon[ak.num(electron,axis=1) > 0]
+		electron_e = electron[ak.num(electron,axis=1) > 0]
+		AK8Jet_e = AK8Jet[ak.num(electron,axis=1) > 0]
+		Jet_e = Jet[ak.num(electron,axis=1) > 0]
+		event_level_e = event_level[ak.num(electron,axis=1) > 0]
+		boostedtau_e = boostedtau[ak.num(electron,axis=1) > 0]
+		
+		#Make slections and apply them
+		tau_e_dR_cond = deltaR_Selec(tau_e[:,0],electron_e[:,0],1.5)  
+		tau_e_mass_cond = dimass_Selec(tau_e[:,0],electron_e[:,0],20)
 		tau_e_cond = np.bitwise_and(tau_e_dR_cond, tau_e_mass_cond)
 		
-		boostedtau_e_dR_cond = deltaR_Selec(boostedtau[:,0],electron[:,0],1.5)
-		boostedtau_e_mass_cond = dimass_Selec(boostedtau[:,0],electron[:,0],20)
+		boostedtau_e_dR_cond = deltaR_Selec(boostedtau_e[:,0],electron_e[:,0],1.5)
+		boostedtau_e_mass_cond = dimass_Selec(boostedtau_e[:,0],electron_e[:,0],20)
 		boostedtau_e_cond = np.bitwise_and(boostedtau_e_dR_cond,boosted_tau_e_mass_cond)
 		
 		electron_Cond = np.bitwise_or(tau_e_cond,boostedtau_e_cond)
-		boostedtau_e = boostedtau[electron_Cond]
-		tau_e = tau[electron_Cond]
-		electron_e = electron[electron_Cond]
-		muon_e = muon[electron_Cond]
-		Jet_e = Jet[electron_Cond]
-		AK8Jet_e = AK8Jet[electron_Cond]
-		event_level_e = event_level[electron_Cond]
+		boostedtau_e = boostedtau_e[electron_Cond]
+		tau_e = tau_e[electron_Cond]
+		electron_e = electron_e[electron_Cond]
+		muon_e = muon_e[electron_Cond]
+		Jet_e = Jet_e[electron_Cond]
+		AK8Jet_e = AK8Jet_e[electron_Cond]
+		event_level_e = event_level_e[electron_Cond]
 		
 		#MET Phi selection
 		deltaPhiMET_Cond_e = deltaPhi_METSelec(AK8Jet_e[:,0],event_level,1)
@@ -793,22 +836,31 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level_e = event_level[deltaPhiMET_Cond_e]
 		
 		#Muon Channel
-		tau_m_dR_cond = deltaR_Selec(tau[:,0],muon[:,0],1.5)  
-		tau_m_mass_cond = dimass_Selec(tau[:,0],muon[:,0],20)
+		#Split into only canidate events for muon tau channel
+		tau_m = tau[ak.num(muon,axis=1) > 0]
+		muon_m = muon[ak.num(muon,axis=1) > 0]
+		electron_m = electron[ak.num(muon,axis=1) > 0]
+		AK8Jet_m = AK8Jet[ak.num(muon,axis=1) > 0]
+		Jet_m = Jet[ak.num(muon,axis=1) > 0]
+		event_level_m = event_level[ak.num(muon,axis=1) > 0]
+		boostedtau_m = boostedtau[ak.num(muon,axis=1) > 0]
+		
+		tau_m_dR_cond = deltaR_Selec(tau_m[:,0],muon_m[:,0],1.5)  
+		tau_m_mass_cond = dimass_Selec(tau_m[:,0],muon_m[:,0],20)
 		tau_m_cond = np.bitwise_and(tau_m_dR_cond, tau_m_mass_cond)
 		
-		boostedtau_m_dR_cond = deltaR_Selec(boostedtau[:,0],muon[:,0],1.5)
-		boostedtau_m_mass_cond = dimass_Selec(boostedtau[:,0],muon[:,0],20)
+		boostedtau_m_dR_cond = deltaR_Selec(boostedtau_m[:,0],muon_m[:,0],1.5)
+		boostedtau_m_mass_cond = dimass_Selec(boostedtau_m[:,0],muon_m[:,0],20)
 		boostedtau_m_cond = np.bitwise_and(boostedtau_m_dR_cond,boosted_tau_m_mass_cond)
 		
 		muon_Cond = np.bitwise_or(tau_m_cond,boostedtau_m_cond)
-		boostedtau_m = boostedtau[muon_Cond]
-		tau_m = tau[muon_Cond]
-		electron_m = electron[muon_Cond]
-		muon_m = muon[muon_Cond]
-		Jet_m = Jet[muon_Cond]
-		AK8Jet_m = AK8Jet[muon_Cond]
-		event_level_m = event_level[muon_Cond]
+		boostedtau_m = boostedtau_m[muon_Cond]
+		tau_m = tau_m[muon_Cond]
+		electron_m = electron_m[muon_Cond]
+		muon_m = muon_m[muon_Cond]
+		Jet_m = Jet_m[muon_Cond]
+		AK8Jet_m = AK8Jet_m[muon_Cond]
+		event_level_m = event_level_m[muon_Cond]
 		
 		#MET Phi selection
 		deltaPhiMET_Cond_m = deltaPhi_METSelec(AK8Jet_m[:,0],event_level,1)
@@ -1056,29 +1108,29 @@ if __name__ == "__main__":
 	os.makedirs(htc_log_err_dir)
 
 	cluster = HTCondorCluster(
-            cores=1,
+			cores=1,
 			 memory="5 GB",
-            disk="1.5 GB",
-            death_timeout = '60',
-            job_extra_directives={
-                "+JobFlavour": '"tomorrow"',
-                "log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
-                "output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
-                "error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
-                "should_transfer_files": "yes",
-                "when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
-                "transfer_executable": "false",
-                "+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
-                "Requirements": "HasSingularityJobStart",
-                "InitialDir": f'/scratch/{os.environ["USER"]}',
-                'transfer_input_files': f"{_x509_path}",
+			disk="1.5 GB",
+			death_timeout = '60',
+			job_extra_directives={
+				"+JobFlavour": '"tomorrow"',
+				"log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
+				"output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
+				"error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
+				"should_transfer_files": "yes",
+				"when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
+				"transfer_executable": "false",
+				"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
+				"Requirements": "HasSingularityJobStart",
+				"InitialDir": f'/scratch/{os.environ["USER"]}',
+				'transfer_input_files': f"{_x509_path}",
 
-            },
-            job_script_prologue = [
-                "export XRD_RUNFORKHANDLER=1",
-                f"export X509_USER_PROXY={_x509_path}",
-            ]
-    )
+			},
+			job_script_prologue = [
+				"export XRD_RUNFORKHANDLER=1",
+				f"export X509_USER_PROXY={_x509_path}",
+			]
+	)
 	cluster.adapt(minimum=1, maximum=500)
 
 	run_on_condor = True
@@ -1156,16 +1208,16 @@ if __name__ == "__main__":
 	file_dict_test = {
 			"ZZ4l": [Skimmed_Ganesh_base + "ZZTo4L.root"],
 			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root"]
-        }
+		}
 	
 	file_dict_data = {
 			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root",Skimmed_Ganesh_base + "MET/MET_Run2018B.root",Skimmed_Ganesh_base + "MET/MET_Run2018C.root",
-                Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
-                Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
-        }
+				Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
+				Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
+		}
 	file_dict_data_test = {
 			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root"]
-        }
+		}
 	
 	file_dict_full = {
 			"TTToSemiLeptonic": list(np.append([Skimmed_Ganesh_base + "TTToSemiLeptonic_" + str(j) + ".root" for j in range(2,5)], Skimmed_Ganesh_base + "TTToSemiLeptonic.root")),
@@ -1221,9 +1273,18 @@ if __name__ == "__main__":
 			"QCD_HT1000to1500": [Skimmed_Ganesh_base + "QCD_HT1000to1500.root"], "QCD_HT1500to2000": [Skimmed_Ganesh_base + "QCD_HT1500to2000.root"],
 			"QCD_HT2000toInf": [Skimmed_Ganesh_base + "QCD_HT2000toInf.root"],
 			"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root",Skimmed_Ganesh_base + "MET/MET_Run2018B.root",Skimmed_Ganesh_base + "MET/MET_Run2018C.root",
-                Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
-                Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
-        }
+				Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
+				Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
+		}
+	
+	#Background lists 
+	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"] #Full background list
+	background_list_test = [r"$ZZ \rightarrow 4l$"] #Only ZZ4l background for testing
+	background_list_none = [] #No backgrounds for data only testing
+	
+	#Set file dictionary and list of backgrounds prior to running processor
+	file_dict = file_dict_full
+	background_list = background_list_full
 
 	start_time = time.time()
 	for key_name, file_array in file_dict.items(): 
@@ -1241,16 +1302,6 @@ if __name__ == "__main__":
 		else: #Ignore data files
 			numEvents_Dict[key_name] = 1
 			sumWEvents_Dict[key_name] = 1
-
-	#Background lists 
-	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"] #Full background list
-	background_list_test = [r"$ZZ \rightarrow 4l$"] #Only ZZ4l background for testing
-	background_list_none = [] #No backgrounds for data only testing
-	
-	#Set file dictionary and list of backgrounds prior to running processor
-	file_dict = file_dict_full
-	background_list = background_list_full
-	
 
 	#Background names for single background plot file names
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
@@ -1438,7 +1489,7 @@ if __name__ == "__main__":
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
-		data_stack = hist_dict_data[hist_name] #.stack("data")    
+		data_stack = hist_dict_data[hist_name] #.stack("data")	  
 		#signal_array = [signal_stack["Signal"]]
 		data_array = [data_stack] #["Data"]]
 				
