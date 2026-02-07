@@ -26,7 +26,9 @@ hep.style.use(hep.style.CMS)
 TABLEAU_COLORS = ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']
 
 if __name__ == "__main__":
-	coffea_file = "output_2018_run20260201_081537.coffea" #Store coffea file as hardcoded variable
+	print("Test")
+	
+	coffea_file = "output_2018_run20260201_081729.coffea" #Store coffea file as hardcoded variable
 
 	#Dictionaries and arrays with information on plot constrution, naming and samples
 	four_tau_hist_list = [

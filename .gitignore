@@ -13,5 +13,8 @@ __pycache__/
 Simple_CrossSec.txt
 Full_CrossSecDict.txt
 
+#Old plots
+Studies_2b2tau/Old_Plots/
+
 #Shell file
 shell

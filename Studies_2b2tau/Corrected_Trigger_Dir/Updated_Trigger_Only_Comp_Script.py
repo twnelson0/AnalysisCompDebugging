@@ -185,7 +185,8 @@ def deltaR_Selec(part1,part2,upp_lim):
 	part2_4vec = ak.zip({"rho": part2.pt, "phi": part2.phi, "eta": part2.eta, "tau": part2.mass},with_name="Momentum4D")
 	
 	#Obtain seperation
-	deltaR_Arr = part1.deltaR(part2)
+	#deltaR_Arr = part1.deltaR(part2)
+	deltaR_Arr = np.sqrt((part1.eta - part2.eta)**2 + ((part1_4vec.phi - part2_4vec.phi + np.pi) %(2*np.pi) - np.pi)**2)
 
 	dR_Cond = deltaR_Arr <= upp_lim
 
@@ -203,8 +204,8 @@ def dimass_Selec(part1,part2,low_lim):
 
 	return dimass_Selec
 
-def deltaPhi_METSelec(part1,MET,low_lim): #Check where you get delta phi definition from
-	return (part1.phi - MET.pfMETPhi + np.pi) % (2*pi) - pi
+def deltaPhi_METSelec(part1,MET,low_lim): #Note definition of deltaR coppied from coffea code (line 67 of vector.py)
+	return (part1.phi - MET.pfMETPhi + np.pi) % (2*np.pi) - np.pi > low_lim
 
 def reorder(to_reorder, template_object):
 	to_reorder_cc = to_reorder[ak.num(template_object,axis=1)>0]
@@ -534,205 +535,205 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			
 		#PreSelection Cuts
 		#AK8Jets
-		AK8Jet = AK8Jet[AK8Jet.pt > 200]
-		AK8Jet = AK8Jet[np.abs(AK8Jet.eta) < 2.5]
-		AK8Jet = AK8Jet[AK8Jet.softDropM < 30]
-		AK8Jet = AK8Jet[AK8Jet.Id > 1]
+	#	AK8Jet = AK8Jet[AK8Jet.pt > 200]
+	#	AK8Jet = AK8Jet[np.abs(AK8Jet.eta) < 2.5]
+	#	AK8Jet = AK8Jet[AK8Jet.softDropM < 30]
+	#	AK8Jet = AK8Jet[AK8Jet.Id > 1]
 
-		#Require only events with atleast 1 AK8 Jet
-		tau = tau[ak.num(AK8Jet,axis=1) > 0]
-		boostedtau = boostedtau[ak.num(AK8Jet,axis=1) > 0]
-		Jet = Jet[ak.num(AK8Jet,axis=1) > 0]
-		electron = electron[ak.num(AK8Jet,axis=1) > 0]
-		muon = muon[ak.num(AK8Jet,axis=1) > 0]
-		event_level = event_level[ak.num(AK8Jet,axis=1) > 0]				
-		AK8Jet = AK8Jet[ak.num(AK8Jet,axis=1) > 0]
+	#	#Require only events with atleast 1 AK8 Jet
+	#	tau = tau[ak.num(AK8Jet,axis=1) > 0]
+	#	boostedtau = boostedtau[ak.num(AK8Jet,axis=1) > 0]
+	#	Jet = Jet[ak.num(AK8Jet,axis=1) > 0]
+	#	electron = electron[ak.num(AK8Jet,axis=1) > 0]
+	#	muon = muon[ak.num(AK8Jet,axis=1) > 0]
+	#	event_level = event_level[ak.num(AK8Jet,axis=1) > 0]				
+	#	AK8Jet = AK8Jet[ak.num(AK8Jet,axis=1) > 0]
 
-		#Force AK8Jet to be pT ordered
-		AK8Jet = AK8Jet[ak.argsort(-AK8Jet.pt,axis=1)]
+	#	#Force AK8Jet to be pT ordered
+	#	AK8Jet = AK8Jet[ak.argsort(-AK8Jet.pt,axis=1)]
 
-		
-		#Boosted Tau selections
-		boostedtau = boostedtau[boostedtau.pt > 20]
-		boostedtau = boostedtau[np.abs(boostedtau.eta) < 2.5]
-		boostedtau = boostedtau[boostedtau.DBT >= 0.85]
-		
-		#Tau
-		tau = tau[tau.pt > 20]
-		tau = tau[np.abs(tau.eta) < 2.5]
-		tau = tau[tau.IDVsJets > 1]
-		tau = tau[tau.IDVsEle > 1 ]
-		tau = tau[tau.IDVsMu > 1 ]
+	#	
+	#	#Boosted Tau selections
+	#	boostedtau = boostedtau[boostedtau.pt > 20]
+	#	boostedtau = boostedtau[np.abs(boostedtau.eta) < 2.5]
+	#	boostedtau = boostedtau[boostedtau.DBT >= 0.85]
+	#	
+	#	#Tau
+	#	tau = tau[tau.pt > 20]
+	#	tau = tau[np.abs(tau.eta) < 2.5]
+	#	tau = tau[tau.IDVsJets > 1]
+	#	tau = tau[tau.IDVsEle > 1 ]
+	#	tau = tau[tau.IDVsMu > 1 ]
 
-		#Handle events with differing numbers of taus without loosing anything
-		tau_1 = tau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		muon_1 = muon[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		electron_1 = electron[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		AK8Jet_1 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		Jet_1 = Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		event_level_1 = event_level[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		boostedtau_1 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		
-		tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		muon_2 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		electron_2 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		Jet_2 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		event_level_2 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		boostedtau_2 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		
-		tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		muon_3 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		electron_3 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		Jet_3 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		event_level_3 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		boostedtau_3 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	#Handle events with differing numbers of taus without loosing anything
+	#	tau_1 = tau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	muon_1 = muon[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	electron_1 = electron[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	AK8Jet_1 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	Jet_1 = Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	event_level_1 = event_level[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	boostedtau_1 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	
+	#	tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	muon_2 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	electron_2 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	Jet_2 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	event_level_2 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	boostedtau_2 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	
+	#	tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	muon_3 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	electron_3 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	Jet_3 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	event_level_3 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	boostedtau_3 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 
-		#Boosted Tau Cross Cleaning
-		boostedtau_1 = boostedtau_1[crossClean(boostedtau_1, muon_1, 0.05)]
-		boostedtau_1 = boostedtau_1[crossClean(boostedtau_1, electron_1, 0.05)]
-		boostedtau_1 = boostedtau_1[crossClean_PartJet(boostedtau_1, AK8Jet_1[:,0], 1.5)]
-		
-		boostedtau_3 = boostedtau_3[crossClean(boostedtau_3, muon_3, 0.05)]
-		boostedtau_3 = boostedtau_3[crossClean(boostedtau_3, electron_3, 0.05)]
-		boostedtau_3 = boostedtau_3[crossClean_PartJet(boostedtau_3, AK8Jet_3[:,0], 1.5)]
-		
-		#Tau Cross Cleaning
-		tau_2 = tau_2[crossClean(tau_2, muon_2, 0.05)]
-		tau_2 = tau_2[crossClean(tau_2, electron_2, 0.05)]
-		tau_2 = tau_2[crossClean_PartJet(tau_2, AK8Jet_2[:,0], 1.5)]
-		
-		tau_3 = tau_3[crossClean(tau_3, muon_3, 0.05)]
-		tau_3 = tau_3[crossClean(tau_3, electron_3, 0.05)]
-		tau_3 = tau_3[crossClean_PartJet(tau_3, AK8Jet_3[:,0], 1.5)]
+	#	#Boosted Tau Cross Cleaning
+	#	boostedtau_1 = boostedtau_1[crossClean(boostedtau_1, muon_1, 0.05)]
+	#	boostedtau_1 = boostedtau_1[crossClean(boostedtau_1, electron_1, 0.05)]
+	#	boostedtau_1 = boostedtau_1[crossClean_PartJet(boostedtau_1, AK8Jet_1[:,0], 1.5)]
+	#	
+	#	boostedtau_3 = boostedtau_3[crossClean(boostedtau_3, muon_3, 0.05)]
+	#	boostedtau_3 = boostedtau_3[crossClean(boostedtau_3, electron_3, 0.05)]
+	#	boostedtau_3 = boostedtau_3[crossClean_PartJet(boostedtau_3, AK8Jet_3[:,0], 1.5)]
+	#	
+	#	#Tau Cross Cleaning
+	#	tau_2 = tau_2[crossClean(tau_2, muon_2, 0.05)]
+	#	tau_2 = tau_2[crossClean(tau_2, electron_2, 0.05)]
+	#	tau_2 = tau_2[crossClean_PartJet(tau_2, AK8Jet_2[:,0], 1.5)]
+	#	
+	#	tau_3 = tau_3[crossClean(tau_3, muon_3, 0.05)]
+	#	tau_3 = tau_3[crossClean(tau_3, electron_3, 0.05)]
+	#	tau_3 = tau_3[crossClean_PartJet(tau_3, AK8Jet_3[:,0], 1.5)]
 
-		#Recombine everything
-		tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,tau_3])])
-		muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,muon_3])])
-		electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,electron_3])])
-		AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
-		Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
-		event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
-		boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
+	#	#Recombine everything
+	#	tau = ak.concatenate([tau_1,ak.concatenate([tau_2,tau_3])])
+	#	muon = ak.concatenate([muon_1,ak.concatenate([muon_2,muon_3])])
+	#	electron = ak.concatenate([electron_1,ak.concatenate([electron_2,electron_3])])
+	#	AK8Jet = ak.concatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
+	#	Jet = ak.concatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
+	#	event_level = ak.concatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
+	#	boostedtau = ak.concatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
 
-		#Electrons
-		electron = electron[electron.pt > 10]
-		electron = electron[np.abs(electron.eta) < 2.5]
-		iso_cond1 = np.bitwise_and(electron.RelIso < 0.112*ak.ones_like(electron.pt) + (0.506/electron.pt),np.abs(electron.eta) <= 1.479)		
-		iso_cond2 = np.bitwise_and(electron.RelIso < 0.108*ak.ones_like(electron.pt) + 0.963/electron.pt,np.bitwise_and(np.abs(electron.eta) > 1.479, np.abs(electron.eta) <= 2.5))
-		iso_cond_e = np.bitwise_or(iso_cond1,iso_cond2)
-		electron = electron[iso_cond_e]
+	#	#Electrons
+	#	electron = electron[electron.pt > 10]
+	#	electron = electron[np.abs(electron.eta) < 2.5]
+	#	iso_cond1 = np.bitwise_and(electron.RelIso < 0.112*ak.ones_like(electron.pt) + (0.506/electron.pt),np.abs(electron.eta) <= 1.479)		
+	#	iso_cond2 = np.bitwise_and(electron.RelIso < 0.108*ak.ones_like(electron.pt) + 0.963/electron.pt,np.bitwise_and(np.abs(electron.eta) > 1.479, np.abs(electron.eta) <= 2.5))
+	#	iso_cond_e = np.bitwise_or(iso_cond1,iso_cond2)
+	#	electron = electron[iso_cond_e]
 
-		electron = electron[np.bitwise_not(np.bitwise_and(np.abs(electron.eta) < 1.57, np.abs(electron.eta) > 1.44))] #Veto ECal tansition region 
-		
-		#Electron Cross Cleaning
-		electron = electron[crossClean_PartJet(electron,AK8Jet[:,0],0.8)]
+	#	electron = electron[np.bitwise_not(np.bitwise_and(np.abs(electron.eta) < 1.57, np.abs(electron.eta) > 1.44))] #Veto ECal tansition region 
+	#	
+	#	#Electron Cross Cleaning
+	#	electron = electron[crossClean_PartJet(electron,AK8Jet[:,0],0.8)]
 
-		#Muons
-		muon = muon[muon.pt > 15]
-		muon = muon[np.abs(muon.eta) < 2.4]
-		muon = muon[muon.LooseId]
-		muon = muon[muon.RelIso < 0.25]
-		
-		#Muon Cross Cleaning
-		muon = muon[crossClean_PartJet(muon,AK8Jet[:,0],0.8)]
+	#	#Muons
+	#	muon = muon[muon.pt > 15]
+	#	muon = muon[np.abs(muon.eta) < 2.4]
+	#	muon = muon[muon.LooseId]
+	#	muon = muon[muon.RelIso < 0.25]
+	#	
+	#	#Muon Cross Cleaning
+	#	muon = muon[crossClean_PartJet(muon,AK8Jet[:,0],0.8)]
 
-		#Jets (AK4)
-		Jet = Jet[Jet.pt > 30]
-		Jet = Jet[np.abs(Jet.eta) < 2.5]
-		Jet = Jet[Jet.JetId > 1]
+	#	#Jets (AK4)
+	#	Jet = Jet[Jet.pt > 30]
+	#	Jet = Jet[np.abs(Jet.eta) < 2.5]
+	#	Jet = Jet[Jet.JetId > 1]
 
-		#Jet Cross Cleaning
-		Jet = Jet[crossClean_DiJet(Jet,AK8Jet[:,0],1.2)]
+	#	#Jet Cross Cleaning
+	#	Jet = Jet[crossClean_DiJet(Jet,AK8Jet[:,0],1.2)]
 
-		#Split objects for non tau lepton cross cleaning
-		tau_1 = tau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
-		muon_1 = muon[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
-		electron_1 = electron[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
-		AK8Jet_1 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
-		Jet_1 = Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
-		event_level_1 = event_level[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
-		boostedtau_1 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
+	#	#Split objects for non tau lepton cross cleaning
+	#	tau_1 = tau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
+	#	muon_1 = muon[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
+	#	electron_1 = electron[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
+	#	AK8Jet_1 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
+	#	Jet_1 = Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
+	#	event_level_1 = event_level[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
+	#	boostedtau_1 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) > 0)]
 
-		tau_2 = tau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
-		muon_2 = muon[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
-		electron_2 = electron[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
-		AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
-		Jet_2 = Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
-		event_level_2 = event_level[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
-		boostedtau_2 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
+	#	tau_2 = tau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
+	#	muon_2 = muon[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
+	#	electron_2 = electron[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
+	#	AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
+	#	Jet_2 = Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
+	#	event_level_2 = event_level[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
+	#	boostedtau_2 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) == 0)]
 
-		tau_3 = tau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
-		muon_3 = muon[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
-		electron_3 = electron[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
-		AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
-		Jet_3 = Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
-		event_level_3 = event_level[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
-		boostedtau_3 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
+	#	tau_3 = tau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
+	#	muon_3 = muon[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
+	#	electron_3 = electron[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
+	#	AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
+	#	Jet_3 = Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
+	#	event_level_3 = event_level[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
+	#	boostedtau_3 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(electron,axis=1) > 0)]
 
-		tau_4 = tau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
-		muon_4 = muon[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
-		electron_4 = electron[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
-		AK8Jet_4 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
-		Jet_4 = Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
-		event_level_4 = event_level[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
-		boostedtau_4 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
+	#	tau_4 = tau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
+	#	muon_4 = muon[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
+	#	electron_4 = electron[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
+	#	AK8Jet_4 = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
+	#	Jet_4 = Jet[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
+	#	event_level_4 = event_level[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
+	#	boostedtau_4 = boostedtau[np.bitwise_and(ak.num(muon,axis=1) == 0,ak.num(electron,axis=1) == 0)]
 
-		Jet_1 = Jet_1[crossClean_JetPart(Jet_1,electron_1[:,0],0.4)]
-		Jet_3 = Jet_3[crossClean_JetPart(Jet_3,electron_3[:,0],0.4)]
-		
-		Jet_2 = Jet_2[crossClean_JetPart(Jet_2,muon_2[:,0],0.4)]
-		Jet_3 = Jet_3[crossClean_JetPart(Jet_3,muon_3[:,0],0.4)]
+	#	Jet_1 = Jet_1[crossClean_JetPart(Jet_1,electron_1[:,0],0.4)]
+	#	Jet_3 = Jet_3[crossClean_JetPart(Jet_3,electron_3[:,0],0.4)]
+	#	
+	#	Jet_2 = Jet_2[crossClean_JetPart(Jet_2,muon_2[:,0],0.4)]
+	#	Jet_3 = Jet_3[crossClean_JetPart(Jet_3,muon_3[:,0],0.4)]
 
-		#Recombine everything
-		tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,ak.concatenate([tau_3,tau_4])])])
-		muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,ak.concatenate([muon_3,muon_4])])])
-		electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,ak.concatenate([electron_3,electron_4])])])
-		AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,ak.concatenate([AK8Jet_3,AK8Jet_4])])])
-		Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,ak.concatenate([Jet_3,Jet_4])])])
-		event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,ak.concatenate([event_level_3,event_level_4])])])
-		boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,ak.concatenate([boostedtau_3,boostedtau_4])])])
+	#	#Recombine everything
+	#	tau = ak.concatenate([tau_1,ak.concatenate([tau_2,ak.concatenate([tau_3,tau_4])])])
+	#	muon = ak.concatenate([muon_1,ak.concatenate([muon_2,ak.concatenate([muon_3,muon_4])])])
+	#	electron = ak.concatenate([electron_1,ak.concatenate([electron_2,ak.concatenate([electron_3,electron_4])])])
+	#	AK8Jet = ak.concatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,ak.concatenate([AK8Jet_3,AK8Jet_4])])])
+	#	Jet = ak.concatenate([Jet_1,ak.concatenate([Jet_2,ak.concatenate([Jet_3,Jet_4])])])
+	#	event_level = ak.concatenate([event_level_1,ak.concatenate([event_level_2,ak.concatenate([event_level_3,event_level_4])])])
+	#	boostedtau = ak.concatenate([boostedtau_1,ak.concatenate([boostedtau_2,ak.concatenate([boostedtau_3,boostedtau_4])])])
 
-		#Split objects for lepton cross cleaning of taus
-		tau_1 = tau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		muon_1 = muon[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		electron_1 = electron[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		AK8Jet_1 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		Jet_1 = Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		event_level_1 = event_level[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		boostedtau_1 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
-		
-		tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		muon_2 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		electron_2 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		Jet_2 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		event_level_2 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		boostedtau_2 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
-		
-		tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		muon_3 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		electron_3 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		Jet_3 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		event_level_3 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
-		boostedtau_3 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	#Split objects for lepton cross cleaning of taus
+	#	tau_1 = tau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	muon_1 = muon[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	electron_1 = electron[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	AK8Jet_1 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	Jet_1 = Jet[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	event_level_1 = event_level[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	boostedtau_1 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) == 0,ak.num(boostedtau,axis=1) > 0)]
+	#	
+	#	tau_2 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	muon_2 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	electron_2 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	AK8Jet_2 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	Jet_2 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	event_level_2 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	boostedtau_2 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) == 0)]
+	#	
+	#	tau_3 = tau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	muon_3 = muon[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	electron_3 = electron[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	AK8Jet_3 = AK8Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	Jet_3 = Jet[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	event_level_3 = event_level[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+	#	boostedtau_3 = boostedtau[np.bitwise_and(ak.num(tau,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
 
-		Jet_1 = Jet_1[crossClean_JetPart(Jet_1,boostedtau_1[:,0],0.4)]
-		Jet_3 = Jet_3[crossClean_JetPart(Jet_3,boostedtau_3[:,0],0.4)]
+	#	Jet_1 = Jet_1[crossClean_JetPart(Jet_1,boostedtau_1[:,0],0.4)]
+	#	Jet_3 = Jet_3[crossClean_JetPart(Jet_3,boostedtau_3[:,0],0.4)]
 
-		Jet_2 = Jet_2[crossClean_JetPart(Jet_2,tau_2[:,0],0.4)]
-		Jet_3 = Jet_3[crossClean_JetPart(Jet_3,tau_3[:,0],0.4)]
+	#	Jet_2 = Jet_2[crossClean_JetPart(Jet_2,tau_2[:,0],0.4)]
+	#	Jet_3 = Jet_3[crossClean_JetPart(Jet_3,tau_3[:,0],0.4)]
 
-		#Recombine everything
-		tau = ak.conccatenate([tau_1,ak.concatenate([tau_2,tau_3])])
-		muon = ak.conccatenate([muon_1,ak.concatenate([muon_2,muon_3])])
-		electron = ak.conccatenate([electron_1,ak.concatenate([electron_2,electron_3])])
-		AK8Jet = ak.conccatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
-		Jet = ak.conccatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
-		event_level = ak.conccatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
-		boostedtau = ak.conccatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
+	#	#Recombine everything
+	#	tau = ak.concatenate([tau_1,ak.concatenate([tau_2,tau_3])])
+	#	muon = ak.concatenate([muon_1,ak.concatenate([muon_2,muon_3])])
+	#	electron = ak.concatenate([electron_1,ak.concatenate([electron_2,electron_3])])
+	#	AK8Jet = ak.concatenate([AK8Jet_1,ak.concatenate([AK8Jet_2,AK8Jet_3])])
+	#	Jet = ak.concatenate([Jet_1,ak.concatenate([Jet_2,Jet_3])])
+	#	event_level = ak.concatenate([event_level_1,ak.concatenate([event_level_2,event_level_3])])
+	#	boostedtau = ak.concatenate([boostedtau_1,ak.concatenate([boostedtau_2,boostedtau_3])])
 		
 
 		#Split output channels
@@ -1109,8 +1110,8 @@ if __name__ == "__main__":
 
 	cluster = HTCondorCluster(
 			cores=1,
-			 memory="5 GB",
-			disk="1.5 GB",
+			 memory="7 GB",
+			disk="2.5 GB",
 			death_timeout = '60',
 			job_extra_directives={
 				"+JobFlavour": '"tomorrow"',
@@ -1142,6 +1143,8 @@ if __name__ == "__main__":
 			schema=BaseSchema,
 			skipbadfiles=True,
 			xrootdtimeout=1000,
+            #chunksize=150000,
+            #maxchunks = 10
 		)
 	else: #Iterative runner
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
