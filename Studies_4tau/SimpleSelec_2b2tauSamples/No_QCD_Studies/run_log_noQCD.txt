@@ -1,0 +1,1646 @@
+x509 path: x509up_u10161
+Run on Condor
+TTToSemiLeptonic
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/TTToSemiLeptonic_2.root
+TTToSemiLeptonicsum: 116084000.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/TTToSemiLeptonic_3.root
+TTToSemiLeptonicsum: 232754000.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/TTToSemiLeptonic_4.root
+TTToSemiLeptonicsum: 349056000.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/TTToSemiLeptonic.root
+TTToSemiLeptonicsum: 476966000.000000
+TTTo2L2Nu
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/TTTo2L2Nu.root
+TTTo2L2Nusum: 79293000.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/TTTo2L2Nu_2.root
+TTTo2L2Nusum: 146010000.000000
+TTToHadronic
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/TTToHadronic.root
+TTToHadronicsum: 343200000.000000
+ZZ4l
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ZZTo4L.root
+ZZ4lsum: 98468000.000000
+ZZTo2L2Nu
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ZZTo2L2Nu.root
+ZZTo2L2Nusum: 56886000.000000
+ZZTo2Nu2Q
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ZZTo2Nu2Q_5f.root
+ZZTo2Nu2Qsum: 4950564.000000
+ZZTo4Q
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ZZTo4Q_5f.root
+ZZTo4Qsum: 2535895.000000
+VV2l2nu
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WWTo2L2Nu.root
+VV2l2nusum: 9994000.000000
+WWTo1L1Nu2Q
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WWTo1L1Nu2Q_4f.root
+WWTo1L1Nu2Qsum: 40272013.000000
+WWTo4Q
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WWTo4Q_4f.root
+WWTo4Qsum: 39674916.000000
+WZ1l3nu
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WZTo1L3Nu_4f.root
+WZ1l3nusum: 2497292.000000
+ZZ2l2q
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ZZTo2Q2L_mllmin4p0.root
+ZZ2l2qsum: 29357938.000000
+WZ2l2q
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WZTo2Q2L_mllmin4p0.root
+WZ2l2qsum: 28576996.000000
+WZ1l1nu2q
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WZTo1L1Nu2Q_4f.root
+WZ1l1nu2qsum: 7395487.000000
+DYJetsToLL_M-4to50_HT-70to100
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-4to50_HT-70to100.root
+DYJetsToLL_M-4to50_HT-70to100sum: 15951497.000000
+DYJetsToLL_M-4to50_HT-100to200
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-4to50_HT-100to200.root
+DYJetsToLL_M-4to50_HT-100to200sum: 14442189.000000
+DYJetsToLL_M-4to50_HT-200to400
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-4to50_HT-200to400.root
+DYJetsToLL_M-4to50_HT-200to400sum: 14305796.000000
+DYJetsToLL_M-4to50_HT-400to600
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-4to50_HT-400to600.root
+DYJetsToLL_M-4to50_HT-400to600sum: 15537383.000000
+DYJetsToLL_M-4to50_HT-600toInf
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-4to50_HT-600toInf.root
+DYJetsToLL_M-4to50_HT-600toInfsum: 14597795.000000
+DYJetsToLL_M-50_HT-70to100
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-70to100.root
+DYJetsToLL_M-50_HT-70to100sum: 17004433.000000
+DYJetsToLL_M-50_HT-100to200
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-100to200.root
+DYJetsToLL_M-50_HT-100to200sum: 26202328.000000
+DYJetsToLL_M-50_HT-200to400
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-200to400.root
+DYJetsToLL_M-50_HT-200to400sum: 18455718.000000
+DYJetsToLL_M-50_HT-400to600
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-400to600.root
+DYJetsToLL_M-50_HT-400to600sum: 8908406.000000
+DYJetsToLL_M-50_HT-600to800
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-600to800.root
+DYJetsToLL_M-50_HT-600to800sum: 7035971.000000
+DYJetsToLL_M-50_HT-800to1200
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-800to1200.root
+DYJetsToLL_M-50_HT-800to1200sum: 6678036.000000
+DYJetsToLL_M-50_HT-1200to2500
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-1200to2500.root
+DYJetsToLL_M-50_HT-1200to2500sum: 6166852.000000
+DYJetsToLL_M-50_HT-2500toInf
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/DYJetsToLL_M-50_HT-2500toInf.root
+DYJetsToLL_M-50_HT-2500toInfsum: 1978203.000000
+T-tchan
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ST_t-channel_top_4f_InclusiveDecays.root
+T-tchansum: 178756000.000000
+Tbar-tchan
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ST_t-channel_antitop_4f_InclusiveDecays.root
+Tbar-tchansum: 95833000.000000
+T-tW
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ST_tW_top_5f_inclusiveDecays.root
+T-tWsum: 7956000.000000
+Tbar-tW
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ST_tW_antitop_5f_inclusiveDecays.root
+Tbar-tWsum: 7749000.000000
+ST_s-channel_4f_hadronicDecays
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ST_s-channel_4f_hadronicDecays.root
+ST_s-channel_4f_hadronicDecayssum: 16391000.000000
+ST_s-channel_4f_leptonDecays
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/ST_s-channel_4f_leptonDecays.root
+ST_s-channel_4f_leptonDecayssum: 19365999.000000
+WJetsToLNu_HT-70To100
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-70To100.root
+WJetsToLNu_HT-70To100sum: 66569448.000000
+WJetsToLNu_HT-100To200
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-100To200.root
+WJetsToLNu_HT-100To200sum: 51541593.000000
+WJetsToLNu_HT-200To400
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-200To400.root
+WJetsToLNu_HT-200To400sum: 58331446.000000
+WJetsToLNu_HT-400To600
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-400To600.root
+WJetsToLNu_HT-400To600sum: 7444030.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-400To600_2.root
+WJetsToLNu_HT-400To600sum: 9415474.000000
+WJetsToLNu_HT-600To800
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-600To800.root
+WJetsToLNu_HT-600To800sum: 7718765.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-600To800_2.root
+WJetsToLNu_HT-600To800sum: 13472940.000000
+WJetsToLNu_HT-800To1200
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-800To1200.root
+WJetsToLNu_HT-800To1200sum: 7306187.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-800To1200_2.root
+WJetsToLNu_HT-800To1200sum: 12725029.000000
+WJetsToLNu_HT-1200To2500
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-1200To2500.root
+WJetsToLNu_HT-1200To2500sum: 6481518.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-1200To2500_2.root
+WJetsToLNu_HT-1200To2500sum: 12967787.000000
+WJetsToLNu_HT-2500ToInf
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-2500ToInf.root
+WJetsToLNu_HT-2500ToInfsum: 2097648.000000
+root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/WJetsToLNu_HT-2500ToInf_2.root
+WJetsToLNu_HT-2500ToInfsum: 12222295.000000
+Data_Mu
+It takes about 10308.0 s to run
+Saved output to /srv/output_2018_run20260208_081018.coffea
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist boostedtau_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 1952960.034121
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 127310.510138
+Background: Di-Bosons
+Sum of stacked histogram: 82849.448009
+Background: Single Top
+Sum of stacked histogram: 230914.037897
+Background: W+Jets
+Sum of stacked histogram: 1819859.569229
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 231.605586
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist Leadingboostedtau_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 610412.226359
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 49841.249195
+Background: Di-Bosons
+Sum of stacked histogram: 34349.528403
+Background: Single Top
+Sum of stacked histogram: 82608.448120
+Background: W+Jets
+Sum of stacked histogram: 818972.602637
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 94.828405
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist boostedtau_eta_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 1953007.647434
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 127330.720511
+Background: Di-Bosons
+Sum of stacked histogram: 82858.068136
+Background: Single Top
+Sum of stacked histogram: 230928.652302
+Background: W+Jets
+Sum of stacked histogram: 1819958.919940
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 231.651944
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist boostedtau_phi_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 1952864.253648
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 127320.845710
+Background: Di-Bosons
+Sum of stacked histogram: 82850.849529
+Background: Single Top
+Sum of stacked histogram: 230913.345310
+Background: W+Jets
+Sum of stacked histogram: 1819823.830798
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 231.636491
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist tau_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 2616669.715455
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 163945.474784
+Background: Di-Bosons
+Sum of stacked histogram: 110926.217934
+Background: Single Top
+Sum of stacked histogram: 305426.146951
+Background: W+Jets
+Sum of stacked histogram: 2275958.135978
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 365.579296
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist Leadingtau_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 617109.556490
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 51030.392395
+Background: Di-Bosons
+Sum of stacked histogram: 35553.373062
+Background: Single Top
+Sum of stacked histogram: 84648.175831
+Background: W+Jets
+Sum of stacked histogram: 838611.369486
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 101.908247
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist tau_eta_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 2616720.480312
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 163967.202446
+Background: Di-Bosons
+Sum of stacked histogram: 110937.098770
+Background: Single Top
+Sum of stacked histogram: 305445.502527
+Background: W+Jets
+Sum of stacked histogram: 2276075.293999
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 365.633787
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist tau_phi_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 2616530.872994
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 163955.411374
+Background: Di-Bosons
+Sum of stacked histogram: 110928.531499
+Background: Single Top
+Sum of stacked histogram: 305425.148936
+Background: W+Jets
+Sum of stacked histogram: 2275907.941563
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 365.606948
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist electron_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 639267.820031
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 29745.101632
+Background: Di-Bosons
+Sum of stacked histogram: 21208.230689
+Background: Single Top
+Sum of stacked histogram: 69747.338780
+Background: W+Jets
+Sum of stacked histogram: 382560.512445
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 92.695099
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist Leadingelectron_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 406862.594422
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 22534.565341
+Background: Di-Bosons
+Sum of stacked histogram: 16286.805339
+Background: Single Top
+Sum of stacked histogram: 48194.547097
+Background: W+Jets
+Sum of stacked histogram: 305750.054736
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 59.604869
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist electron_eta_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 639295.496478
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 29750.470288
+Background: Di-Bosons
+Sum of stacked histogram: 21210.544140
+Background: Single Top
+Sum of stacked histogram: 69755.596597
+Background: W+Jets
+Sum of stacked histogram: 382600.349566
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 92.708112
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist electron_phi_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 639245.733558
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 29748.017753
+Background: Di-Bosons
+Sum of stacked histogram: 21208.358124
+Background: Single Top
+Sum of stacked histogram: 69751.204205
+Background: W+Jets
+Sum of stacked histogram: 382565.244062
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 92.701606
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist muon_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 885849.951189
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 80874.301917
+Background: Di-Bosons
+Sum of stacked histogram: 44639.070062
+Background: Single Top
+Sum of stacked histogram: 119864.714295
+Background: W+Jets
+Sum of stacked histogram: 972581.091016
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 207.438966
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist Leadingmuon_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 616193.207373
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 50960.634324
+Background: Di-Bosons
+Sum of stacked histogram: 35516.336869
+Background: Single Top
+Sum of stacked histogram: 84529.609599
+Background: W+Jets
+Sum of stacked histogram: 837768.552718
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 101.743959
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist muon_eta_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 886805.141830
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 80987.614308
+Background: Di-Bosons
+Sum of stacked histogram: 44692.213145
+Background: Single Top
+Sum of stacked histogram: 120017.265568
+Background: W+Jets
+Sum of stacked histogram: 973675.318369
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 207.669945
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist muon_phi_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 886894.599567
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 80994.290279
+Background: Di-Bosons
+Sum of stacked histogram: 44697.952275
+Background: Single Top
+Sum of stacked histogram: 120027.706243
+Background: W+Jets
+Sum of stacked histogram: 973811.750709
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 207.681331
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist Jet_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 5275657.447692
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 352776.647641
+Background: Di-Bosons
+Sum of stacked histogram: 234183.663323
+Background: Single Top
+Sum of stacked histogram: 638579.063987
+Background: W+Jets
+Sum of stacked histogram: 4990453.893833
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 695.961894
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist LeadingJet_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 615912.034441
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 50895.053868
+Background: Di-Bosons
+Sum of stacked histogram: 35487.940491
+Background: Single Top
+Sum of stacked histogram: 84415.417092
+Background: W+Jets
+Sum of stacked histogram: 837628.195296
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 101.803330
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist Jet_eta_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 5086028.461185
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 336395.237453
+Background: Di-Bosons
+Sum of stacked histogram: 223938.026920
+Background: Single Top
+Sum of stacked histogram: 611573.123486
+Background: W+Jets
+Sum of stacked histogram: 4752323.584330
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 665.536060
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist Jet_phi_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 5276733.514261
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 352991.226486
+Background: Di-Bosons
+Sum of stacked histogram: 234263.946133
+Background: Single Top
+Sum of stacked histogram: 638853.725202
+Background: W+Jets
+Sum of stacked histogram: 4991681.141907
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 696.113983
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist AK8Jet_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 925871.761860
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 75057.935662
+Background: Di-Bosons
+Sum of stacked histogram: 49797.025416
+Background: Single Top
+Sum of stacked histogram: 125501.282789
+Background: W+Jets
+Sum of stacked histogram: 1131034.319363
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 136.777994
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist LeadingAK8Jet_pt_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 615476.321493
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 50847.659430
+Background: Di-Bosons
+Sum of stacked histogram: 35463.912548
+Background: Single Top
+Sum of stacked histogram: 84339.319117
+Background: W+Jets
+Sum of stacked histogram: 837261.395543
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 101.768358
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist AK8Jet_eta_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 927965.932310
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 75377.959665
+Background: Di-Bosons
+Sum of stacked histogram: 49930.818471
+Background: Single Top
+Sum of stacked histogram: 125920.438065
+Background: W+Jets
+Sum of stacked histogram: 1133218.814458
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 137.045572
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist AK8Jet_phi_Trigg================
+Background: $t\bar{t}$
+Sum of stacked histogram: 927900.307404
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 75371.547857
+Background: Di-Bosons
+Sum of stacked histogram: 49928.794843
+Background: Single Top
+Sum of stacked histogram: 125911.437516
+Background: W+Jets
+Sum of stacked histogram: 1133131.760803
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 137.036626
+Background type $t\bar{t}$
+TTToSemiLeptonic
+TTTo2L2Nu
+TTToHadronic
+Background type Drell-Yan+Jets
+DYJetsToLL_M-4to50_HT-70to100
+DYJetsToLL_M-4to50_HT-100to200
+DYJetsToLL_M-4to50_HT-200to400
+DYJetsToLL_M-4to50_HT-400to600
+DYJetsToLL_M-4to50_HT-600toInf
+DYJetsToLL_M-50_HT-70to100
+DYJetsToLL_M-50_HT-100to200
+DYJetsToLL_M-50_HT-200to400
+DYJetsToLL_M-50_HT-400to600
+DYJetsToLL_M-50_HT-600to800
+DYJetsToLL_M-50_HT-800to1200
+DYJetsToLL_M-50_HT-1200to2500
+DYJetsToLL_M-50_HT-2500toInf
+Background type Di-Bosons
+WZ2l2q
+WZ1l1nu2q
+ZZ2l2q
+WZ1l3nu
+VV2l2nu
+WWTo1L1Nu2Q
+WWTo4Q
+ZZTo4Q
+ZZTo2L2Nu
+ZZTo2Nu2Q
+Background type Single Top
+Tbar-tchan
+T-tchan
+Tbar-tW
+T-tW
+ST_s-channel_4f_leptonDecays
+ST_s-channel_4f_hadronicDecays
+Background type W+Jets
+WJetsToLNu_HT-70To100
+WJetsToLNu_HT-100To200
+WJetsToLNu_HT-200To400
+WJetsToLNu_HT-400To600
+WJetsToLNu_HT-600To800
+WJetsToLNu_HT-800To1200
+WJetsToLNu_HT-1200To2500
+WJetsToLNu_HT-2500ToInf
+Background type $ZZ \rightarrow 4l$
+ZZ4l
+==================Hist MET================
+Background: $t\bar{t}$
+Sum of stacked histogram: 616013.170581
+Background: Drell-Yan+Jets
+Sum of stacked histogram: 50986.796987
+Background: Di-Bosons
+Sum of stacked histogram: 35199.425539
+Background: Single Top
+Sum of stacked histogram: 84288.808086
+Background: W+Jets
+Sum of stacked histogram: 835373.564110
+Background: $ZZ \rightarrow 4l$
+Sum of stacked histogram: 101.678081

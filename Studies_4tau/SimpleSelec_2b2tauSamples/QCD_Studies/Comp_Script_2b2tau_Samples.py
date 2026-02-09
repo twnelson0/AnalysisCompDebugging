@@ -382,35 +382,35 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
 
 		#Basic Kinematic histograms Boosted tau
-		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ Leading $p_T$ [GeV]").Double()
 		h_boostedtau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$").Double()
 		h_boostedtau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$").Double()
 		h_boostedtau_raw_iso_Trigger = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score").Double()
 		
 		#Basic Kinematic histograms of tau/HPS tau
-		h_tau_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingtau_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_tau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ Leading $p_T$ [GeV]").Double()
 		h_tau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r" $\tau$ $\eta$").Double()
 		h_tau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$").Double()
 		
 		#Basic Kinematic histograms leptons (muons and electrons)
-		h_electron_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
-		h_Leadingelectron_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
+		h_electron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e $p_T$ [GeV]").Double()
+		h_Leadingelectron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e Leading $p_T$ [GeV]").Double()
 		h_electron_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"e $\eta$").Double()
-		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"e $\phi$").Double()
-		h_muon_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
-		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"e Leading $\phi$").Double()
+		h_muon_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"$\mu$ Leading $p_T$ [GeV]").Double()
 		h_muon_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$").Double()
 		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$").Double()
 		
 		#Basic Kinematic histograms Jets (check which Jets most useful based on 
-		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
-		h_LeadingJet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
+		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"Jet $p_T$ [GeV]").Double()
+		h_LeadingJet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"Jet Leading $p_T$ [GeV]").Double()
 		h_Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$").Double()
 		h_Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$").Double()
-		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
-		h_LeadingAK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_LeadingAK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet Leading $p_T$ [GeV]").Double()
 		h_AK8Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double()
 		h_AK8Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double()
 		
@@ -633,7 +633,6 @@ if __name__ == "__main__":
 					"AK8Jet_pt_Trigg": r"AK8Jet $p_T$ after Trigger","LeadingAK8Jet_pt_Trigg": r"Leading AK8Jet $p_T$ after Trigger",
 					"AK8Jet_eta_Trigg": r"AK8Jet $\eta$ after Trigger","AK8Jet_phi_Trigg": r"AK8Jet $\phi$ after Trigger",
 					"MET": r"MET after Trigger",
-					
 					}
 
 	#Diretory for files
@@ -715,13 +714,14 @@ if __name__ == "__main__":
 		}
 	
 	#Background lists 
-	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"] #Full background list
+	background_list_full_QCD = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"] #Full background list (with QCD)
+	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"] #Full background list
 	background_list_test = [r"$ZZ \rightarrow 4l$"] #Only ZZ4l background for testing
 	background_list_none = [] #No backgrounds for data only testing
 	
 	#Set file dictionary and list of backgrounds prior to running processor
 	file_dict = file_dict_full
-	background_list = background_list_full
+	background_list = background_list_full_QCD
 
 	start_time = time.time()
 	for key_name, file_array in file_dict.items(): 

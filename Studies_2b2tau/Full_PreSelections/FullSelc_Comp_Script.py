@@ -1049,24 +1049,24 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"boostedtau_phi_Trigg_m": h_boostedtau_phi_Trigger_m,
 				"boostedtau_iso_Trigg_m": h_boostedtau_raw_iso_Trigger_m,
 				
-				#Boosted Tau kineamtic distirubtions
-				"boostedtau_pt_Trigg_h": h_boostedtau_pT_Trigger_h,
-				"Leadingboostedtau_pt_Trigg_h": h_Leadingboostedtau_pT_Trigger_h,
-				"boostedtau_eta_Trigg_h": h_boostedtau_eta_Trigger_h,
-				"boostedtau_phi_Trigg_h": h_boostedtau_phi_Trigger_h,
-				"boostedtau_iso_Trigg_h": h_boostedtau_raw_iso_Trigger_h,
+				#HPS Tau kineamtic distirubtions
+				"tau_pt_Trigg_h": h_tau_pT_Trigger_h,
+				"Leadingtau_pt_Trigg_h": h_Leadingtau_pT_Trigger_h,
+				"tau_eta_Trigg_h": h_tau_eta_Trigger_h,
+				"tau_phi_Trigg_h": h_tau_phi_Trigger_h,
+				"tau_iso_Trigg_h": h_tau_raw_iso_Trigger_h,
 				
-				"boostedtau_pt_Trigg_e": h_boostedtau_pT_Trigger_e,
-				"Leadingboostedtau_pt_Trigg_e": h_Leadingboostedtau_pT_Trigger_e,
-				"boostedtau_eta_Trigg_e": h_boostedtau_eta_Trigger_e,
-				"boostedtau_phi_Trigg_e": h_boostedtau_phi_Trigger_e,
-				"boostedtau_iso_Trigg_e": h_boostedtau_raw_iso_Trigger_e,
+				"tau_pt_Trigg_e": h_tau_pT_Trigger_e,
+				"Leadingtau_pt_Trigg_e": h_Leadingtau_pT_Trigger_e,
+				"tau_eta_Trigg_e": h_tau_eta_Trigger_e,
+				"tau_phi_Trigg_e": h_tau_phi_Trigger_e,
+				"tau_iso_Trigg_e": h_tau_raw_iso_Trigger_e,
 				
-				"boostedtau_pt_Trigg_m": h_boostedtau_pT_Trigger_m,
-				"Leadingboostedtau_pt_Trigg_m": h_Leadingboostedtau_pT_Trigger_m,
-				"boostedtau_eta_Trigg_m": h_boostedtau_eta_Trigger_m,
-				"boostedtau_phi_Trigg_m": h_boostedtau_phi_Trigger_m,
-				"boostedtau_iso_Trigg_m": h_boostedtau_raw_iso_Trigger_m,
+				"tau_pt_Trigg_m": h_tau_pT_Trigger_m,
+				"Leadingtau_pt_Trigg_m": h_Leadingtau_pT_Trigger_m,
+				"tau_eta_Trigg_m": h_tau_eta_Trigger_m,
+				"tau_phi_Trigg_m": h_tau_phi_Trigger_m,
+				"tau_iso_Trigg_m": h_tau_raw_iso_Trigger_m,
 				
 				#Electron kineamtic distirubtions
 				"electron_pt_Trigg_h": h_electron_pT_Trigger_h,
@@ -1195,16 +1195,19 @@ if __name__ == "__main__":
 	
 	four_tau_hist_list = [
 			"tau_pt_Trigg_h","tau_eta_Trigg_h","tau_phi_Trigg_h",
+			"boostedtau_pt_Trigg_h","boostedtau_eta_Trigg_h","boostedtau_phi_Trigg_h",
 			"electron_pt_Trigg_h","electron_eta_Trigg_h","electron_phi_Trigg_h",
 			"muon_pt_Trigg_h","muon_eta_Trigg_h","muon_phi_Trigg_h",
 			"Jet_pt_Trigg_h","Jet_eta_Trigg_h","Jet_phi_Trigg_h",
 			"AK8Jet_pt_Trigg_h","AK8Jet_eta_Trigg_h","AK8Jet_phi_Trigg_h","MET_h",
 			"tau_pt_Trigg_e","tau_eta_Trigg_e","tau_phi_Trigg_e",
+			"boostedtau_pt_Trigg_e","boostedtau_eta_Trigg_e","boostedtau_phi_Trigg_e",
 			"electron_pt_Trigg_e","electron_eta_Trigg_e","electron_phi_Trigg_e",
 			"muon_pt_Trigg_e","muon_eta_Trigg_e","muon_phi_Trigg_e",
 			"Jet_pt_Trigg_e","Jet_eta_Trigg_e","Jet_phi_Trigg_e",
 			"AK8Jet_pt_Trigg_e","AK8Jet_eta_Trigg_e","AK8Jet_phi_Trigg_e","MET_e",
 			"tau_pt_Trigg_m","tau_eta_Trigg_m","tau_phi_Trigg_m",
+			"boostedtau_pt_Trigg_m","boostedtau_eta_Trigg_m","boostedtau_phi_Trigg_m",
 			"electron_pt_Trigg_m","electron_eta_Trigg_m","electron_phi_Trigg_m",
 			"muon_pt_Trigg_m","muon_eta_Trigg_m","muon_phi_Trigg_m",
 			"Jet_pt_Trigg_m","Jet_eta_Trigg_m","Jet_phi_Trigg_m",
@@ -1214,6 +1217,8 @@ if __name__ == "__main__":
 	hist_name_dict = {
 					"tau_pt_Trigg_h": r"$\tau$ $p_T$ after Trigger",
 					"tau_eta_Trigg_h": r"$\tau$ $\eta$ after Trigger","tau_phi_Trigg_h": r"$\tau$ $\phi$ after Trigger", 
+					"boostedtau_pt_Trigg_h": r"Boosted $\tau$ $p_T$ after Trigger",
+					"boostedtau_eta_Trigg_h": r"Boosted $\tau$ $\eta$ after Trigger","boostedtau_phi_Trigg_h": r"Boosted $\tau$ $\phi$ after Trigger", 
 					"electron_pt_Trigg_h": r"e $p_T$ after Trigger",
 					"electron_eta_Trigg_h": r"e $\eta$ after Trigger", "electron_phi_Trigg_h": r"e $\phi$ after Trigger", 
 					"muon_pt_Trigg_h": r"$\mu$ $p_T$ after Trigger",
@@ -1226,6 +1231,8 @@ if __name__ == "__main__":
 					
 					"tau_pt_Trigg_e": r"$\tau$ $p_T$ after Trigger",
 					"tau_eta_Trigg_e": r"$\tau$ $\eta$ after Trigger","tau_phi_Trigg_e": r"$\tau$ $\phi$ after Trigger", 
+					"boostedtau_pt_Trigg_e": r"Boosted $\tau$ $p_T$ after Trigger",
+					"boostedtau_eta_Trigg_e": r"Boosted $\tau$ $\eta$ after Trigger","boostedtau_phi_Trigg_e": r"Boosted $\tau$ $\phi$ after Trigger", 
 					"electron_pt_Trigg_e": r"e $p_T$ after Trigger",
 					"electron_eta_Trigg_e": r"e $\eta$ after Trigger", "electron_phi_Trigg_e": r"e $\phi$ after Trigger", 
 					"muon_pt_Trigg_e": r"$\mu$ $p_T$ after Trigger",
@@ -1238,6 +1245,8 @@ if __name__ == "__main__":
 					
 					"tau_pt_Trigg_m": r"$\tau$ $p_T$ after Trigger",
 					"tau_eta_Trigg_m": r"$\tau$ $\eta$ after Trigger","tau_phi_Trigg_m": r"$\tau$ $\phi$ after Trigger", 
+					"boostedtau_pt_Trigg_m": r"Boosted $\tau$ $p_T$ after Trigger",
+					"boostedtau_eta_Trigg_m": r"Boosted $\tau$ $\eta$ after Trigger","boostedtau_phi_Trigg_m": r"Boosted $\tau$ $\phi$ after Trigger", 
 					"electron_pt_Trigg_m": r"e $p_T$ after Trigger",
 					"electron_eta_Trigg_m": r"e $\eta$ after Trigger", "electron_phi_Trigg_m": r"e $\phi$ after Trigger", 
 					"muon_pt_Trigg_m": r"$\mu$ $p_T$ after Trigger",

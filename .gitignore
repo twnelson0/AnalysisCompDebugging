@@ -13,8 +13,10 @@ __pycache__/
 Simple_CrossSec.txt
 Full_CrossSecDict.txt
 
-#Old plots
+#Directories with only plots and data files
 Studies_2b2tau/Old_Plots/
+Studies_4tau/SimpleSelec_2b2tauSamples/Plots_WithQCD/
+*/SingleBackground_Dir/
 
 #Shell file
 shell
