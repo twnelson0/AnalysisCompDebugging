@@ -383,93 +383,93 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
 
 		#Basic Kinematic histograms Boosted tau
-		h_boostedtau_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingboostedtau_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_boostedtau_pT_Trigger_h = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingboostedtau_pT_Trigger_h = hist.Hist.new.Regular(20,0,400,label = r"Leading Boosted $\tau$ $p_T$ [GeV]").Double()
 		h_boostedtau_eta_Trigger_h = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$").Double()
 		h_boostedtau_phi_Trigger_h = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$").Double()
 		h_boostedtau_raw_iso_Trigger_h = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score").Double()
 		
-		h_boostedtau_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingboostedtau_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_boostedtau_pT_Trigger_e = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingboostedtau_pT_Trigger_e = hist.Hist.new.Regular(20,0,400,label = r"Leading Boosted $\tau$ $p_T$ [GeV]").Double()
 		h_boostedtau_eta_Trigger_e = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$").Double()
 		h_boostedtau_phi_Trigger_e = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$").Double()
 		h_boostedtau_raw_iso_Trigger_e = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score").Double()
 		
-		h_boostedtau_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingboostedtau_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_boostedtau_pT_Trigger_m = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingboostedtau_pT_Trigger_m = hist.Hist.new.Regular(20,0,400,label = r"Leading Boosted $\tau$ $p_T$ [GeV]").Double()
 		h_boostedtau_eta_Trigger_m = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$").Double()
 		h_boostedtau_phi_Trigger_m = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$").Double()
 		h_boostedtau_raw_iso_Trigger_m = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score").Double()
 		
 		#Basic Kinematic histograms of tau/HPS tau
-		h_tau_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingtau_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_tau_pT_Trigger_h = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingtau_pT_Trigger_h = hist.Hist.new.Regular(20,0,400,label = r"Leading $\tau$ $p_T$ [GeV]").Double()
 		h_tau_eta_Trigger_h = hist.Hist.new.Regular(20,-4,4,label = r" $\tau$ $\eta$").Double()
 		h_tau_phi_Trigger_h = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$").Double()
 		
-		h_tau_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingtau_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_tau_pT_Trigger_e = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingtau_pT_Trigger_e = hist.Hist.new.Regular(20,0,400,label = r"Leading $\tau$ $p_T$ [GeV]").Double()
 		h_tau_eta_Trigger_e = hist.Hist.new.Regular(20,-4,4,label = r" $\tau$ $\eta$").Double()
 		h_tau_phi_Trigger_e = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$").Double()
 		
-		h_tau_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingtau_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_tau_pT_Trigger_m = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ $p_T$ [GeV]").Double()
+		h_Leadingtau_pT_Trigger_m = hist.Hist.new.Regular(20,0,400,label = r"Leading $\tau$ $p_T$ [GeV]").Double()
 		h_tau_eta_Trigger_m = hist.Hist.new.Regular(20,-4,4,label = r" $\tau$ $\eta$").Double()
 		h_tau_phi_Trigger_m = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$").Double()
 
 		#Basic Kinematic histograms leptons (muons and electrons)
-		h_electron_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
-		h_Leadingelectron_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
+		h_electron_pT_Trigger_h = hist.Hist.new.Regular(15,0,300,label = r"e $p_T$ [GeV]").Double()
+		h_Leadingelectron_pT_Trigger_h = hist.Hist.new.Regular(15,0,300,label = r"Leading e $p_T$ [GeV]").Double()
 		h_electron_eta_Trigger_h = hist.Hist.new.Regular(20,-4,4,label = r"e $\eta$").Double()
 		h_electron_phi_Trigger_h = hist.Hist.new.Regular(20,-pi,pi,label = r"e $\phi$").Double()
-		h_muon_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
-		h_Leadingmuon_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_muon_pT_Trigger_h = hist.Hist.new.Regular(15,0,300,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_Leadingmuon_pT_Trigger_h = hist.Hist.new.Regular(15,0,300,label = r"Leading $\mu$ $p_T$ [GeV]").Double()
 		h_muon_eta_Trigger_h = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$").Double()
 		h_muon_phi_Trigger_h = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$").Double()
 		
-		h_electron_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
-		h_Leadingelectron_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
+		h_electron_pT_Trigger_e = hist.Hist.new.Regular(15,0,300,label = r"e $p_T$ [GeV]").Double()
+		h_Leadingelectron_pT_Trigger_e = hist.Hist.new.Regular(15,0,300,label = r"Leading e $p_T$ [GeV]").Double()
 		h_electron_eta_Trigger_e = hist.Hist.new.Regular(20,-4,4,label = r"e $\eta$").Double()
 		h_electron_phi_Trigger_e = hist.Hist.new.Regular(20,-pi,pi,label = r"e $\phi$").Double()
-		h_muon_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
-		h_Leadingmuon_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_muon_pT_Trigger_e = hist.Hist.new.Regular(15,0,300,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_Leadingmuon_pT_Trigger_e = hist.Hist.new.Regular(15,0,300,label = r"Leading $\mu$ $p_T$ [GeV]").Double()
 		h_muon_eta_Trigger_e = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$").Double()
 		h_muon_phi_Trigger_e = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$").Double()
 		
-		h_electron_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
-		h_Leadingelectron_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"e $p_T$ [GeV]").Double()
+		h_electron_pT_Trigger_m = hist.Hist.new.Regular(15,0,300,label = r"e $p_T$ [GeV]").Double()
+		h_Leadingelectron_pT_Trigger_m = hist.Hist.new.Regular(15,0,300,label = r"Leading e $p_T$ [GeV]").Double()
 		h_electron_eta_Trigger_m = hist.Hist.new.Regular(20,-4,4,label = r"e $\eta$").Double()
 		h_electron_phi_Trigger_m = hist.Hist.new.Regular(20,-pi,pi,label = r"e $\phi$").Double()
-		h_muon_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
-		h_Leadingmuon_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_muon_pT_Trigger_m = hist.Hist.new.Regular(15,0,300,label = r"$\mu$ $p_T$ [GeV]").Double()
+		h_Leadingmuon_pT_Trigger_m = hist.Hist.new.Regular(15,0,300,label = r"Leading $\mu$ $p_T$ [GeV]").Double()
 		h_muon_eta_Trigger_m = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$").Double()
 		h_muon_phi_Trigger_m = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$").Double()
 
 		#Basic Kinematic histograms Jets (check which Jets most useful based on 
-		h_Jet_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
-		h_LeadingJet_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
+		h_Jet_pT_Trigger_h = hist.Hist.new.Regular(50,0,700,label = r"Jet $p_T$ [GeV]").Double()
+		h_LeadingJet_pT_Trigger_h = hist.Hist.new.Regular(50,0,700,label = r"Leading Jet $p_T$ [GeV]").Double()
 		h_Jet_eta_Trigger_h = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$").Double()
 		h_Jet_phi_Trigger_h = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$").Double()
-		h_AK8Jet_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
-		h_LeadingAK8Jet_pT_Trigger_h = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_AK8Jet_pT_Trigger_h = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_LeadingAK8Jet_pT_Trigger_h = hist.Hist.new.Regular(50,0,700,label = r"Leading AK8Jet $p_T$ [GeV]").Double()
 		h_AK8Jet_eta_Trigger_h = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double()
 		h_AK8Jet_phi_Trigger_h = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double()
 		
-		h_Jet_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
-		h_LeadingJet_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
+		h_Jet_pT_Trigger_e = hist.Hist.new.Regular(50,0,700,label = r"Jet $p_T$ [GeV]").Double()
+		h_LeadingJet_pT_Trigger_e = hist.Hist.new.Regular(50,0,700,label = r"Leading Jet $p_T$ [GeV]").Double()
 		h_Jet_eta_Trigger_e = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$").Double()
 		h_Jet_phi_Trigger_e = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$").Double()
-		h_AK8Jet_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
-		h_LeadingAK8Jet_pT_Trigger_e = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_AK8Jet_pT_Trigger_e = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_LeadingAK8Jet_pT_Trigger_e = hist.Hist.new.Regular(50,0,700,label = r"Leading AK8Jet $p_T$ [GeV]").Double()
 		h_AK8Jet_eta_Trigger_e = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double()
 		h_AK8Jet_phi_Trigger_e = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double()
 		
-		h_Jet_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
-		h_LeadingJet_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"Jet $p_T$ [GeV]").Double()
+		h_Jet_pT_Trigger_m = hist.Hist.new.Regular(50,0,700,label = r"Jet $p_T$ [GeV]").Double()
+		h_LeadingJet_pT_Trigger_m = hist.Hist.new.Regular(50,0,700,label = r"Leading Jet $p_T$ [GeV]").Double()
 		h_Jet_eta_Trigger_m = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$").Double()
 		h_Jet_phi_Trigger_m = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$").Double()
-		h_AK8Jet_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
-		h_LeadingAK8Jet_pT_Trigger_m = hist.Hist.new.Regular(50,0,1000,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_AK8Jet_pT_Trigger_m = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet $p_T$ [GeV]").Double()
+		h_LeadingAK8Jet_pT_Trigger_m = hist.Hist.new.Regular(50,0,700,label = r"Leading AK8Jet $p_T$ [GeV]").Double()
 		h_AK8Jet_eta_Trigger_m = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double()
 		h_AK8Jet_phi_Trigger_m = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double()
 
@@ -825,7 +825,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level_h = ak.concatenate([event_level_hps,ak.concatenate([event_level_boost,event_level_both])])
 
 		#MET Phi selection
-		deltaPhiMET_Cond_h = deltaPhi_METSelec(AK8Jet_h[:,0],event_level,1)
+		deltaPhiMET_Cond_h = deltaPhi_METSelec(AK8Jet_h[:,0],event_level_h,1)
 		boostedtau_h = boostedtau[deltaPhiMET_Cond_h]
 		tau_h = tau[deltaPhiMET_Cond_h]
 		electron_h = electron[deltaPhiMET_Cond_h]
@@ -836,42 +836,62 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		
 		#Electron Channel
 		#Split into only canidate events for e tau channel
-		tau_e = tau[ak.num(electron,axis=1) > 0]
-		muon_e = muon[ak.num(electron,axis=1) > 0]
-		electron_e = electron[ak.num(electron,axis=1) > 0]
-		AK8Jet_e = AK8Jet[ak.num(electron,axis=1) > 0]
-		Jet_e = Jet[ak.num(electron,axis=1) > 0]
-		event_level_e = event_level[ak.num(electron,axis=1) > 0]
-		boostedtau_e = boostedtau[ak.num(electron,axis=1) > 0]
+		tau_e_hps = tau[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(tau,axis=1)>0)]
+		muon_e_hps = muon[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(tau,axis=1)>0)]
+		electron_e_hps = electron[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(tau,axis=1)>0)]
+		AK8Jet_e_hps = AK8Jet[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(tau,axis=1)>0)]
+		Jet_e_hps = Jet[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(tau,axis=1)>0)]
+		event_level_e_hps = event_level[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(tau,axis=1)>0)]
+		boostedtau_e_hps = boostedtau[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(tau,axis=1)>0)]
 		
-		tau_e = tau[ak.num(electron,axis=1) > 0]
-		muon_e = muon[ak.num(electron,axis=1) > 0]
-		electron_e = electron[ak.num(electron,axis=1) > 0]
-		AK8Jet_e = AK8Jet[ak.num(electron,axis=1) > 0]
-		Jet_e = Jet[ak.num(electron,axis=1) > 0]
-		event_level_e = event_level[ak.num(electron,axis=1) > 0]
-		boostedtau_e = boostedtau[ak.num(electron,axis=1) > 0]
+		tau_e_boost = tau[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(boostedtau,axis=1)>0)]
+		muon_e_boost = muon[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(boostedtau,axis=1)>0)]
+		electron_e_boost = electron[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(boostedtau,axis=1)>0)]
+		AK8Jet_e_boost = AK8Jet[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(boostedtau,axis=1)>0)]
+		Jet_e_boost = Jet[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(boostedtau,axis=1)>0)]
+		event_level_e_boost = event_level[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(boostedtau,axis=1)>0)]
+		boostedtau_e_boost = boostedtau[np.bitwise_and(ak.num(electron,axis=1) > 0,ak.num(boostedtau,axis=1)>0)]
 		
 		#Make slections and apply them
-		tau_e_dR_cond = deltaR_Selec(tau_e[:,0],electron_e[:,0],1.5)  
-		tau_e_mass_cond = dimass_Selec(tau_e[:,0],electron_e[:,0],20)
+		#HPS tau conditions
+		tau_e_dR_cond = deltaR_Selec(tau_e_hps[:,0],electron_e_hps[:,0],1.5)  
+		tau_e_mass_cond = dimass_Selec(tau_e_hps[:,0],electron_e_hps[:,0],20)
 		tau_e_cond = np.bitwise_and(tau_e_dR_cond, tau_e_mass_cond)
+
+		#Apply slections to hps candiate events
+		tau_e_hps = tau_e_hps[tau_e_cond]
+		muon_e_hps = muon_e_hps[tau_e_cond]
+		electron_e_hps = electron_e_hps[tau_e_cond]
+		AK8Jet_e_hps = AK8Jet_e_hps[tau_e_cond]
+		Jet_e_hps = Jet_e_hps[tau_e_cond]
+		event_level_e_hps = event_level_e_hps[tau_e_cond]
+		boostedtau_e_hps = boostedtau_e_hps[tau_e_cond]
+	
+		#Boosted tau conditions
+		boostedtau_e_dR_cond = deltaR_Selec(boostedtau_e_boost[:,0],electron_e_boost[:,0],1.5)
+		boostedtau_e_mass_cond = dimass_Selec(boostedtau_e_boost[:,0],electron_e_boost[:,0],20)
+		boostedtau_e_cond = np.bitwise_and(boostedtau_e_dR_cond,boostedtau_e_mass_cond)
 		
-		boostedtau_e_dR_cond = deltaR_Selec(boostedtau_e[:,0],electron_e[:,0],1.5)
-		boostedtau_e_mass_cond = dimass_Selec(boostedtau_e[:,0],electron_e[:,0],20)
-		boostedtau_e_cond = np.bitwise_and(boostedtau_e_dR_cond,boosted_tau_e_mass_cond)
+		#Apply slections to boosted candiate events
+		tau_e_boost = tau_e_boost[boostedtau_e_cond]
+		muon_e_boost = muon_e_boost[boostedtau_e_cond]
+		electron_e_boost = electron_e_boost[boostedtau_e_cond]
+		AK8Jet_e_boost = AK8Jet_e_boost[boostedtau_e_cond]
+		Jet_e_boost = Jet_e_boost[boostedtau_e_cond]
+		event_level_e_boost = event_level_e_boost[boostedtau_e_cond]
+		boostedtau_e_boost = boostedtau_e_boost[boostedtau_e_cond]
 		
-		electron_Cond = np.bitwise_or(tau_e_cond,boostedtau_e_cond)
-		boostedtau_e = boostedtau_e[electron_Cond]
-		tau_e = tau_e[electron_Cond]
-		electron_e = electron_e[electron_Cond]
-		muon_e = muon_e[electron_Cond]
-		Jet_e = Jet_e[electron_Cond]
-		AK8Jet_e = AK8Jet_e[electron_Cond]
-		event_level_e = event_level_e[electron_Cond]
+		#electron_Cond = np.bitwise_or(tau_e_cond,boostedtau_e_cond)
+		boostedtau_e = ak.concatenate([boostedtau_e_hps,boostedtau_e_boost]) 
+		tau_e = ak.concatenate([tau_e_hps,tau_e_boost])
+		electron_e = ak.concatenate([electron_e_hps,electron_e_boost])
+		muon_e = ak.concatenate([muon_e_hps,muon_e_boost])
+		Jet_e = ak.concatenate([Jet_e_hps,Jet_e_boost])
+		AK8Jet_e = ak.concatenate([AK8Jet_e_hps,AK8Jet_e_boost])
+		event_level_e = ak.concatenate([event_level_e_hps,event_level_e_boost])
 		
 		#MET Phi selection
-		deltaPhiMET_Cond_e = deltaPhi_METSelec(AK8Jet_e[:,0],event_level,1)
+		deltaPhiMET_Cond_e = deltaPhi_METSelec(AK8Jet_e[:,0],event_level_e,1)
 		boostedtau_e = boostedtau[deltaPhiMET_Cond_e]
 		tau_e = tau[deltaPhiMET_Cond_e]
 		electron_e = electron[deltaPhiMET_Cond_e]
@@ -882,33 +902,60 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		
 		#Muon Channel
 		#Split into only canidate events for muon tau channel
-		tau_m = tau[ak.num(muon,axis=1) > 0]
-		muon_m = muon[ak.num(muon,axis=1) > 0]
-		electron_m = electron[ak.num(muon,axis=1) > 0]
-		AK8Jet_m = AK8Jet[ak.num(muon,axis=1) > 0]
-		Jet_m = Jet[ak.num(muon,axis=1) > 0]
-		event_level_m = event_level[ak.num(muon,axis=1) > 0]
-		boostedtau_m = boostedtau[ak.num(muon,axis=1) > 0]
+		#HPS Canidate events
+		tau_m_hps = tau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(tau,axis=1) > 0)]
+		muon_m_hps = muon[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(tau,axis=1) > 0)]
+		electron_m_hps = electron[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(tau,axis=1) > 0)]
+		AK8Jet_m_hps = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(tau,axis=1) > 0)]
+		Jet_m_hps = Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(tau,axis=1) > 0)]
+		event_level_m_hps = event_level[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(tau,axis=1) > 0)]
+		boostedtau_m_hps = boostedtau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(tau,axis=1) > 0)]
 		
-		tau_m_dR_cond = deltaR_Selec(tau_m[:,0],muon_m[:,0],1.5)  
-		tau_m_mass_cond = dimass_Selec(tau_m[:,0],muon_m[:,0],20)
+		tau_m_dR_cond = deltaR_Selec(tau_m_hps[:,0],muon_m_hps[:,0],1.5)  
+		tau_m_mass_cond = dimass_Selec(tau_m_hps[:,0],muon_m_hps[:,0],20)
 		tau_m_cond = np.bitwise_and(tau_m_dR_cond, tau_m_mass_cond)
 		
-		boostedtau_m_dR_cond = deltaR_Selec(boostedtau_m[:,0],muon_m[:,0],1.5)
-		boostedtau_m_mass_cond = dimass_Selec(boostedtau_m[:,0],muon_m[:,0],20)
-		boostedtau_m_cond = np.bitwise_and(boostedtau_m_dR_cond,boosted_tau_m_mass_cond)
+		tau_m_hps = tau_m_hps[tau_m_cond]
+		muon_m_hps = muon_m_hps[tau_m_cond]
+		electron_m_hps = electron_m_hps[tau_m_cond]
+		AK8Jet_m_hps = AK8Jet_m_hps[tau_m_cond]
+		Jet_m_hps = Jet_m_hps[tau_m_cond]
+		event_level_m_hps = event_level_m_hps[tau_m_cond]
+		boostedtau_m_hps = boostedtau_m_hps[tau_m_cond]
 		
-		muon_Cond = np.bitwise_or(tau_m_cond,boostedtau_m_cond)
-		boostedtau_m = boostedtau_m[muon_Cond]
-		tau_m = tau_m[muon_Cond]
-		electron_m = electron_m[muon_Cond]
-		muon_m = muon_m[muon_Cond]
-		Jet_m = Jet_m[muon_Cond]
-		AK8Jet_m = AK8Jet_m[muon_Cond]
-		event_level_m = event_level_m[muon_Cond]
+		#boosted Canidate events
+		tau_m_boost = tau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		muon_m_boost = muon[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		electron_m_boost = electron[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		AK8Jet_m_boost = AK8Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		Jet_m_boost = Jet[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		event_level_m_boost = event_level[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		boostedtau_m_boost = boostedtau[np.bitwise_and(ak.num(muon,axis=1) > 0,ak.num(boostedtau,axis=1) > 0)]
+		
+		boostedtau_m_dR_cond = deltaR_Selec(boostedtau_m_boost[:,0],muon_m_boost[:,0],1.5)
+		boostedtau_m_mass_cond = dimass_Selec(boostedtau_m_boost[:,0],muon_m_boost[:,0],20)
+		boostedtau_m_cond = np.bitwise_and(boostedtau_m_dR_cond,boostedtau_m_mass_cond)
+		
+		tau_m_boost = tau_m_boost[boostedtau_m_cond]
+		muon_m_boost = muon_m_boost[boostedtau_m_cond]
+		electron_m_boost = electron_m_boost[boostedtau_m_cond]
+		AK8Jet_m_boost = AK8Jet_m_boost[boostedtau_m_cond]
+		Jet_m_boost = Jet_m_boost[boostedtau_m_cond]
+		event_level_m_boost = event_level_m_boost[boostedtau_m_cond]
+		boostedtau_m_boost = boostedtau_m_boost[boostedtau_m_cond]
+		
+		
+		#muon_Cond = np.bitwise_or(tau_m_cond,boostedtau_m_cond)
+		boostedtau_m = ak.concatenate([boostedtau_m_hps,boostedtau_m_boost]) 
+		tau_m = ak.concatenate([tau_m_hps,tau_m_boost])
+		electron_m = ak.concatenate([electron_m_hps,electron_m_boost])
+		muon_m = ak.concatenate([muon_m_hps,muon_m_boost])
+		Jet_m = ak.concatenate([Jet_m_hps,Jet_m_boost])
+		AK8Jet_m = ak.concatenate([AK8Jet_m_hps,AK8Jet_m_boost])
+		event_level_m = ak.concatenate([event_level_m_hps,event_level_m_boost])
 		
 		#MET Phi selection
-		deltaPhiMET_Cond_m = deltaPhi_METSelec(AK8Jet_m[:,0],event_level,1)
+		deltaPhiMET_Cond_m = deltaPhi_METSelec(AK8Jet_m[:,0],event_level_m,1)
 		boostedtau_m = boostedtau[deltaPhiMET_Cond_m]
 		tau_m = tau[deltaPhiMET_Cond_m]
 		electron_m = electron[deltaPhiMET_Cond_m]
@@ -920,21 +967,21 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
 		h_boostedtau_pT_Trigger_h.fill(ak.ravel(boostedtau_h.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_h.pt))[0]))
-		h_Leadingboostedtau_pT_Trigger_h.fill(ak.ravel(boostedtau_h[:,0].pt),weight=ak.ravel(event_level_h.event_weight*CrossSec_Weight))
+		h_Leadingboostedtau_pT_Trigger_h.fill(ak.ravel(boostedtau_h[ak.num(boostedtau_h,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_h[ak.num(boostedtau_h,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_boostedtau_eta_Trigger_h.fill(ak.ravel(boostedtau_h.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_h.eta))[0]))
 		h_boostedtau_phi_Trigger_h.fill(ak.ravel(boostedtau_h.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_h.phi))[0]))
 		h_boostedtau_raw_iso_Trigger_h.fill(ak.ravel(boostedtau_h.iso),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_h.iso))[0]))
 
 		
 		h_boostedtau_pT_Trigger_e.fill(ak.ravel(boostedtau_e.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_e.pt))[0]))
-		h_Leadingboostedtau_pT_Trigger_e.fill(ak.ravel(boostedtau_e[:,0].pt),weight=ak.ravel(event_level_e.event_weight*CrossSec_Weight))
+		h_Leadingboostedtau_pT_Trigger_e.fill(ak.ravel(boostedtau_e[ak.num(boostedtau_e,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_e[ak.num(boostedtau_e,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_boostedtau_eta_Trigger_e.fill(ak.ravel(boostedtau_e.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_e.eta))[0]))
 		h_boostedtau_phi_Trigger_e.fill(ak.ravel(boostedtau_e.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_e.phi))[0]))
 		h_boostedtau_raw_iso_Trigger_e.fill(ak.ravel(boostedtau_e.iso),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_e.iso))[0]))
 		
 		
 		h_boostedtau_pT_Trigger_m.fill(ak.ravel(boostedtau_m.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_m.pt))[0]))
-		h_Leadingboostedtau_pT_Trigger_m.fill(ak.ravel(boostedtau_m[:,0].pt),weight=ak.ravel(event_level_m.event_weight*CrossSec_Weight))
+		h_Leadingboostedtau_pT_Trigger_m.fill(ak.ravel(boostedtau_m[ak.num(boostedtau_m,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_m[ak.num(boostedtau_m,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_boostedtau_eta_Trigger_m.fill(ak.ravel(boostedtau_m.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_m.eta))[0]))
 		h_boostedtau_phi_Trigger_m.fill(ak.ravel(boostedtau_m.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_m.phi))[0]))
 		h_boostedtau_raw_iso_Trigger_m.fill(ak.ravel(boostedtau_m.iso),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(boostedtau_m.iso))[0]))
@@ -942,88 +989,88 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#HPS Taus
 		h_tau_pT_Trigger_h.fill(ak.ravel(tau_h.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(tau_h.pt))[0]))
-		h_Leadingtau_pT_Trigger_h.fill(ak.ravel(tau_h[:,0].pt),weight=ak.ravel(event_level_h.event_weight*CrossSec_Weight))
+		h_Leadingtau_pT_Trigger_h.fill(ak.ravel(tau_h[ak.num(tau_h,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_h[ak.num(tau_h,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_tau_eta_Trigger_h.fill(ak.ravel(tau_h.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(tau_h.eta))[0]))
 		h_tau_phi_Trigger_h.fill(ak.ravel(tau_h.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(tau_h.phi))[0]))
 		
 		h_tau_pT_Trigger_e.fill(ak.ravel(tau_e.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(tau_e.pt))[0]))
-		h_Leadingtau_pT_Trigger_e.fill(ak.ravel(tau_e[:,0].pt),weight=ak.ravel(event_level_e.event_weight*CrossSec_Weight))
+		h_Leadingtau_pT_Trigger_e.fill(ak.ravel(tau_e[ak.num(tau_e,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_e[ak.num(tau_e,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_tau_eta_Trigger_e.fill(ak.ravel(tau_e.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(tau_e.eta))[0]))
 		h_tau_phi_Trigger_e.fill(ak.ravel(tau_e.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(tau_e.phi))[0]))
 		
 		h_tau_pT_Trigger_m.fill(ak.ravel(tau_m.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(tau_m.pt))[0]))
-		h_Leadingtau_pT_Trigger_m.fill(ak.ravel(tau_m[:,0].pt),weight=ak.ravel(event_level_m.event_weight*CrossSec_Weight))
+		h_Leadingtau_pT_Trigger_m.fill(ak.ravel(tau_m[ak.num(tau_m,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_m[ak.num(tau_m,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_tau_eta_Trigger_m.fill(ak.ravel(tau_m.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(tau_m.eta))[0]))
 		h_tau_phi_Trigger_m.fill(ak.ravel(tau_m.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(tau_m.phi))[0]))
 		
 		#Electrons
 		h_electron_pT_Trigger_h.fill(ak.ravel(electron_h.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(electron_h.pt))[0]))
-		h_Leadingelectron_pT_Trigger_h.fill(ak.ravel(electron_h[:,0].pt),weight=ak.ravel(event_level_h.event_weight*CrossSec_Weight))
+		h_Leadingelectron_pT_Trigger_h.fill(ak.ravel(electron_h[ak.num(electron_h,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_h[ak.num(electron_h,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_electron_eta_Trigger_h.fill(ak.ravel(electron_h.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(electron_h.eta))[0]))
 		h_electron_phi_Trigger_h.fill(ak.ravel(electron_h.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(electron_h.phi))[0]))
 
 		h_electron_pT_Trigger_e.fill(ak.ravel(electron_e.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(electron_e.pt))[0]))
-		h_Leadingelectron_pT_Trigger_e.fill(ak.ravel(electron_e[:,0].pt),weight=ak.ravel(event_level_e.event_weight*CrossSec_Weight))
+		h_Leadingelectron_pT_Trigger_e.fill(ak.ravel(electron_e[ak.num(electron_e,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_e[ak.num(electron_e,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_electron_eta_Trigger_e.fill(ak.ravel(electron_e.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(electron_e.eta))[0]))
 		h_electron_phi_Trigger_e.fill(ak.ravel(electron_e.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(electron_e.phi))[0]))
 		
 		h_electron_pT_Trigger_m.fill(ak.ravel(electron_m.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(electron_m.pt))[0]))
-		h_Leadingelectron_pT_Trigger_m.fill(ak.ravel(electron_m[:,0].pt),weight=ak.ravel(event_level_m.event_weight*CrossSec_Weight))
+		h_Leadingelectron_pT_Trigger_m.fill(ak.ravel(electron_m[ak.num(electron_m,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_m[ak.num(electron_m,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_electron_eta_Trigger_m.fill(ak.ravel(electron_m.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(electron_m.eta))[0]))
 		h_electron_phi_Trigger_m.fill(ak.ravel(electron_m.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(electron_m.phi))[0]))
 		#Muons
 		h_muon_pT_Trigger_h.fill(ak.ravel(muon_h.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(muon_h.pt))[0]))
-		h_Leadingmuon_pT_Trigger_h.fill(ak.ravel(muon_h.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(muon_h.pt))[0]))
+		h_Leadingmuon_pT_Trigger_h.fill(ak.ravel(muon_h[ak.num(muon_h,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_h[ak.num(muon_h,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_muon_eta_Trigger_h.fill(ak.ravel(muon_h.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(muon_h.eta))[0]))
 		h_muon_phi_Trigger_h.fill(ak.ravel(muon_h.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(muon_h.phi))[0]))
 
 		h_muon_pT_Trigger_e.fill(ak.ravel(muon_e.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(muon_e.pt))[0]))
-		h_Leadingmuon_pT_Trigger_e.fill(ak.ravel(muon_e.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(muon_e.pt))[0]))
+		h_Leadingmuon_pT_Trigger_e.fill(ak.ravel(muon_e[ak.num(muon_e,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_e[ak.num(muon_e,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_muon_eta_Trigger_e.fill(ak.ravel(muon_e.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(muon_e.eta))[0]))
 		h_muon_phi_Trigger_e.fill(ak.ravel(muon_e.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(muon_e.phi))[0]))
 
 		h_muon_pT_Trigger_m.fill(ak.ravel(muon_m.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(muon_m.pt))[0]))
-		h_Leadingmuon_pT_Trigger_m.fill(ak.ravel(muon_m.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(muon_m.pt))[0]))
+		h_Leadingmuon_pT_Trigger_m.fill(ak.ravel(muon_m[ak.num(muon_m,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_m[ak.num(muon_m,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_muon_eta_Trigger_m.fill(ak.ravel(muon_m.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(muon_m.eta))[0]))
 		h_muon_phi_Trigger_m.fill(ak.ravel(muon_m.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(muon_m.phi))[0]))
 
 
 		#Jets 
 		h_Jet_pT_Trigger_h.fill(ak.ravel(Jet_h.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(Jet_h.pt))[0]))
-		h_LeadingJet_pT_Trigger_h.fill(ak.ravel(Jet_h[:,0].pt),weight=ak.ravel(event_level_h.event_weight*CrossSec_Weight))
+		h_LeadingJet_pT_Trigger_h.fill(ak.ravel(Jet_h[ak.num(Jet_h,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_h[ak.num(Jet_h,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_Jet_eta_Trigger_h.fill(ak.ravel(Jet_h.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(Jet_h.eta))[0]))
 		h_Jet_phi_Trigger_h.fill(ak.ravel(Jet_h.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(Jet_h.phi))[0]))
 		
 		h_Jet_pT_Trigger_e.fill(ak.ravel(Jet_e.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(Jet_e.pt))[0]))
-		h_LeadingJet_pT_Trigger_e.fill(ak.ravel(Jet_e[:,0].pt),weight=ak.ravel(event_level_e.event_weight*CrossSec_Weight))
+		h_LeadingJet_pT_Trigger_e.fill(ak.ravel(Jet_e[ak.num(Jet_e,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_e[ak.num(Jet_e,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_Jet_eta_Trigger_e.fill(ak.ravel(Jet_e.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(Jet_e.eta))[0]))
 		h_Jet_phi_Trigger_e.fill(ak.ravel(Jet_e.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(Jet_e.phi))[0]))
 		
 		h_Jet_pT_Trigger_m.fill(ak.ravel(Jet_m.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(Jet_m.pt))[0]))
-		h_LeadingJet_pT_Trigger_m.fill(ak.ravel(Jet_m[:,0].pt),weight=ak.ravel(event_level_m.event_weight*CrossSec_Weight))
+		h_LeadingJet_pT_Trigger_m.fill(ak.ravel(Jet_m[ak.num(Jet_m,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_m[ak.num(Jet_m,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_Jet_eta_Trigger_m.fill(ak.ravel(Jet_m.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(Jet_m.eta))[0]))
 		h_Jet_phi_Trigger_m.fill(ak.ravel(Jet_m.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(Jet_m.phi))[0]))
 
 		#AK8/Fat Jets
 		h_AK8Jet_pT_Trigger_h.fill(ak.ravel(AK8Jet_h.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_h.pt))[0]))
-		h_LeadingAK8Jet_pT_Trigger_h.fill(ak.ravel(AK8Jet_h[:,0].pt),weight=ak.ravel(event_level_h.event_weight*CrossSec_Weight))
+		h_LeadingAK8Jet_pT_Trigger_h.fill(ak.ravel(AK8Jet_h[ak.num(AK8Jet_h,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_h[ak.num(AK8Jet_h,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_AK8Jet_eta_Trigger_h.fill(ak.ravel(AK8Jet_h.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_h.eta))[0]))
 		h_AK8Jet_phi_Trigger_h.fill(ak.ravel(AK8Jet_h.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_h.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_h.phi))[0]))
 		
 		h_AK8Jet_pT_Trigger_e.fill(ak.ravel(AK8Jet_e.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_e.pt))[0]))
-		h_LeadingAK8Jet_pT_Trigger_e.fill(ak.ravel(AK8Jet_e[:,0].pt),weight=ak.ravel(event_level_e.event_weight*CrossSec_Weight))
+		h_LeadingAK8Jet_pT_Trigger_e.fill(ak.ravel(AK8Jet_e[ak.num(AK8Jet_e,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_e[ak.num(AK8Jet_e,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_AK8Jet_eta_Trigger_e.fill(ak.ravel(AK8Jet_e.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_e.eta))[0]))
 		h_AK8Jet_phi_Trigger_e.fill(ak.ravel(AK8Jet_e.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_e.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_e.phi))[0]))
 		
 		h_AK8Jet_pT_Trigger_m.fill(ak.ravel(AK8Jet_m.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_m.pt))[0]))
-		h_LeadingAK8Jet_pT_Trigger_m.fill(ak.ravel(AK8Jet_m[:,0].pt),weight=ak.ravel(event_level_m.event_weight*CrossSec_Weight))
+		h_LeadingAK8Jet_pT_Trigger_m.fill(ak.ravel(AK8Jet_m[ak.num(AK8Jet_m,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level_m[ak.num(AK8Jet_m,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_AK8Jet_eta_Trigger_m.fill(ak.ravel(AK8Jet_m.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_m.eta))[0]))
 		h_AK8Jet_phi_Trigger_m.fill(ak.ravel(AK8Jet_m.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level_m.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet_m.phi))[0]))
 
 		#Print the MET
-		h_MET_Trigger_h.fill(ak.ravel(event_level_h.pfMET),weight=ak.ravel(event_level_h.eventweight*CrossSec_Weight))
-		h_MET_Trigger_e.fill(ak.ravel(event_level_e.pfMET),weight=ak.ravel(event_level_e.eventweight*CrossSec_Weight))
-		h_MET_Trigger_m.fill(ak.ravel(event_level_m.pfMET),weight=ak.ravel(event_level_m.eventweight*CrossSec_Weight))
+		h_MET_Trigger_h.fill(ak.ravel(event_level_h.pfMET),weight=ak.ravel(event_level_h.event_weight*CrossSec_Weight))
+		h_MET_Trigger_e.fill(ak.ravel(event_level_e.pfMET),weight=ak.ravel(event_level_e.event_weight*CrossSec_Weight))
+		h_MET_Trigger_m.fill(ak.ravel(event_level_m.pfMET),weight=ak.ravel(event_level_m.event_weight*CrossSec_Weight))
 		
 		return{
 			dataset: {
@@ -1054,19 +1101,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Leadingtau_pt_Trigg_h": h_Leadingtau_pT_Trigger_h,
 				"tau_eta_Trigg_h": h_tau_eta_Trigger_h,
 				"tau_phi_Trigg_h": h_tau_phi_Trigger_h,
-				"tau_iso_Trigg_h": h_tau_raw_iso_Trigger_h,
 				
 				"tau_pt_Trigg_e": h_tau_pT_Trigger_e,
 				"Leadingtau_pt_Trigg_e": h_Leadingtau_pT_Trigger_e,
 				"tau_eta_Trigg_e": h_tau_eta_Trigger_e,
 				"tau_phi_Trigg_e": h_tau_phi_Trigger_e,
-				"tau_iso_Trigg_e": h_tau_raw_iso_Trigger_e,
 				
 				"tau_pt_Trigg_m": h_tau_pT_Trigger_m,
 				"Leadingtau_pt_Trigg_m": h_Leadingtau_pT_Trigger_m,
 				"tau_eta_Trigg_m": h_tau_eta_Trigger_m,
 				"tau_phi_Trigg_m": h_tau_phi_Trigger_m,
-				"tau_iso_Trigg_m": h_tau_raw_iso_Trigger_m,
 				
 				#Electron kineamtic distirubtions
 				"electron_pt_Trigg_h": h_electron_pT_Trigger_h,
@@ -1187,8 +1231,8 @@ if __name__ == "__main__":
 			schema=BaseSchema,
 			skipbadfiles=True,
 			xrootdtimeout=1000,
-            #chunksize=150000,
-            #maxchunks = 1
+            chunksize=200,
+            maxchunks = 1
 		)
 	else: #Iterative runner
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)

@@ -765,7 +765,7 @@ if __name__ == "__main__":
 	}
 
 	#Dictinary with file names
-	trigger_name = "MET_Trigger"
+	trigger_name = "SingleMu_Trigger"
 	four_tau_names = {
 		"boostedtau_pt_Trigg": "BoostedTau_pT_Trigger" + "-" + trigger_name,
 		"Leadingboostedtau_pt_Trigg": "BoostedTau_Leading_pT_Trigger" + "-" + trigger_name,

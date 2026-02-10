@@ -390,7 +390,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		
 		#Basic Kinematic histograms of tau/HPS tau
 		h_tau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ Leading $p_T$ [GeV]").Double()
+		h_Leadingtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"$\tau$ Leading $p_T$ [GeV]").Double()
 		h_tau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r" $\tau$ $\eta$").Double()
 		h_tau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$").Double()
 		
@@ -765,7 +765,7 @@ if __name__ == "__main__":
 	}
 
 	#Dictinary with file names
-	trigger_name = "MET_Trigger"
+	trigger_name = "Mu_Trigger_WithQCD"
 	four_tau_names = {
 		"boostedtau_pt_Trigg": "BoostedTau_pT_Trigger" + "-" + trigger_name,
 		"Leadingboostedtau_pt_Trigg": "BoostedTau_Leading_pT_Trigger" + "-" + trigger_name,
