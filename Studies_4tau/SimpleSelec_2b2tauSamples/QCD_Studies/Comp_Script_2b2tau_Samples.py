@@ -207,12 +207,6 @@ def dimass_Selec(part1,part2,low_lim):
 def deltaPhi_METSelec(part1,MET,low_lim): #Note definition of deltaR coppied from coffea code (line 67 of vector.py)
 	return (part1.phi - MET.pfMETPhi + np.pi) % (2*np.pi) - np.pi > low_lim
 
-def reorder(to_reorder, template_object):
-	to_reorder_cc = to_reorder[ak.num(template_object,axis=1)>0]
-	to_reorder_conv = to_reorder[ak.num(template_object,axis=1) == 0]
-
-	return ak.concatenate((to_reorder_cc,to_reorder_conv))
-
 
 class PlottingScriptProcessor(processor.ProcessorABC):
 	def __init__(self): #Additional arguements can be added later
@@ -328,11 +322,12 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"mass": events.Muon_mass, 
 				#"IDbit": events.muIDbit, #No idea what the nanoAOD analog is for this 
 				#"IDbit": events.Muon_IDbit,
-				"IDSelec": events.Muon_mediumId,
+				"IDSelec_Med": events.Muon_mediumId,
 				"D0": events.Muon_dxy,
 				"Dz": events.Muon_dz,
 				"LooseId": events.Muon_looseId,
 				"RelIso": events.Muon_pfRelIso04_all,
+				#"RelIso": events.Muon_pfRelIso03_all,
 					
 			},
 			with_name="MuonArray",
@@ -453,16 +448,29 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = Jet[ak.any(muon.pt > 52, axis=1)]
 		electron = electron[ak.any(muon.pt > 52, axis=1)]
 		muon = muon[ak.any(muon.pt > 52, axis=1)]
-		event_level = event_level[ak.any(muon.pt > 52, axis=1)]				
+		event_level = event_level[ak.any(muon.pt > 52, axis=1)]	
+
+		#Apply isolation and ID selections on muons
+		id_selec = muon[:,0].IDSelec_Med
+		Iso_selec = muon[:,0].RelIso < 0.10
+		
+		tau = tau[np.bitwise_and(id_selec,Iso_selec)]
+		boostedtau = boostedtau[np.bitwise_and(id_selec,Iso_selec)]
+		AK8Jet = AK8Jet[np.bitwise_and(id_selec,Iso_selec)]
+		Jet = Jet[np.bitwise_and(id_selec,Iso_selec)]
+		electron = electron[np.bitwise_and(id_selec,Iso_selec)]
+		muon = muon[np.bitwise_and(id_selec,Iso_selec)]
+		event_level = event_level[np.bitwise_and(id_selec,Iso_selec)]	
+
 
 		#MET selection
-		tau = tau[event_level.pfMET > 80]
-		boostedtau = boostedtau[event_level.pfMET > 80]
-		AK8Jet = AK8Jet[event_level.pfMET > 80]
-		Jet = Jet[event_level.pfMET > 80]
-		electron = electron[event_level.pfMET > 80]
-		muon = muon[event_level.pfMET > 80]
-		event_level = event_level[event_level.pfMET > 80]				
+		tau = tau[event_level.pfMET > 100]
+		boostedtau = boostedtau[event_level.pfMET > 100]
+		AK8Jet = AK8Jet[event_level.pfMET > 100]
+		Jet = Jet[event_level.pfMET > 100]
+		electron = electron[event_level.pfMET > 100]
+		muon = muon[event_level.pfMET > 100]
+		event_level = event_level[event_level.pfMET > 100]				
 			
 		#PreSelection Cuts
 		
