@@ -1,0 +1,3 @@
+[submodule "PlottingLib"]
+	path = PlottingLib
+	url = https://github.com/twnelson0/PlottingLib.git
