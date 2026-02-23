@@ -32,7 +32,8 @@ if __name__ == "__main__":
 
 	#Dictionaries and arrays with information on plot constrution, naming and samples
 	four_tau_hist_list = [
-			"boostedtau_pt_Trigg","boostedtau_eta_Trigg","boostedtau_phi_Trigg",
+			#"boostedtau_pt_Trigg","boostedtau_eta_Trigg","boostedtau_phi_Trigg",
+			"boostedtau_pt_Trigg","Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg", "Thirdleadingboostedtau_pt_Trigg","boostedtau_eta_Trigg","boostedtau_phi_Trigg",
 			"tau_pt_Trigg","tau_eta_Trigg","tau_phi_Trigg",
 			"electron_pt_Trigg","electron_eta_Trigg","electron_phi_Trigg",
 			"muon_pt_Trigg","muon_eta_Trigg","muon_phi_Trigg",
@@ -72,7 +73,11 @@ if __name__ == "__main__":
 	trigger_name = "SingleMu_Trigger"
 	four_tau_names = {
 		"boostedtau_pt_Trigg": "BoostedTau_pT_Trigger" + "-" + trigger_name,
+		#"Leadingboostedtau_pt_Trigg": "BoostedTau_Leading_pT_Trigger" + "-" + trigger_name,
 		"Leadingboostedtau_pt_Trigg": "BoostedTau_Leading_pT_Trigger" + "-" + trigger_name,
+		"Subleadingboostedtau_pt_Trigg": "BoostedTau_Subleading_pT_Trigger" + "-" + trigger_name, 
+		"Thirdleadingboostedtau_pt_Trigg": "BoostedTau_3rdleading_pT_Trigger" + "-" + trigger_name, 
+		"Fourthleadingboostedtau_pt_Trigg": "BoostedTau_4thleading_pT_Trigger" + "-" + trigger_name, 
 		"boostedtau_eta_Trigg": "BoostedTau_eta_Trigger" + "-" + trigger_name,
 		"boostedtau_phi_Trigg": "BoostedTau_phi_Trigger" + "-" + trigger_name,
 		"boostedtau_iso_Trigg": "BoostedTau_iso_Trigger" + "-" + trigger_name,
@@ -206,16 +211,34 @@ if __name__ == "__main__":
 			background_array.append(background_stack[background]) #Is this line fucking up your scaling??
 			print("Background: " + background)
 			print("Sum of stacked histogram: %f"%background_stack[background].sum())
-					
-		#Stack background distributions and plot signal + data distribution
-		fig,ax = plt.subplots()
-		hep.histplot(background_array,ax=ax,stack=True,histtype="fill",label=background_list,facecolor=TABLEAU_COLORS[:len(background_list)],edgecolor=TABLEAU_COLORS[:len(background_list)])
-		#hep.histplot(signal_array,ax=ax,stack=True,histtype="step",label=signal_list,edgecolor=TABLEAU_COLORS[len(background_list)+1],linewidth=2.95)
-		hep.histplot(data_array,ax=ax,stack=False,histtype="errorbar", yerr=True,label=["Data"],marker="o",color = "k") #,facecolor='black',edgecolor='black') #,mec='k')
-		hep.cms.text("Preliminary",loc=0,fontsize=13)
-		ax.set_title("2018 Data",loc = "right")
-		ax.legend(fontsize=10, loc='upper right')
+		
+		#MPLHEP ratio plot
+		print(fourtau_out["Data_Mu"][hist_name].axes[0].label)
+		fig, ax_main, ax_comp = hep.comp.data_model(
+			data_hist = fourtau_out["Data_Mu"][hist_name],
+            unstacked_kwargs_list = [{"s":2}],
+			#s = 2, #Modify the size of the data points (not sure if this will work)
+			stacked_components = background_array,
+			stacked_colors = TABLEAU_COLORS[:len(background_list)],
+			stacked_labels = background_list,
+			xlabel = fourtau_out["Data_Mu"][hist_name].axes[0].label,
+			model_uncertainty=False,
+			comparison = "ratio",
+		)
+		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name])
 		plt.close()
+
+					
+		#Stack background distributions and plot signal + data distribution
+#		fig,ax = plt.subplots()
+#		hep.histplot(background_array,ax=ax,stack=True,histtype="fill",label=background_list,facecolor=TABLEAU_COLORS[:len(background_list)],edgecolor=TABLEAU_COLORS[:len(background_list)])
+#		#hep.histplot(signal_array,ax=ax,stack=True,histtype="step",label=signal_list,edgecolor=TABLEAU_COLORS[len(background_list)+1],linewidth=2.95)
+#		hep.histplot(data_array,ax=ax,stack=False,histtype="errorbar", yerr=True,label=["Data"],marker="o",color = "k") #,facecolor='black',edgecolor='black') #,mec='k')
+#		hep.cms.text("Preliminary",loc=0,fontsize=13)
+#		ax.set_title("2018 Data",loc = "right")
+#		ax.legend(fontsize=10, loc='upper right')
+#		plt.savefig(four_tau_names[hist_name])
+#		plt.close()
 
 
