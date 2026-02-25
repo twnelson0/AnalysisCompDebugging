@@ -20,27 +20,50 @@ import datetime
 from distributed import Client
 from dask_jobqueue import HTCondorCluster
 import csv
+import sys
+import argparse
 
 #Plot style variables defined
 hep.style.use(hep.style.CMS)
 TABLEAU_COLORS = ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']
 
+#Use arguement parser to handle command line arguemetns
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--File", help = "Input coffea file")
+parse.add_argument("-n", "--NumberTau", help = "Number of boosted taus in selection")
+
 if __name__ == "__main__":
 	print("Test")
 	
-	coffea_file = "output_2018_run20260201_081729.coffea" #Store coffea file as hardcoded variable
+	#coffea_file = "output_2018_run20260201_081729.coffea" #Store coffea file as hardcoded variable
+	#coffea_file = "third_leading_boostedtau.coffea" #Store coffea file as hardcoded variable
+	#coffea_file = "fourth_leading_boostedtau.coffea" #Store coffea file as hardcoded variable
+
+	coffea_file = args.File
 
 	#Dictionaries and arrays with information on plot constrution, naming and samples
 	four_tau_hist_list = [
-			#"boostedtau_pt_Trigg","boostedtau_eta_Trigg","boostedtau_phi_Trigg",
-			"boostedtau_pt_Trigg","Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg", "Thirdleadingboostedtau_pt_Trigg","boostedtau_eta_Trigg","boostedtau_phi_Trigg",
+			"boostedtau_pt_Trigg","boostedtau_eta_Trigg","boostedtau_phi_Trigg",
 			"tau_pt_Trigg","tau_eta_Trigg","tau_phi_Trigg",
 			"electron_pt_Trigg","electron_eta_Trigg","electron_phi_Trigg",
-			"muon_pt_Trigg","muon_eta_Trigg","muon_phi_Trigg",
+			"muon_pt_Trigg","muon_eta_Trigg","muon_phi_Trigg","Leadingmuon_pt_Trigg","Leadingmuon_eta_Trigg",
 			"Jet_pt_Trigg","Jet_eta_Trigg","Jet_phi_Trigg",
-			"AK8Jet_pt_Trigg","AK8Jet_eta_Trigg","AK8Jet_phi_Trigg","MET",
-			] 
+			"AK8Jet_pt_Trigg","AK8Jet_eta_Trigg","AK8Jet_phi_Trigg",
+			"MET","HT","MHT",
+			]
 
+	#Additional boosted tau distributions to pull based on boosted tau requirements
+	add_var = []
+	if (args.NumberTau == 1):
+		add_var = ["Leadingboostedtau_pt_Trigg"]
+	if (args.NumberTau == 2):
+		add_var = ["Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg"]
+	if (args.NumberTau == 3):
+		add_var = ["Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg","Thirdleadingboostedtau_pt_Trigg"]
+	if (args.NumberTau == 4):
+		add_var = ["Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg","Thirdleadingboostedtau_pt_Trigg","FourthLeadingboostedtau_pt_Trigg"]
+
+	four_tau_hist_list = add_var + four_tau_hist_list
 	
 	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"]
 	background_list_test = [r"$ZZ \rightarrow 4l$"]
@@ -102,6 +125,8 @@ if __name__ == "__main__":
 		"AK8Jet_eta_Trigg": "AK8Jet_eta_Trigger" + "-" + trigger_name,
 		"AK8Jet_phi_Trigg": "AK8Jet_phi_Trigger" + "-" + trigger_name,
 		"MET": "MET_Trigger" + "-" + trigger_name,
+		"HT": "HT_Trigger" + "-" + trigger_name,
+		"MHT": "MHT_Trigger" + "-" + trigger_name,
 	}
 
 
@@ -199,7 +224,7 @@ if __name__ == "__main__":
 		
 		#Obtain data distributions
 		print("==================Hist %s================"%hist_name)
-		hist_dict_data[hist_name] = coffea_input["Data_MET"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
+		hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
 		
@@ -213,17 +238,18 @@ if __name__ == "__main__":
 			print("Sum of stacked histogram: %f"%background_stack[background].sum())
 		
 		#MPLHEP ratio plot
-		print(fourtau_out["Data_Mu"][hist_name].axes[0].label)
+		print(coffea_input["Data_Mu"][hist_name].axes[0].label)
 		fig, ax_main, ax_comp = hep.comp.data_model(
-			data_hist = fourtau_out["Data_Mu"][hist_name],
-            unstacked_kwargs_list = [{"s":2}],
-			#s = 2, #Modify the size of the data points (not sure if this will work)
+			data_hist = coffea_input["Data_Mu"][hist_name],
 			stacked_components = background_array,
 			stacked_colors = TABLEAU_COLORS[:len(background_list)],
 			stacked_labels = background_list,
-			xlabel = fourtau_out["Data_Mu"][hist_name].axes[0].label,
-			model_uncertainty=False,
+			xlabel = coffea_input["Data_Mu"][hist_name].axes[0].label,
+			model_uncertainty=True,
 			comparison = "ratio",
+            markersize = 10,
+			#linewidth=2,
+
 		)
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name])
