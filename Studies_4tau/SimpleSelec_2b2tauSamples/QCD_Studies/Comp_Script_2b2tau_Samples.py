@@ -595,16 +595,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.pt))[0]))
 		
 		if (self.nTau_Selec >= 1):
-			h_Leadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) > 3][:,0].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) > 3].event_weight*CrossSec_Weight))
+			h_Leadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nTau_Selec][:,0].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nTau_Selec].event_weight*CrossSec_Weight))
 		
 		if (self.nTau_Selec >= 2):
-			h_Subleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) > 3][:,1].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) > 3].event_weight*CrossSec_Weight))
+			h_Subleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nTau_Selec][:,1].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nTau_Selec].event_weight*CrossSec_Weight))
 		
 		if (self.nTau_Selec >= 3):
-			h_Thirdleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) > 3][:,2].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) > 3].event_weight*CrossSec_Weight))
+			h_Thirdleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nTau_Selec][:,2].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nTau_Selec].event_weight*CrossSec_Weight))
 		
 		if (self.nTau_Selec >= 4):
-			h_Fourthleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) > 3][:,3].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) > 3].event_weight*CrossSec_Weight))
+			h_Fourthleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nTau_Selec][:,3].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nTau_Selec].event_weight*CrossSec_Weight))
 		
 		h_boostedtau_eta_Trigger.fill(ak.ravel(boostedtau.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.eta))[0]))
 		h_boostedtau_phi_Trigger.fill(ak.ravel(boostedtau.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.phi))[0]))
@@ -953,7 +953,7 @@ if __name__ == "__main__":
 	
 	print(os.getcwd())
 	output_array = []
-	for n_taus in range(5):
+	for n_taus in range(1,5):
 		#print(os.getcwd())
 		start_time = time.time()
 		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus)) #Modified for NanoAOD (changd treename)

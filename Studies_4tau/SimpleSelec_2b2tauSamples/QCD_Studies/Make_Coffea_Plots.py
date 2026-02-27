@@ -39,7 +39,7 @@ if __name__ == "__main__":
 	#coffea_file = "fourth_leading_boostedtau.coffea" #Store coffea file as hardcoded variable
 
 	print("Running on file " + args.File)
-	print("With " + str(args.NumberTau) + " Boosted taus required")
+	print("With " + args.NumberTau + " Boosted taus required")
 
 	coffea_file = args.File
 
@@ -56,14 +56,19 @@ if __name__ == "__main__":
 
 	#Additional boosted tau distributions to pull based on boosted tau requirements
 	add_var = []
-	if (args.NumberTau == 1):
+	n_tau = int(args.NumberTau)
+	if (n_tau == 1):
+		print("One Boosted tau required")
 		add_var = ["Leadingboostedtau_pt_Trigg"]
-	if (args.NumberTau == 2):
+	if (n_tau == 2):
+		print("Two Boosted taus required")
 		add_var = ["Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg"]
-	if (args.NumberTau == 3):
+	if (n_tau == 3):
+		print("Three Boosted taus required")
 		add_var = ["Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg","Thirdleadingboostedtau_pt_Trigg"]
-	if (args.NumberTau == 4):
-		add_var = ["Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg","Thirdleadingboostedtau_pt_Trigg","FourthLeadingboostedtau_pt_Trigg"]
+	if (n_tau == 4):
+		print("Four Boosted taus required")
+		add_var = ["Leadingboostedtau_pt_Trigg", "Subleadingboostedtau_pt_Trigg","Thirdleadingboostedtau_pt_Trigg","Fourthleadingboostedtau_pt_Trigg"]
 
 	four_tau_hist_list = add_var + four_tau_hist_list
 	
@@ -246,13 +251,16 @@ if __name__ == "__main__":
 			#print("Sum of stacked histogram: %f"%background_stack[background].sum())
 		
 		#MPLHEP ratio plot
-		print(coffea_input["Data_Mu"][hist_name].axes[0].label)
+		if (hist_name == "Leadingmuon_eta_Trigg"):
+			axis_label = r"Leading $\mu$ $\eta$"
+		else:
+			axis_label = coffea_input["Data_Mu"][hist_name].axes[0].label
 		fig, ax_main, ax_comp = hep.comp.data_model(
 			data_hist = coffea_input["Data_Mu"][hist_name],
 			stacked_components = background_array,
 			stacked_colors = TABLEAU_COLORS[:len(background_list)],
 			stacked_labels = background_list,
-			xlabel = coffea_input["Data_Mu"][hist_name].axes[0].label,
+			xlabel = axis_label,
 			model_uncertainty=True,
 			comparison = "ratio",
             markersize = 10,
