@@ -28,16 +28,18 @@ hep.style.use(hep.style.CMS)
 TABLEAU_COLORS = ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']
 
 #Use arguement parser to handle command line arguemetns
-parser = argparse.ArgumentParser()
-parser.add_argument("-f", "--File", help = "Input coffea file")
+parse = argparse.ArgumentParser()
+parse.add_argument("-f", "--File", help = "Input coffea file")
 parse.add_argument("-n", "--NumberTau", help = "Number of boosted taus in selection")
+args = parse.parse_args()
 
 if __name__ == "__main__":
-	print("Test")
-	
 	#coffea_file = "output_2018_run20260201_081729.coffea" #Store coffea file as hardcoded variable
 	#coffea_file = "third_leading_boostedtau.coffea" #Store coffea file as hardcoded variable
 	#coffea_file = "fourth_leading_boostedtau.coffea" #Store coffea file as hardcoded variable
+
+	print("Running on file " + args.File)
+	print("With " + str(args.NumberTau) + " Boosted taus required")
 
 	coffea_file = args.File
 
@@ -116,6 +118,7 @@ if __name__ == "__main__":
 		"Leadingmuon_pt_Trigg": "Muon_Leading_pT_Trigger" + "-" + trigger_name,
 		"muon_eta_Trigg": "Muon_eta_Trigger" + "-" + trigger_name,
 		"muon_phi_Trigg": "Muon_phi_Trigger" + "-" + trigger_name,
+        "Leadingmuon_eta_Trigg": "Muon_Leading_eta_Trigger" + "-" + trigger_name,
 		"Jet_pt_Trigg": "Jet_pT_Trigger" + "-" + trigger_name,
 		"LeadingJet_pt_Trigg": "Jet_Leading_pT_Trigger" + "-" + trigger_name,
 		"Jet_eta_Trigg": "Jet_eta_Trigger" + "-" + trigger_name,
@@ -132,6 +135,11 @@ if __name__ == "__main__":
 
 	#Import coffea files with histograms
 	coffea_input = util.load(coffea_file)
+
+	#Print the abount of data
+	print("=============================================")
+	print("Number of data events: %d"%coffea_input["Data_Mu"]["Event_Count"])
+	print("=============================================")
 	
 	#Dictionaries of histograms for background, signal and data
 	hist_dict_background = dict.fromkeys(four_tau_hist_list)
@@ -144,13 +152,13 @@ if __name__ == "__main__":
 		temp_hist_dict = dict.fromkeys(background_list) # create dictionary of histograms for each background type
 				
 		for background_type in background_list:
-			print("Background type %s"%background_type)
+			#print("Background type %s"%background_type)
 			background_array = []
 			backgrounds = background_dict[background_type]
 						
 			#Loop over all backgrounds
 			for background in backgrounds:
-				print("%s"%background)
+				#print("%s"%background)
 				if (True): #Only need to generate single background once
 					
 					#Plot the cutflow for each background
@@ -161,13 +169,13 @@ if __name__ == "__main__":
 						else:
 							cutflow_hist += coffea_input[background]["cutflow_table"]
 							
-						if (background == backgrounds[-1]):
-							fig2p5, ax2p5 = plt.subplots()
-							cutflow_hist.plot1d(ax=ax2p5)
-							plt.title(background_type + " Cutflow Table")
-							ax2p5.set_yscale('log')
-							plt.savefig("SingleBackground" + background_plot_names[background_type] + "CutFlowTable")
-							plt.close()
+					#	if (background == backgrounds[-1]):
+					#		fig2p5, ax2p5 = plt.subplots()
+					#		cutflow_hist.plot1d(ax=ax2p5)
+					#		plt.title(background_type + " Cutflow Table")
+					#		ax2p5.set_yscale('log')
+					#		plt.savefig("SingleBackground" + background_plot_names[background_type] + "CutFlowTable")
+					#		plt.close()
 							
 						#Plot the weights for each background
 						if (background == backgrounds[0]):
@@ -192,38 +200,38 @@ if __name__ == "__main__":
 					if (hist_name != "Electron_tau_dR_Arr" and hist_name != "Muon_tau_dR_Arr"):
 						if (background == backgrounds[0]):
 							crnt_hist = coffea_input[background][hist_name]
-							print("Background: " + background)
-							print("Sum of entries: %f"%coffea_input[background][hist_name].sum())
+							#print("Background: " + background)
+							#print("Sum of entries: %f"%coffea_input[background][hist_name].sum())
 						else:
 							crnt_hist += coffea_input[background][hist_name]
-							print("Background: " + background)
-							print("Sum of entries: %f"%coffea_input[background][hist_name].sum())
+							#print("Background: " + background)
+							#print("Sum of entries: %f"%coffea_input[background][hist_name].sum())
 						if (background == backgrounds[-1]):
-							fig2, ax2 = plt.subplots()
+							#fig2, ax2 = plt.subplots()
 							temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
-							crnt_hist.plot1d(ax=ax2)
+							#crnt_hist.plot1d(ax=ax2)
 							#if (hist_name == "FourTau_Mass_Arr"):
-							print("Background: " + background_type)
-							print("Sum of entries: %f"%crnt_hist.sum())
+							#print("Background: " + background_type)
+							#print("Sum of entries: %f"%crnt_hist.sum())
 							#print("Number of Entries: %d"%coffea_input[background]["num_events"])
-							plt.title(background_type)
-							plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
-							plt.close()
+							#plt.title(background_type)
+							#plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
+							#plt.close()
 
 					else: #lepton-tau delta R 
-						fig2, ax2 = plt.subplots()
+					#	fig2, ax2 = plt.subplots()
 						coffea_input[background][hist_name].plot1d(ax=ax2)
-						ax2.set_yscale('log')
-						plt.title(background_type)
-						plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
-						plt.close()
+					#	ax2.set_yscale('log')
+					#	plt.title(background_type)
+					#	plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
+					#	plt.close()
 						
 
 		#Combine the backgrounds together
 		hist_dict_background[hist_name] = hist.Stack.from_dict(temp_hist_dict) #This could be causing the problems 
 		
 		#Obtain data distributions
-		print("==================Hist %s================"%hist_name)
+		#print("==================Hist %s================"%hist_name)
 		hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
@@ -234,8 +242,8 @@ if __name__ == "__main__":
 				
 		for background in background_list:
 			background_array.append(background_stack[background]) #Is this line fucking up your scaling??
-			print("Background: " + background)
-			print("Sum of stacked histogram: %f"%background_stack[background].sum())
+			#print("Background: " + background)
+			#print("Sum of stacked histogram: %f"%background_stack[background].sum())
 		
 		#MPLHEP ratio plot
 		print(coffea_input["Data_Mu"][hist_name].axes[0].label)
@@ -252,7 +260,7 @@ if __name__ == "__main__":
 
 		)
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
-		plt.savefig(four_tau_names[hist_name])
+		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")
 		plt.close()
 
 					
