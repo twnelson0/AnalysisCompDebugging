@@ -205,7 +205,7 @@ def dimass_Selec(part1,part2,low_lim):
 	return mass_Cond 
 
 def deltaPhi_METSelec(part1,MET,low_lim): #Note definition of deltaR coppied from coffea code (line 67 of vector.py)
-	return (part1.phi - MET.pfMETPhi + np.pi) % (2*np.pi) - np.pi > low_lim
+	return (part1.phi - MET.MET_Phi + np.pi) % (2*np.pi) - np.pi > low_lim
 
 
 class PlottingScriptProcessor(processor.ProcessorABC):
@@ -228,8 +228,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Mu_Trigger": events.HLT_Mu50,
 				"MET_trigger1": events.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight,
 				"MET_trigger2": events.HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight,
-				"pfMET": events.MET_pt,
-				"pfMETPhi": events.MET_phi,
+				"MET_pt": events.MET_pt,
+				"MET_Phi": events.MET_phi,
 				"event_weight": ak.ones_like(events.MET_pt), #*0.9,
 				"n_electrons": ak.zeros_like(events.MET_pt),
 				"n_muons": ak.zeros_like(events.MET_pt),
@@ -239,6 +239,21 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"event_num": events.event,
 				"run": events.run,
 				"Lumi" : events.luminosityBlock,
+				"PV_ndof": events.PV_ndof,
+				"PV_z": events.PV_z,
+				"PV_x": events.PV_x,
+				"PV_y": events.PV_y,
+				"nFatJet": events.nFatJet,
+				"Flag_goodVertices": events.Flag_goodVertices,
+				"Flag_globalSuperTightHalo2016Filter": events.Flag_globalSuperTightHalo2016Filter,
+				"Flag_HBHENoiseFilter": events.Flag_HBHENoiseFilter,
+				"Flag_HBHENoiseIsoFilter": events.Flag_HBHENoiseIsoFilter,
+				"Flag_EcalDeadCellTriggerPrimitiveFilter": events.Flag_EcalDeadCellTriggerPrimitiveFilter,
+				"Flag_BadPFMuonFilter": events.Flag_BadPFMuonFilter,
+				"Flag_BadPFMuonDzFilter": events.Flag_BadPFMuonDzFilter,
+				"Flag_hfNoisyHitsFilter": events.Flag_hfNoisyHitsFilter,
+				"Flag_eeBadScFilter": events.Flag_eeBadScFilter,
+				"Flag_ecalBadCalibFilter": events.Flag_ecalBadCalibFilter,
 				#"genWeight": events.genWeight
 			},
 			with_name="EventArray",
@@ -500,13 +515,51 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 
 		#MET selection
-		tau = tau[event_level.pfMET > 100]
-		boostedtau = boostedtau[event_level.pfMET > 100]
-		AK8Jet = AK8Jet[event_level.pfMET > 100]
-		Jet = Jet[event_level.pfMET > 100]
-		electron = electron[event_level.pfMET > 100]
-		muon = muon[event_level.pfMET > 100]
-		event_level = event_level[event_level.pfMET > 100]				
+		tau = tau[event_level.MET_pt > 100]
+		boostedtau = boostedtau[event_level.MET_pt > 100]
+		AK8Jet = AK8Jet[event_level.MET_pt > 100]
+		Jet = Jet[event_level.MET_pt > 100]
+		electron = electron[event_level.MET_pt > 100]
+		muon = muon[event_level.MET_pt > 100]
+		event_level = event_level[event_level.MET_pt > 100]		
+
+		#Impose all events have at least one fat Jet
+		tau = tau[event_level.nFatJet > 0]
+		boostedtau = boostedtau[event_level.nFatJet > 0]
+		AK8Jet = AK8Jet[event_level.nFatJet > 0]
+		Jet = Jet[event_level.nFatJet > 0]
+		electron = electron[event_level.nFatJet > 0]
+		muon = muon[event_level.nFatJet > 0]
+		event_level = event_level[event_level.nFatJet > 0]	
+
+		#Flag conditions
+		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
+		flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
+		
+		for flag in Flag_Array:
+			flag_cond = flag_cond & event_level[flag]
+		
+		tau = tau[flag_cond]
+		boostedtau = boostedtau[flag_cond]
+		AK8Jet = AK8Jet[flag_cond]
+		Jet = Jet[flag_cond]
+		electron = electron[flag_cond]
+		muon = muon[flag_cond]
+		event_level = event_level[flag_cond]	
+
+		#PV selections
+		ndof_cond = event_level.PV_ndof > 4
+		PVz_cond = np.abs(event_level.PV_z) < 24
+		PVr_cond = np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2
+		PV_Cond = np.bitwise_and(ndof_cond,np.bitwise_and(PVz_cond,PVr_cond))
+		
+		tau = tau[PV_Cond]
+		boostedtau = boostedtau[PV_Cond]
+		AK8Jet = AK8Jet[PV_Cond]
+		Jet = Jet[PV_Cond]
+		electron = electron[PV_Cond]
+		muon = muon[PV_Cond]
+		event_level = event_level[PV_Cond]		
 
         #Boosted tau selections
 		if (self.nTau_Selec > 0):
@@ -520,7 +573,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			event_level = event_level[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
 
 			#Impose selections on leading boosted tau
-			pT_Cond = boostedtau[:,0].pt > 30
+			pT_Cond = boostedtau[:,0].pt > 20
 			eta_Cond = np.abs(boostedtau[:,0].eta) < 2.3
 			decayMode_Cond = boostedtau[:,0].decay >= 0.5
 			DBT_Iso_Mode_Cond = boostedtau[:,0].DBT > 0.5
@@ -537,7 +590,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			
 			#Impose selections on Subleading boosted tau
 			if (self.nTau_Selec > 1):
-				pT_Cond = boostedtau[:,1].pt > 30
+				pT_Cond = boostedtau[:,1].pt > 20
 				eta_Cond = np.abs(boostedtau[:,1].eta) < 2.3
 				decayMode_Cond = boostedtau[:,1].decay >= 0.5
 				DBT_Iso_Mode_Cond = boostedtau[:,1].DBT > 0.5
@@ -642,7 +695,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_AK8Jet_phi_Trigger.fill(ak.ravel(AK8Jet.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet.phi))[0]))
 
 		#Store MET
-		h_MET_Trigger.fill(ak.ravel(event_level.pfMET),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
+		h_MET_Trigger.fill(ak.ravel(event_level.MET_pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_HT_Trigger.fill(ak.ravel(event_level.HT),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_MHT_Trigger.fill(ak.ravel(event_level.MHT),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		
@@ -716,7 +769,7 @@ if __name__ == "__main__":
 
 	cluster = HTCondorCluster(
 			cores=1,
-			 memory="7 GB",
+			memory="4 GB",
 			disk="2.0 GB",
 			death_timeout = '60',
 			job_extra_directives={
@@ -749,7 +802,7 @@ if __name__ == "__main__":
 			schema=BaseSchema,
 			skipbadfiles=True,
 			xrootdtimeout=1000,
-            #chunksize=150000,
+            #chunksize=500000,
             #maxchunks = 1
 		)
 	else: #Iterative runner
@@ -953,7 +1006,7 @@ if __name__ == "__main__":
 	
 	print(os.getcwd())
 	output_array = []
-	for n_taus in range(1,5):
+	for n_taus in range(0,5):
 		#print(os.getcwd())
 		start_time = time.time()
 		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus)) #Modified for NanoAOD (changd treename)
