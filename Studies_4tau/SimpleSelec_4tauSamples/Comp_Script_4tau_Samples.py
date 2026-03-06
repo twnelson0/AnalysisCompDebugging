@@ -444,7 +444,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		cutflow_dict["Skimming"] = ak.num(boostedtau,axis=0)
 
 		#Fill initial entries in skim and N-1 histograms
-		n_Skim = ak.num(event_level,axis=0)
+		n_Skim = np.size(event_level.nFatJet)
 		h_CutFlow_Mini.fill("SkimOnly",weight=n_Skim)
 		h_NMinus1_Mini.fill("SkimOnly",weight=0)
 		
@@ -522,7 +522,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		event_level = event_level[ak.num(muon,axis=1)>0]
 
 		#Fill post trigger entries in skim and N-1 histograms
-		n_Trigger = ak.num(event_level,axis=0)
+		n_Trigger = np.size(event_level.nFatJet)
 		h_CutFlow_Mini.fill("Trigger",weight=n_Trigger)
 		h_NMinus1_Mini.fill("Trigger",weight=n_Skim - n_Trigger)	
 
@@ -535,8 +535,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		muon = muon[event_level.MET_pt > 100]
 		event_level = event_level[event_level.MET_pt > 100]	
 
-		#Fill post trigger entries in skim and N-1 histograms
-		n_MET = ak.num(event_level,axis=0)
+		#Fill post MET entries in skim and N-1 histograms
+		n_MET = np.size(event_level.nFatJet)
 		h_CutFlow_Mini.fill("METCut",weight=n_MET)
 		h_NMinus1_Mini.fill("METCut",weight=n_Trigger - n_MET)	
 
@@ -549,8 +549,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		muon = muon[event_level.nFatJet > 0]
 		event_level = event_level[event_level.nFatJet > 0]	
 
-		#Fill post trigger entries in skim and N-1 histograms
-		n_FatJet = ak.num(event_level,axis=0)
+		#Fill post FatJet entries in skim and N-1 histograms
+		n_FatJet = np.size(event_level.nFatJet)
 		h_CutFlow_Mini.fill("nFatJetReq",weight=n_FatJet)
 		h_NMinus1_Mini.fill("nFatJetReq",weight=n_MET - n_FatJet)
 

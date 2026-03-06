@@ -371,7 +371,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = ak.zip(
 			{
 				"pt": events.Jet_pt,
-                #"PFLooseId": events.JetPFLooseId,
+				#"PFLooseId": events.JetPFLooseId,
 				"JetId": events.Jet_jetId, #Not sure that this is correct
 				"eta": events.Jet_eta,
 				"phi": events.Jet_phi,
@@ -401,7 +401,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		# flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
 		
 		# for flag in Flag_Array:
-		# 	flag_cond = flag_cond & event_level[flag]
+		#	flag_cond = flag_cond & event_level[flag]
 
 		# selection.add("Trigger", event_level.Mu_Trigger)
 		# selection.add("OfflineSelec",ak.any(muon.nMu > 0, axis = 1) & ak.any(muon.pt > 52, axis=1))
@@ -411,33 +411,33 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		# selection.add("Flags",flag_cond)
 		# selection.add("PVSelec",event_level.PV_ndof > 4 & np.abs(event_level.PV_z) < 24 & np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2)
 		# if (slef.nTau_Selec > 0):
-		# 	pT_Cond1 = boostedtau[:,0].pt > 20
-		# 	eta_Cond1 = np.abs(boostedtau[:,0].eta) < 2.3
-		# 	decayMode_Cond1 = boostedtau[:,0].decay >= 0.5
-		# 	DBT_Iso_Mode_Cond1 = boostedtau[:,0].DBT > 0.5
-		# 	selection.add("LeadingTauSelec", pT_Cond1 & eta_Cond1 & decayMode_Cond1 & DBT_Iso_Mode_Cond1)
+		#	pT_Cond1 = boostedtau[:,0].pt > 20
+		#	eta_Cond1 = np.abs(boostedtau[:,0].eta) < 2.3
+		#	decayMode_Cond1 = boostedtau[:,0].decay >= 0.5
+		#	DBT_Iso_Mode_Cond1 = boostedtau[:,0].DBT > 0.5
+		#	selection.add("LeadingTauSelec", pT_Cond1 & eta_Cond1 & decayMode_Cond1 & DBT_Iso_Mode_Cond1)
 		# if (slef.nTau_Selec > 1):
-		# 	pT_Cond2 = boostedtau[:,1].pt > 20
-		# 	eta_Cond2 = np.abs(boostedtau[:,1].eta) < 2.3
-		# 	decayMode_Cond2 = boostedtau[:,1].decay >= 0.5
-		# 	DBT_Iso_Mode_Cond2 = boostedtau[:,1].DBT > 0.5
-		# 	selection.add("SubLeadingTauSelec", pT_Cond2 & eta_Cond2 & decayMode_Cond2 & DBT_Iso_Mode_Cond2)
+		#	pT_Cond2 = boostedtau[:,1].pt > 20
+		#	eta_Cond2 = np.abs(boostedtau[:,1].eta) < 2.3
+		#	decayMode_Cond2 = boostedtau[:,1].decay >= 0.5
+		#	DBT_Iso_Mode_Cond2 = boostedtau[:,1].DBT > 0.5
+		#	selection.add("SubLeadingTauSelec", pT_Cond2 & eta_Cond2 & decayMode_Cond2 & DBT_Iso_Mode_Cond2)
 		# if (slef.nTau_Selec > 2):
-		# 	pT_Cond3 = boostedtau[:,2].pt > 20
-		# 	eta_Cond3 = np.abs(boostedtau[:,2].eta) < 2.3
-		# 	decayMode_Cond3 = boostedtau[:,2].decay >= 0.5
-		# 	DBT_Iso_Mode_Cond3 = boostedtau[:,2].DBT > 0.5
-		# 	selection.add("3rdLeadingTauSelec", pT_Cond3 & eta_Cond3 & decayMode_Cond3 & DBT_Iso_Mode_Cond3)
+		#	pT_Cond3 = boostedtau[:,2].pt > 20
+		#	eta_Cond3 = np.abs(boostedtau[:,2].eta) < 2.3
+		#	decayMode_Cond3 = boostedtau[:,2].decay >= 0.5
+		#	DBT_Iso_Mode_Cond3 = boostedtau[:,2].DBT > 0.5
+		#	selection.add("3rdLeadingTauSelec", pT_Cond3 & eta_Cond3 & decayMode_Cond3 & DBT_Iso_Mode_Cond3)
 		# if (slef.nTau_Selec > 3):
-		# 	pT_Cond4 = boostedtau[:,3].pt > 20
-		# 	eta_Cond4 = np.abs(boostedtau[:,3].eta) < 2.3
-		# 	decayMode_Cond4 = boostedtau[:,3].decay >= 0.5
-		# 	DBT_Iso_Mode_Cond4 = boostedtau[:,3].DBT > 0.5
-		# 	selection.add("4thLeadingTauSelec", pT_Cond4 & eta_Cond4 & decayMode_Cond4 & DBT_Iso_Mode_Cond4)
+		#	pT_Cond4 = boostedtau[:,3].pt > 20
+		#	eta_Cond4 = np.abs(boostedtau[:,3].eta) < 2.3
+		#	decayMode_Cond4 = boostedtau[:,3].decay >= 0.5
+		#	DBT_Iso_Mode_Cond4 = boostedtau[:,3].DBT > 0.5
+		#	selection.add("4thLeadingTauSelec", pT_Cond4 & eta_Cond4 & decayMode_Cond4 & DBT_Iso_Mode_Cond4)
 
 		#Add the random selection variable
-		event_rand = np.randint(0,5,ak.num(event_level,axis=0))
-		event_level["rand_selec"] = ak.singletlons(ak.from_numpy(event_rand))
+		event_rand = np.random.randint(0,5,np.size(event_level.nFatJet))
+		event_level["rand_selec"] = ak.from_numpy(event_rand)
 
 		#Basic Kinematic histograms Boosted tau
 		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
@@ -508,10 +508,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet_HT = Jet_HT[Jet_HT.JetId > 0.5]
 		event_level["HT"] = ak.sum(Jet_HT.pt, axis=1, keepdims=False) 
 		del Jet_HT
-        
-        #############
-        #Trigger and Offline Cuts
-        #############
+		
+		#############
+		#Trigger and Offline Cuts
+		#############
 		
 		#HLT Trigger(s)
 		boostedtau = boostedtau[event_level.Mu_Trigger]
@@ -551,7 +551,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		muon = muon[np.bitwise_and(id_selec,Iso_selec)]
 		event_level = event_level[np.bitwise_and(id_selec,Iso_selec)]	
 
-        #Drop any events with no muons after selection
+		#Drop any events with no muons after selection
 		tau = tau[ak.num(muon,axis=1)>0]
 		boostedtau = boostedtau[ak.num(muon,axis=1)>0]
 		AK8Jet = AK8Jet[ak.num(muon,axis=1)>0]
@@ -608,7 +608,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		muon = muon[PV_Cond]
 		event_level = event_level[PV_Cond]		
 
-        #Boosted tau selections
+		#Boosted tau selections
 		if (self.nTau_Selec > 0):
 			#Require events to have at least n boosted tau
 			tau = tau[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
@@ -686,13 +686,13 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				muon = muon[tau_4lead_selec]
 				event_level = event_level[tau_4lead_selec]				
 
-        #############
-        #Cut Selections
-        #############
-        #Apply the random selection
-        rand_selec_cond = event_level["rand_selec"] == 4
+		#############
+		#Cut Selections
+		#############
+		#Apply the random selection
+		rand_selec_cond = event_level["rand_selec"] == 4
 
-        tau = tau[rand_selec_cond]
+		tau = tau[rand_selec_cond]
 		boostedtau = boostedtau[rand_selec_cond]
 		AK8Jet = AK8Jet[rand_selec_cond]
 		Jet = Jet[rand_selec_cond]
@@ -790,7 +790,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"muon_pt_Trigg": h_muon_pT_Trigger,
 				"Leadingmuon_pt_Trigg": h_Leadingmuon_pT_Trigger,
 				"muon_eta_Trigg": h_muon_eta_Trigger,
-                "Leadingmuon_eta_Trigg": h_Leadingmuon_eta_Trigger,
+				"Leadingmuon_eta_Trigg": h_Leadingmuon_eta_Trigger,
 				"muon_phi_Trigg": h_muon_phi_Trigger,
 				
 				#Jet kineamtic distirubtions
@@ -860,8 +860,8 @@ if __name__ == "__main__":
 			schema=BaseSchema,
 			skipbadfiles=True,
 			xrootdtimeout=1000,
-            #chunksize=500000,
-            #maxchunks = 1
+			#chunksize=500000,
+			#maxchunks = 1
 		)
 	else: #Iterative runner
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
@@ -1063,7 +1063,7 @@ if __name__ == "__main__":
 	
 	print(os.getcwd())
 	output_array = []
-	for n_taus in range(0,5):
+	for n_taus in range(4,5):
 		#print(os.getcwd())
 		start_time = time.time()
 		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus)) #Modified for NanoAOD (changd treename)
@@ -1073,7 +1073,7 @@ if __name__ == "__main__":
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		output_array.append(fourtau_out)
 		
-        #Save coffea file
+		#Save coffea file
 		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec.coffea")
 		#outfile = "~/Analysis/BoostedTau/ControlPlots/DebuggingStudies/AnalysisCompDebugging/Studies_4tau/SimpleSelec_2b2tauSamples/QCD_Studies/" + f"output_{n_taus}_boosted_tau_selec.coffea"
 		#timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -1199,7 +1199,7 @@ if __name__ == "__main__":
 #		print(fourtau_out["Data_Mu"][hist_name].axes[0].label)
 #		fig, ax_main, ax_comp = hep.comp.data_model(
 #			data_hist = fourtau_out["Data_Mu"][hist_name],
-#            unstacked_kwargs_list = [{"s":2}],
+#			 unstacked_kwargs_list = [{"s":2}],
 #			#s = 2, #Modify the size of the data points (not sure if this will work)
 #			stacked_components = background_array,
 #			stacked_colors = TABLEAU_COLORS[:len(background_list)],
