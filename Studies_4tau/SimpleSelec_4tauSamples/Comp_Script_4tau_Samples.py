@@ -434,11 +434,19 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_HT_Trigger = hist.Hist.new.Regular(40,0,1200,label=r"HT [GeV]").Double()
 		h_MHT_Trigger = hist.Hist.new.Regular(20,0,500,label=r"MHT [GeV]").Double()
 
+		#Add a kind of mini cutflow and N-1 tables
+		h_CutFlow_Mini = hist.Hist.new.StrCategory(["SkimOnly","Trigger","METCut","nFatJetReq"]).Double()
+		h_NMinus1_Mini = hist.Hist.new.StrCategory(["SkimOnly","Trigger","METCut","nFatJetReq"]).Double()
 
 		cutflow_dict = dict.fromkeys(["Sample","PreSkimming","Skimming","Trigger","Tau_pT","Tau_eta","decay","deepboosted","Mass_Cut","Higgs_dR"])
 		cutflow_dict["Sample"] = dataset
 		cutflow_dict["PreSkimming"] = numEvents_Dict[dataset] 
 		cutflow_dict["Skimming"] = ak.num(boostedtau,axis=0)
+
+		#Fill initial entries in skim and N-1 histograms
+		n_Skim = ak.num(event_level,axis=0)
+		h_CutFlow_Mini.fill("SkimOnly",weight=n_Skim)
+		h_NMinus1_Mini.fill("SkimOnly",weight=0)
 		
 		#Obtain the cross section scale factor	
 		if (self.isData):
@@ -511,8 +519,12 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = Jet[ak.num(muon,axis=1)>0]
 		electron = electron[ak.num(muon,axis=1)>0]
 		muon = muon[ak.num(muon,axis=1)>0]
-		event_level = event_level[ak.num(muon,axis=1)>0]	
+		event_level = event_level[ak.num(muon,axis=1)>0]
 
+		#Fill post trigger entries in skim and N-1 histograms
+		n_Trigger = ak.num(event_level,axis=0)
+		h_CutFlow_Mini.fill("Trigger",weight=n_Trigger)
+		h_NMinus1_Mini.fill("Trigger",weight=n_Skim - n_Trigger)	
 
 		#MET selection
 		tau = tau[event_level.MET_pt > 100]
@@ -521,7 +533,12 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = Jet[event_level.MET_pt > 100]
 		electron = electron[event_level.MET_pt > 100]
 		muon = muon[event_level.MET_pt > 100]
-		event_level = event_level[event_level.MET_pt > 100]		
+		event_level = event_level[event_level.MET_pt > 100]	
+
+		#Fill post trigger entries in skim and N-1 histograms
+		n_MET = ak.num(event_level,axis=0)
+		h_CutFlow_Mini.fill("METCut",weight=n_MET)
+		h_NMinus1_Mini.fill("METCut",weight=n_Trigger - n_MET)	
 
 		#Impose all events have at least one fat Jet
 		tau = tau[event_level.nFatJet > 0]
@@ -531,6 +548,11 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		electron = electron[event_level.nFatJet > 0]
 		muon = muon[event_level.nFatJet > 0]
 		event_level = event_level[event_level.nFatJet > 0]	
+
+		#Fill post trigger entries in skim and N-1 histograms
+		n_FatJet = ak.num(event_level,axis=0)
+		h_CutFlow_Mini.fill("nFatJetReq",weight=n_FatJet)
+		h_NMinus1_Mini.fill("nFatJetReq",weight=n_MET - n_FatJet)
 
 		#Flag conditions
 		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
@@ -751,6 +773,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"MET": h_MET_Trigger,
 				"HT": h_HT_Trigger,
 				"MHT": h_MHT_Trigger,
+
+				#Store the Mini Cutflow and N-1 Table 
+				"Mini_Cutflow": h_CutFlow_Mini,
+				"Mini_NMinus1": h_NMinus1_Mini,
 			}
 		}
 

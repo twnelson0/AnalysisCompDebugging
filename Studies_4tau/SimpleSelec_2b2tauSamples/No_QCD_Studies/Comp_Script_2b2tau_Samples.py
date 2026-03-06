@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import mplhep as hep
 from coffea import processor, nanoevents
+from coffea.analysis_tools import PackedSelection
 from coffea.nanoevents import NanoEventsFactory, NanoAODSchema, BaseSchema
 from coffea.nanoevents.methods import candidate, vector
 from coffea import util
@@ -392,6 +393,52 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			print("Is MC events are equal to gen weights")
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
 
+		#Set up the packed selection object
+		selection = PackedSelection()
+
+		#Flag conditions
+		# Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
+		# flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
+		
+		# for flag in Flag_Array:
+		# 	flag_cond = flag_cond & event_level[flag]
+
+		# selection.add("Trigger", event_level.Mu_Trigger)
+		# selection.add("OfflineSelec",ak.any(muon.nMu > 0, axis = 1) & ak.any(muon.pt > 52, axis=1))
+		# selection.add("MuIDISo",muon[:,0].IDSelec_Med & muon[:,0].RelIso < 0.10)
+		# selection.add("METSelec",event_level.MET_pt > 100)
+		# selection.add("nFatJet",event_level.nFatJet > 0)
+		# selection.add("Flags",flag_cond)
+		# selection.add("PVSelec",event_level.PV_ndof > 4 & np.abs(event_level.PV_z) < 24 & np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2)
+		# if (slef.nTau_Selec > 0):
+		# 	pT_Cond1 = boostedtau[:,0].pt > 20
+		# 	eta_Cond1 = np.abs(boostedtau[:,0].eta) < 2.3
+		# 	decayMode_Cond1 = boostedtau[:,0].decay >= 0.5
+		# 	DBT_Iso_Mode_Cond1 = boostedtau[:,0].DBT > 0.5
+		# 	selection.add("LeadingTauSelec", pT_Cond1 & eta_Cond1 & decayMode_Cond1 & DBT_Iso_Mode_Cond1)
+		# if (slef.nTau_Selec > 1):
+		# 	pT_Cond2 = boostedtau[:,1].pt > 20
+		# 	eta_Cond2 = np.abs(boostedtau[:,1].eta) < 2.3
+		# 	decayMode_Cond2 = boostedtau[:,1].decay >= 0.5
+		# 	DBT_Iso_Mode_Cond2 = boostedtau[:,1].DBT > 0.5
+		# 	selection.add("SubLeadingTauSelec", pT_Cond2 & eta_Cond2 & decayMode_Cond2 & DBT_Iso_Mode_Cond2)
+		# if (slef.nTau_Selec > 2):
+		# 	pT_Cond3 = boostedtau[:,2].pt > 20
+		# 	eta_Cond3 = np.abs(boostedtau[:,2].eta) < 2.3
+		# 	decayMode_Cond3 = boostedtau[:,2].decay >= 0.5
+		# 	DBT_Iso_Mode_Cond3 = boostedtau[:,2].DBT > 0.5
+		# 	selection.add("3rdLeadingTauSelec", pT_Cond3 & eta_Cond3 & decayMode_Cond3 & DBT_Iso_Mode_Cond3)
+		# if (slef.nTau_Selec > 3):
+		# 	pT_Cond4 = boostedtau[:,3].pt > 20
+		# 	eta_Cond4 = np.abs(boostedtau[:,3].eta) < 2.3
+		# 	decayMode_Cond4 = boostedtau[:,3].decay >= 0.5
+		# 	DBT_Iso_Mode_Cond4 = boostedtau[:,3].DBT > 0.5
+		# 	selection.add("4thLeadingTauSelec", pT_Cond4 & eta_Cond4 & decayMode_Cond4 & DBT_Iso_Mode_Cond4)
+
+		#Add the random selection variable
+		event_rand = np.randint(0,5,ak.num(event_level,axis=0))
+		event_level["rand_selec"] = ak.singletlons(ak.from_numpy(event_rand))
+
 		#Basic Kinematic histograms Boosted tau
 		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
 		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ Leading $p_T$ [GeV]").Double()
@@ -638,10 +685,21 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				electron = electron[tau_4lead_selec]
 				muon = muon[tau_4lead_selec]
 				event_level = event_level[tau_4lead_selec]				
-			
+
         #############
         #Cut Selections
         #############
+        #Apply the random selection
+        rand_selec_cond = event_level["rand_selec"] == 4
+
+        tau = tau[rand_selec_cond]
+		boostedtau = boostedtau[rand_selec_cond]
+		AK8Jet = AK8Jet[rand_selec_cond]
+		Jet = Jet[rand_selec_cond]
+		electron = electron[rand_selec_cond]
+		muon = muon[rand_selec_cond]
+		event_level = event_level[rand_selec_cond]
+
 		
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus

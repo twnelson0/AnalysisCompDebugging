@@ -51,7 +51,7 @@ if __name__ == "__main__":
 			"muon_pt_Trigg","muon_eta_Trigg","muon_phi_Trigg","Leadingmuon_pt_Trigg","Leadingmuon_eta_Trigg",
 			"Jet_pt_Trigg","Jet_eta_Trigg","Jet_phi_Trigg",
 			"AK8Jet_pt_Trigg","AK8Jet_eta_Trigg","AK8Jet_phi_Trigg",
-			"MET","HT","MHT",
+			"MET","HT","MHT", "Mini_Cutflow", "Mini_NMinus1"
 			]
 
 	#Additional boosted tau distributions to pull based on boosted tau requirements
