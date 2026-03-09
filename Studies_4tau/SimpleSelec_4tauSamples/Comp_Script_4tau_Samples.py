@@ -209,9 +209,10 @@ def deltaPhi_METSelec(part1,MET,low_lim): #Note definition of deltaR coppied fro
 
 
 class PlottingScriptProcessor(processor.ProcessorABC):
-	def __init__(self, nBoostedTaus = 0): #Additional arguements can be added later
+	def __init__(self, nBoostedTaus = 0, ApplyTrigger = True): #Additional arguements can be added later
 		self.isData = False #Default assumption is MC
 		self.nTau_Selec = nBoostedTaus #Number of tau selections
+		self.ApplyTrigger = ApplyTrigger
 		#pass
 
 	def process(self, events):
@@ -434,19 +435,18 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_HT_Trigger = hist.Hist.new.Regular(40,0,1200,label=r"HT [GeV]").Double()
 		h_MHT_Trigger = hist.Hist.new.Regular(20,0,500,label=r"MHT [GeV]").Double()
 
-		#Add a kind of mini cutflow and N-1 tables
-		h_CutFlow_Mini = hist.Hist.new.StrCategory(["SkimOnly","Trigger","METCut","nFatJetReq"]).Double()
-		h_NMinus1_Mini = hist.Hist.new.StrCategory(["SkimOnly","Trigger","METCut","nFatJetReq"]).Double()
-
-		cutflow_dict = dict.fromkeys(["Sample","PreSkimming","Skimming","Trigger","Tau_pT","Tau_eta","decay","deepboosted","Mass_Cut","Higgs_dR"])
-		cutflow_dict["Sample"] = dataset
-		cutflow_dict["PreSkimming"] = numEvents_Dict[dataset] 
-		cutflow_dict["Skimming"] = ak.num(boostedtau,axis=0)
+		#Add cutflow and N-1 tables
+		if (self.ApplyTrigger):
+			h_CutFlow = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau","Trigger"]).Double()
+			h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau","Trigger"]).Double()
+		else:
+			h_CutFlow = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau"]).Double()
+			h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau"]).Double()
 
 		#Fill initial entries in skim and N-1 histograms
 		n_Skim = np.size(event_level.nFatJet)
-		h_CutFlow_Mini.fill("SkimOnly",weight=n_Skim)
-		h_NMinus1_Mini.fill("SkimOnly",weight=0)
+		h_CutFlow.fill("SkimOnly",weight=n_Skim)
+		h_NMinus1.fill("SkimOnly",weight=0)
 		
 		#Obtain the cross section scale factor	
 		if (self.isData):
@@ -469,62 +469,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet_HT = Jet_HT[Jet_HT.JetId > 0.5]
 		event_level["HT"] = ak.sum(Jet_HT.pt, axis=1, keepdims=False) 
 		del Jet_HT
-        
+
+		#############
+        #Cut Selections
         #############
-        #Trigger and Offline Cuts
-        #############
-		
-		#HLT Trigger(s)
-		boostedtau = boostedtau[event_level.Mu_Trigger]
-		tau = tau[event_level.Mu_Trigger]
-		AK8Jet = AK8Jet[event_level.Mu_Trigger]
-		Jet = Jet[event_level.Mu_Trigger]
-		electron = electron[event_level.Mu_Trigger]
-		muon = muon[event_level.Mu_Trigger]
-		event_level = event_level[event_level.Mu_Trigger]
-
-		#Muon Trigger offline selection
-		tau = tau[ak.any(muon.nMu > 0, axis = 1)]
-		boostedtau = boostedtau[ak.any(muon.nMu > 0, axis = 1)]
-		AK8Jet = AK8Jet[ak.any(muon.nMu > 0, axis = 1)]
-		Jet = Jet[ak.any(muon.nMu > 0, axis = 1)]
-		electron = electron[ak.any(muon.nMu > 0, axis = 1)]
-		muon = muon[ak.any(muon.nMu > 0, axis = 1)]
-		event_level = event_level[ak.any(muon.nMu > 0, axis = 1)]				
-
-		tau = tau[ak.any(muon.pt > 52, axis=1)]
-		boostedtau = boostedtau[ak.any(muon.pt > 52, axis=1)]
-		AK8Jet = AK8Jet[ak.any(muon.pt > 52, axis=1)]
-		Jet = Jet[ak.any(muon.pt > 52, axis=1)]
-		electron = electron[ak.any(muon.pt > 52, axis=1)]
-		muon = muon[ak.any(muon.pt > 52, axis=1)]
-		event_level = event_level[ak.any(muon.pt > 52, axis=1)]	
-
-		#Apply isolation and ID selections on muons
-		id_selec = muon[:,0].IDSelec_Med
-		Iso_selec = muon[:,0].RelIso < 0.10
-		
-		tau = tau[np.bitwise_and(id_selec,Iso_selec)]
-		boostedtau = boostedtau[np.bitwise_and(id_selec,Iso_selec)]
-		AK8Jet = AK8Jet[np.bitwise_and(id_selec,Iso_selec)]
-		Jet = Jet[np.bitwise_and(id_selec,Iso_selec)]
-		electron = electron[np.bitwise_and(id_selec,Iso_selec)]
-		muon = muon[np.bitwise_and(id_selec,Iso_selec)]
-		event_level = event_level[np.bitwise_and(id_selec,Iso_selec)]	
-
-        #Drop any events with no muons after selection
-		tau = tau[ak.num(muon,axis=1)>0]
-		boostedtau = boostedtau[ak.num(muon,axis=1)>0]
-		AK8Jet = AK8Jet[ak.num(muon,axis=1)>0]
-		Jet = Jet[ak.num(muon,axis=1)>0]
-		electron = electron[ak.num(muon,axis=1)>0]
-		muon = muon[ak.num(muon,axis=1)>0]
-		event_level = event_level[ak.num(muon,axis=1)>0]
-
-		#Fill post trigger entries in skim and N-1 histograms
-		n_Trigger = np.size(event_level.nFatJet)
-		h_CutFlow_Mini.fill("Trigger",weight=n_Trigger)
-		h_NMinus1_Mini.fill("Trigger",weight=n_Skim - n_Trigger)	
 
 		#MET selection
 		tau = tau[event_level.MET_pt > 100]
@@ -537,8 +485,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#Fill post MET entries in skim and N-1 histograms
 		n_MET = np.size(event_level.nFatJet)
-		h_CutFlow_Mini.fill("METCut",weight=n_MET)
-		h_NMinus1_Mini.fill("METCut",weight=n_Trigger - n_MET)	
+		h_CutFlow.fill("METCut",weight=n_MET)
+		h_NMinus1.fill("METCut",weight=n_Skim - n_MET)	
 
 		#Impose all events have at least one fat Jet
 		tau = tau[event_level.nFatJet > 0]
@@ -551,8 +499,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#Fill post FatJet entries in skim and N-1 histograms
 		n_FatJet = np.size(event_level.nFatJet)
-		h_CutFlow_Mini.fill("nFatJetReq",weight=n_FatJet)
-		h_NMinus1_Mini.fill("nFatJetReq",weight=n_MET - n_FatJet)
+		h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
+		h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
 
 		#Flag conditions
 		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
@@ -569,6 +517,11 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		muon = muon[flag_cond]
 		event_level = event_level[flag_cond]	
 
+		#Fill post flag selections entries in skim and N-1 histograms
+		n_FlagSelec = np.size(event_level.nFatJet)
+		h_CutFlow.fill("FlagReq",weight=n_FlagSelec)
+		h_NMinus1.fill("FlagReq",weight=n_FatJet - n_FlagSelec)
+
 		#PV selections
 		ndof_cond = event_level.PV_ndof > 4
 		PVz_cond = np.abs(event_level.PV_z) < 24
@@ -581,7 +534,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = Jet[PV_Cond]
 		electron = electron[PV_Cond]
 		muon = muon[PV_Cond]
-		event_level = event_level[PV_Cond]		
+		event_level = event_level[PV_Cond]	
+
+		#Fill post PV selection entries in skim and N-1 histograms
+		n_PVSelec = np.size(event_level.nFatJet)
+		h_CutFlow.fill("PVSelec",weight=n_PVSelec)
+		h_NMinus1.fill("PVSelec",weight=n_FlagSelec - n_PVSelec)
+
+		n_PreTrigger = n_PVSelec #Set number of events left before trigger seleciton to PV selection	
 
         #Boosted tau selections
 		if (self.nTau_Selec > 0):
@@ -598,7 +558,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			pT_Cond = boostedtau[:,0].pt > 20
 			eta_Cond = np.abs(boostedtau[:,0].eta) < 2.3
 			decayMode_Cond = boostedtau[:,0].decay >= 0.5
-			DBT_Iso_Mode_Cond = boostedtau[:,0].DBT > 0.5
+			DBT_Iso_Mode_Cond = boostedtau[:,0].DBT >= 0.5
 
 			tau_lead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
 			
@@ -608,14 +568,21 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			Jet = Jet[tau_lead_selec]
 			electron = electron[tau_lead_selec]
 			muon = muon[tau_lead_selec]
-			event_level = event_level[tau_lead_selec]				
+			event_level = event_level[tau_lead_selec]
+
+			#Fill post leading tau selection entries in skim and N-1 histograms
+			n_LeadTau = np.size(event_level.nFatJet)
+			h_CutFlow.fill("LeadingTau",weight=n_LeadTau)
+			h_NMinus1.fill("LeadingTau",weight=n_PVSelec - n_LeadTau)
+
+			n_PreTrigger = n_LeadTau				
 			
 			#Impose selections on Subleading boosted tau
 			if (self.nTau_Selec > 1):
 				pT_Cond = boostedtau[:,1].pt > 20
 				eta_Cond = np.abs(boostedtau[:,1].eta) < 2.3
 				decayMode_Cond = boostedtau[:,1].decay >= 0.5
-				DBT_Iso_Mode_Cond = boostedtau[:,1].DBT > 0.5
+				DBT_Iso_Mode_Cond = boostedtau[:,1].DBT >= 0.5
 
 				tau_sublead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
 				
@@ -625,14 +592,21 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				Jet = Jet[tau_sublead_selec]
 				electron = electron[tau_sublead_selec]
 				muon = muon[tau_sublead_selec]
-				event_level = event_level[tau_sublead_selec]				
+				event_level = event_level[tau_sublead_selec]
+
+				#Fill post subl-leading tau selection entries in skim and N-1 histograms
+				n_SubLeadTau = np.size(event_level.nFatJet)
+				h_CutFlow.fill("SubleadingTau",weight=n_SubLeadTau)
+				h_NMinus1.fill("SubleadingTau",weight=n_LeadTau - n_SubLeadTau)
+
+				n_PreTrigger = n_SubLeadTau				
 			
 			#Impose selections on third-leading boosted tau
 			if (self.nTau_Selec > 2):
 				pT_Cond = boostedtau[:,2].pt > 20
 				eta_Cond = np.abs(boostedtau[:,2].eta) < 2.3
 				decayMode_Cond = boostedtau[:,2].decay >= 0.5
-				DBT_Iso_Mode_Cond = boostedtau[:,2].DBT > 0.5
+				DBT_Iso_Mode_Cond = boostedtau[:,2].DBT >= 0.5
 
 				tau_3lead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
 				
@@ -642,14 +616,21 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				Jet = Jet[tau_3lead_selec]
 				electron = electron[tau_3lead_selec]
 				muon = muon[tau_3lead_selec]
-				event_level = event_level[tau_3lead_selec]				
+				event_level = event_level[tau_3lead_selec]	
+
+				#Fill post 3rd leading tau selection entries in skim and N-1 histograms
+				n_3rdLeadTau = np.size(event_level.nFatJet)
+				h_CutFlow.fill("3rdLeadingTau",weight=n_3rdLeadTau)
+				h_NMinus1.fill("3rdLeadingTau",weight=n_SubLeadTau - n_3rdLeadTau)
+
+				n_PreTrigger = n_3rdLeadTau				
 			
 			#Impose selections on fourth-leading boosted tau
 			if (self.nTau_Selec > 4):
 				pT_Cond = boostedtau[:,3].pt > 20
 				eta_Cond = np.abs(boostedtau[:,3].eta) < 2.3
 				decayMode_Cond = boostedtau[:,3].decay >= 0.5
-				DBT_Iso_Mode_Cond = boostedtau[:,3].DBT > 0.5
+				DBT_Iso_Mode_Cond = boostedtau[:,3].DBT >= 0.5
 
 				tau_4lead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
 				
@@ -659,12 +640,72 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				Jet = Jet[tau_4lead_selec]
 				electron = electron[tau_4lead_selec]
 				muon = muon[tau_4lead_selec]
-				event_level = event_level[tau_4lead_selec]				
-			
-        #############
-        #Cut Selections
+				event_level = event_level[tau_4lead_selec]	
+
+				#Fill post 4th leading tau selection entries in skim and N-1 histograms
+				n_4thLeadTau = np.size(event_level.nFatJet)
+				h_CutFlow.fill("4thLeadingTau",weight=n_4thLeadTau)
+				h_NMinus1.fill("4thLeadingTau",weight=n_3rdLeadTau - n_4thLeadTau)
+
+				n_PreTrigger = n_4thLeadTau				
+		
+		#############
+        #Trigger and Offline Cuts
         #############
 		
+		if (self.ApplyTrigger):
+			#HLT Trigger(s)
+			boostedtau = boostedtau[event_level.Mu_Trigger]
+			tau = tau[event_level.Mu_Trigger]
+			AK8Jet = AK8Jet[event_level.Mu_Trigger]
+			Jet = Jet[event_level.Mu_Trigger]
+			electron = electron[event_level.Mu_Trigger]
+			muon = muon[event_level.Mu_Trigger]
+			event_level = event_level[event_level.Mu_Trigger]
+
+			#Muon Trigger offline selection
+			tau = tau[ak.any(muon.nMu > 0, axis = 1)]
+			boostedtau = boostedtau[ak.any(muon.nMu > 0, axis = 1)]
+			AK8Jet = AK8Jet[ak.any(muon.nMu > 0, axis = 1)]
+			Jet = Jet[ak.any(muon.nMu > 0, axis = 1)]
+			electron = electron[ak.any(muon.nMu > 0, axis = 1)]
+			muon = muon[ak.any(muon.nMu > 0, axis = 1)]
+			event_level = event_level[ak.any(muon.nMu > 0, axis = 1)]				
+
+			tau = tau[ak.any(muon.pt > 52, axis=1)]
+			boostedtau = boostedtau[ak.any(muon.pt > 52, axis=1)]
+			AK8Jet = AK8Jet[ak.any(muon.pt > 52, axis=1)]
+			Jet = Jet[ak.any(muon.pt > 52, axis=1)]
+			electron = electron[ak.any(muon.pt > 52, axis=1)]
+			muon = muon[ak.any(muon.pt > 52, axis=1)]
+			event_level = event_level[ak.any(muon.pt > 52, axis=1)]	
+
+			#Apply isolation and ID selections on muons
+			id_selec = muon[:,0].IDSelec_Med
+			Iso_selec = muon[:,0].RelIso < 0.10
+			
+			tau = tau[np.bitwise_and(id_selec,Iso_selec)]
+			boostedtau = boostedtau[np.bitwise_and(id_selec,Iso_selec)]
+			AK8Jet = AK8Jet[np.bitwise_and(id_selec,Iso_selec)]
+			Jet = Jet[np.bitwise_and(id_selec,Iso_selec)]
+			electron = electron[np.bitwise_and(id_selec,Iso_selec)]
+			muon = muon[np.bitwise_and(id_selec,Iso_selec)]
+			event_level = event_level[np.bitwise_and(id_selec,Iso_selec)]	
+
+	        #Drop any events with no muons after selection
+			tau = tau[ak.num(muon,axis=1)>0]
+			boostedtau = boostedtau[ak.num(muon,axis=1)>0]
+			AK8Jet = AK8Jet[ak.num(muon,axis=1)>0]
+			Jet = Jet[ak.num(muon,axis=1)>0]
+			electron = electron[ak.num(muon,axis=1)>0]
+			muon = muon[ak.num(muon,axis=1)>0]
+			event_level = event_level[ak.num(muon,axis=1)>0]
+
+			#Fill post trigger entries in skim and N-1 histograms
+			n_Trigger = np.size(event_level.nFatJet)
+			h_CutFlow.fill("Trigger",weight=n_Trigger)
+			h_NMinus1.fill("Trigger",weight=n_PreTrigger - n_Trigger)
+
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
 		h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.pt))[0]))
@@ -775,8 +816,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"MHT": h_MHT_Trigger,
 
 				#Store the Mini Cutflow and N-1 Table 
-				"Mini_Cutflow": h_CutFlow_Mini,
-				"Mini_NMinus1": h_NMinus1_Mini,
+				"Mini_Cutflow": h_CutFlow,
+				"Mini_NMinus1": h_NMinus1,
 			}
 		}
 
@@ -868,6 +909,10 @@ if __name__ == "__main__":
 	#Diretory for files
 	Skimmed_4tau_base_MC = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/"
 	Skimmed_4tau_base_Data = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/Data/"
+
+	file_dict_data_test = {
+		"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
+	}
 	
 	file_dict_full = {
 			"TTToSemiLeptonic": [Skimmed_4tau_base_MC + "TTToSemiLeptonic_35August25_0448_skim_Newskim/TTToSemiLeptonic" + str(j) + ".root" for j in range(10)],
@@ -929,14 +974,13 @@ if __name__ == "__main__":
 		}
 	
 	#Background lists 
-	background_list_full_QCD = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"] #Full background list (with QCD)
+	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"] #Full background list (with QCD)
 	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"] #Full background list
 	background_list_test = [r"$ZZ \rightarrow 4l$"] #Only ZZ4l background for testing
 	background_list_none = [] #No backgrounds for data only testing
 	
 	#Set file dictionary and list of backgrounds prior to running processor
-	file_dict = file_dict_full
-	background_list = background_list_full_QCD
+	file_dict = file_dict_data_test
 
 	start_time = time.time()
 	for key_name, file_array in file_dict.items(): 
@@ -1020,7 +1064,7 @@ if __name__ == "__main__":
 	for n_taus in range(4,5):
 		#print(os.getcwd())
 		start_time = time.time()
-		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus)) #Modified for NanoAOD (changd treename)
+		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus, ApplyTrigger = False)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		
 		time_running = end_time-start_time
@@ -1028,155 +1072,9 @@ if __name__ == "__main__":
 		output_array.append(fourtau_out)
 		
         #Save coffea file
-		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec.coffea")
+		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec_SingleMu2018A.coffea")
 		#outfile = "~/Analysis/BoostedTau/ControlPlots/DebuggingStudies/AnalysisCompDebugging/Studies_4tau/SimpleSelec_2b2tauSamples/QCD_Studies/" + f"output_{n_taus}_boosted_tau_selec.coffea"
 		#timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 		#outfile = os.path.join(os.getcwd(), f"output_2018_run{timestamp}.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	
-
-	#util.save(output_array[0],"output_0_boosted_tau_selec.coffea")
-	#util.save(output_array[1],"output_1_boosted_tau_selec.coffea")
-
-	#fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = 0)) #Modified for NanoAOD (changd treename)
-
-
-	#Dictionaries of histograms for background, signal and data
-	hist_dict_background = dict.fromkeys(four_tau_hist_list)
-	hist_dict_signal = dict.fromkeys(four_tau_hist_list)
-	hist_dict_data = dict.fromkeys(four_tau_hist_list)
-	
-	#Save coffea file
-	#timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-	#outfile = os.path.join(os.getcwd(), f"output_2018_run{timestamp}.coffea")
-	#util.save(fourtau_out, outfile)
-	#print(f"Saved output to {outfile}")	
-
-#	for hist_name in four_tau_hist_list: #Loop over all histograms
-#		temp_hist_dict = dict.fromkeys(background_list) # create dictionary of histograms for each background type
-#				
-#		for background_type in background_list:
-#			print("Background type %s"%background_type)
-#			background_array = []
-#			backgrounds = background_dict[background_type]
-#						
-#			#Loop over all backgrounds
-#			for background in backgrounds:
-#				print("%s"%background)
-#				if (True): #Only need to generate single background once
-#					
-#					#Plot the cutflow for each background
-#					if (hist_name == "cutflow_table"):
-#						#print(fourtau_out[background]["cutflow_table"].axes)
-#						if (background == backgrounds[0]):
-#							cutflow_hist = fourtau_out[background]["cutflow_table"]
-#						else:
-#							cutflow_hist += fourtau_out[background]["cutflow_table"]
-#							
-#						if (background == backgrounds[-1]):
-#							fig2p5, ax2p5 = plt.subplots()
-#							cutflow_hist.plot1d(ax=ax2p5)
-#							plt.title(background_type + " Cutflow Table")
-#							ax2p5.set_yscale('log')
-#							plt.savefig("SingleBackground" + background_plot_names[background_type] + "CutFlowTable")
-#							plt.close()
-#							
-#						#Plot the weights for each background
-#						if (background == backgrounds[0]):
-#							weight_hist = fourtau_out[background]["weight_Hist"]
-#						else:
-#							weight_hist += fourtau_out[background]["weight_Hist"]
-#						if (background == backgrounds[-1]):
-#							figweight, axweight = plt.subplots()
-#							weight_hist.plot1d(ax=axweight)
-#							plt.title(background_type + " Weight Histogram")
-#							plt.savefig("SingleBackground" + background_plot_names[background_type] + "Weight")
-#							plt.close()
-#							
-#					if (hist_name == "Radion_Charge_Arr"):
-#						lumi_table_data["MC Sample"].append(background)
-#						lumi_table_data["Luminosity"].append(fourtau_out[background]["Lumi_Val"])
-#						lumi_table_data["Cross Section (pb)"].append(fourtau_out[background]["CrossSec_Val"])
-#						#lumi_table_data["Number of Events"].append(fourtau_out[background]["NEvent_Val"])
-#						lumi_table_data["Gen SumW"].append(fourtau_out[background]["SumWEvent_Val"])
-#						lumi_table_data["Calculated Weight"].append(fourtau_out[background]["Weight_Val"])
-#							
-#					if (hist_name != "Electron_tau_dR_Arr" and hist_name != "Muon_tau_dR_Arr"):
-#						if (background == backgrounds[0]):
-#							crnt_hist = fourtau_out[background][hist_name]
-#						#	print("Background: " + background)
-#						#	print("Sum of entries: %f"%fourtau_out[background][hist_name].sum())
-#						else:
-#							crnt_hist += fourtau_out[background][hist_name]
-#						#	print("Background: " + background)
-#						#	print("Sum of entries: %f"%fourtau_out[background][hist_name].sum())
-#						if (background == backgrounds[-1]):
-#							fig2, ax2 = plt.subplots()
-#							temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
-#							crnt_hist.plot1d(ax=ax2)
-#							#if (hist_name == "FourTau_Mass_Arr"):
-#						#	print("Background: " + background_type)
-#						#	print("Sum of entries: %f"%crnt_hist.sum())
-#							plt.title(background_type)
-#							plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
-#							plt.close()
-#
-#					else: #lepton-tau delta R 
-#						fig2, ax2 = plt.subplots()
-#						fourtau_out[background][hist_name].plot1d(ax=ax2)
-#						ax2.set_yscale('log')
-#						plt.title(background_type)
-#						plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
-#						plt.close()
-#						
-#
-#		#Combine the backgrounds together
-#		hist_dict_background[hist_name] = hist.Stack.from_dict(temp_hist_dict) #This could be causing the problems 
-#		
-#		#Obtain data distributions
-#		print("==================Hist %s================"%hist_name)
-#		hist_dict_data[hist_name] = fourtau_out["Data_Mu"][hist_name] #.fill("Data",fourtau_out["Data_SingleMuon"][hist_name]) 
-#		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
-#		
-#		#signal_stack = hist_dict_signal[hist_name].stack("signal")
-#		data_stack = hist_dict_data[hist_name] #.stack("data")	  
-#		#signal_array = [signal_stack["Signal"]]
-#		data_array = [data_stack] #["Data"]]
-#				
-#		for background in background_list:
-#			background_array.append(background_stack[background]) 
-#			print("Background: " + background)
-#			print("Sum of stacked histogram: %f"%background_stack[background].sum())
-#					
-#		
-#		#MPLHEP ratio plot
-#		print(fourtau_out["Data_Mu"][hist_name].axes[0].label)
-#		fig, ax_main, ax_comp = hep.comp.data_model(
-#			data_hist = fourtau_out["Data_Mu"][hist_name],
-#            unstacked_kwargs_list = [{"s":2}],
-#			#s = 2, #Modify the size of the data points (not sure if this will work)
-#			stacked_components = background_array,
-#			stacked_colors = TABLEAU_COLORS[:len(background_list)],
-#			stacked_labels = background_list,
-#			xlabel = fourtau_out["Data_Mu"][hist_name].axes[0].label,
-#			model_uncertainty=True,
-#			comparison = "pull",
-#		)
-#		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
-#		plt.savefig(four_tau_names[hist_name])
-#		plt.close()
-
-
-		#Stack background distributions and plot signal + data distribution
-	#	fig,ax = plt.subplots()
-	#	hep.histplot(background_array,ax=ax,stack=True,histtype="fill",label=background_list,facecolor=TABLEAU_COLORS[:len(background_list)],edgecolor=TABLEAU_COLORS[:len(background_list)])
-	#	#hep.histplot(signal_array,ax=ax,stack=True,histtype="step",label=signal_list,edgecolor=TABLEAU_COLORS[len(background_list)+1],linewidth=2.95)
-	#	hep.histplot(data_array,ax=ax,stack=False,histtype="errorbar", yerr=True,label=["Data"],marker="o",color = "k") #,facecolor='black',edgecolor='black') #,mec='k')
-	#	hep.cms.text("Preliminary",loc=0,fontsize=13)
-	#	#ax.set_title(hist_name_dict[hist_name],loc = "right")
-	#	ax.set_title("2018 Data",loc = "right")
-	#	ax.legend(fontsize=10, loc='upper right')
-	#	#ax.legend(fontsize=10, loc=(1.04,1))
-	#	plt.savefig(four_tau_names[hist_name])
-	#	plt.close()
-
