@@ -585,6 +585,12 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_NMinus1.fill("PVSelec",weight=n_FlagSelec - n_PVSelec)
 
 		n_PreTrigger = n_PVSelec #Set number of events left before trigger seleciton to PV selection	
+		
+        #Temp values of the Tau selections
+		n_LeadTau = -1
+		n_SubLeadTau = -1
+		n_3rdLeadTau = -1
+		n_4thLeadTau = -1
 
 		#Boosted tau selections
 		if (self.nTau_Selec > 0):
@@ -669,7 +675,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				n_PreTrigger = n_3rdLeadTau					
 			
 			#Impose selections on fourth-leading boosted tau
-			if (self.nTau_Selec > 4):
+			if (self.nTau_Selec > 3):
 				pT_Cond = boostedtau[:,3].pt > 20
 				eta_Cond = np.abs(boostedtau[:,3].eta) < 2.3
 				decayMode_Cond = boostedtau[:,3].decay >= 0.5
@@ -783,9 +789,9 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#Muons
 		h_muon_pT_Trigger.fill(ak.ravel(muon.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.pt))[0]))
-		h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[:,0].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
+		h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[ak.num(muon.pt,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(muon.pt,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_muon_eta_Trigger.fill(ak.ravel(muon.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.eta))[0]))
-		h_Leadingmuon_eta_Trigger.fill(ak.ravel(muon[:,0].eta),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
+		h_Leadingmuon_eta_Trigger.fill(ak.ravel(muon[ak.num(muon.pt,axis=1) > 0][:,0].eta),weight=ak.ravel(event_level[ak.num(muon.pt,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_muon_phi_Trigger.fill(ak.ravel(muon.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.phi))[0]))
 
 		#Jets 
@@ -811,6 +817,15 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Weight_Val": CrossSec_Weight,
 				"Weight": ak.to_list(event_level.event_weight*CrossSec_Weight), 
 				"Event_Count": np.sum(ak.to_list(event_level.event_weight*CrossSec_Weight)),
+				"n_Skim": n_Skim,
+				"n_MET": n_MET,
+				"n_FatJet": n_FatJet,
+				"n_FlagSelec": n_FlagSelec,
+				"n_PVSelec": n_PVSelec,
+				"n_LeadTau": n_LeadTau,
+				"n_SubLeadTau": n_SubLeadTau,
+				"n_3rdLeadTau": n_3rdLeadTau,
+				"n_4thLeadTau": n_4thLeadTau,
 				
 				#Boosted Tau kineamtic distirubtions
 				"boostedtau_pt_Trigg": h_boostedtau_pT_Trigger,

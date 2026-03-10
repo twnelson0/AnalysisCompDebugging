@@ -123,7 +123,7 @@ if __name__ == "__main__":
 		"Leadingmuon_pt_Trigg": "Muon_Leading_pT_Trigger" + "-" + trigger_name,
 		"muon_eta_Trigg": "Muon_eta_Trigger" + "-" + trigger_name,
 		"muon_phi_Trigg": "Muon_phi_Trigger" + "-" + trigger_name,
-        "Leadingmuon_eta_Trigg": "Muon_Leading_eta_Trigger" + "-" + trigger_name,
+		"Leadingmuon_eta_Trigg": "Muon_Leading_eta_Trigger" + "-" + trigger_name,
 		"Jet_pt_Trigg": "Jet_pT_Trigger" + "-" + trigger_name,
 		"LeadingJet_pt_Trigg": "Jet_Leading_pT_Trigger" + "-" + trigger_name,
 		"Jet_eta_Trigg": "Jet_eta_Trigger" + "-" + trigger_name,
@@ -147,6 +147,17 @@ if __name__ == "__main__":
 	print("=============================================")
 	print("Number of data events: %d"%coffea_input["Data_Mu"]["Event_Count"])
 	print("=============================================")
+
+	print("Number of events prior to selections: %d"%coffea_input["Data_Mu"]["n_Skim"])
+	print("Number of events after MET selection: %d"%coffea_input["Data_Mu"]["n_MET"])
+	print("Number of events after FatJet selection: %d"%coffea_input["Data_Mu"]["n_FatJet"])
+	print("Number of events after quality flag selection: %d"%coffea_input["Data_Mu"]["n_FlagSelec"])
+	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_Mu"]["n_PVSelec"])
+	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_LeadTau"])
+	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_SubLeadTau"])
+	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_3rdLeadTau"])
+	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_4thLeadTau"])
+
 
 	#Produce N-1 and cutflow plots for data
 	figcut, axcut = plt.subplots()

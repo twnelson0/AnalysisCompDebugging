@@ -51,7 +51,7 @@ if __name__ == "__main__":
 			"muon_pt_Trigg","muon_eta_Trigg","muon_phi_Trigg","Leadingmuon_pt_Trigg","Leadingmuon_eta_Trigg",
 			"Jet_pt_Trigg","Jet_eta_Trigg","Jet_phi_Trigg",
 			"AK8Jet_pt_Trigg","AK8Jet_eta_Trigg","AK8Jet_phi_Trigg",
-			"MET","HT","MHT",
+			"MET","HT","MHT" #, "Mini_Cutflow", "Mini_NMinus1"
 			]
 
 	#Additional boosted tau distributions to pull based on boosted tau requirements
@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
 	four_tau_hist_list = add_var + four_tau_hist_list
 	
-	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"]
+	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"] #,"QCD"]
 	background_list_test = [r"$ZZ \rightarrow 4l$"]
 	background_list_none = []
 	background_list = background_list_full
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 		"Leadingmuon_pt_Trigg": "Muon_Leading_pT_Trigger" + "-" + trigger_name,
 		"muon_eta_Trigg": "Muon_eta_Trigger" + "-" + trigger_name,
 		"muon_phi_Trigg": "Muon_phi_Trigger" + "-" + trigger_name,
-        "Leadingmuon_eta_Trigg": "Muon_Leading_eta_Trigger" + "-" + trigger_name,
+		"Leadingmuon_eta_Trigg": "Muon_Leading_eta_Trigger" + "-" + trigger_name,
 		"Jet_pt_Trigg": "Jet_pT_Trigger" + "-" + trigger_name,
 		"LeadingJet_pt_Trigg": "Jet_Leading_pT_Trigger" + "-" + trigger_name,
 		"Jet_eta_Trigg": "Jet_eta_Trigger" + "-" + trigger_name,
@@ -135,6 +135,8 @@ if __name__ == "__main__":
 		"MET": "MET_Trigger" + "-" + trigger_name,
 		"HT": "HT_Trigger" + "-" + trigger_name,
 		"MHT": "MHT_Trigger" + "-" + trigger_name,
+		"Mini_Cutflow": "Mini_Cutflow_Trigger" + "-" + trigger_name,
+		"Mini_NMinus1": "Mini_NMinus1_Trigger" + "-" + trigger_name,
 	}
 
 
@@ -145,6 +147,26 @@ if __name__ == "__main__":
 	print("=============================================")
 	print("Number of data events: %d"%coffea_input["Data_Mu"]["Event_Count"])
 	print("=============================================")
+
+	print("Number of events prior to selections: %d"%coffea_input["Data_Mu"]["n_Skim"])
+	print("Number of events after MET selection: %d"%coffea_input["Data_Mu"]["n_MET"])
+	print("Number of events after FatJet selection: %d"%coffea_input["Data_Mu"]["n_FatJet"])
+	print("Number of events after quality flag selection: %d"%coffea_input["Data_Mu"]["n_FlagSelec"])
+	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_Mu"]["n_PVSelec"])
+	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_LeadTau"])
+	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_SubLeadTau"])
+	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_3rdLeadTau"])
+	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_4thLeadTau"])
+
+
+	#Produce N-1 and cutflow plots for data
+	figcut, axcut = plt.subplots()
+	coffea_input["Data_Mu"]["Mini_Cutflow"].plot1d(ax = axcut)
+	plt.savefig("Data_Cutflow_Plot.png")
+    
+	figcut, axcut = plt.subplots()
+	coffea_input["Data_Mu"]["Mini_NMinus1"].plot1d(ax = axcut)
+	plt.savefig("Data_NMinus_Plot.png")
 	
 	#Dictionaries of histograms for background, signal and data
 	hist_dict_background = dict.fromkeys(four_tau_hist_list)
