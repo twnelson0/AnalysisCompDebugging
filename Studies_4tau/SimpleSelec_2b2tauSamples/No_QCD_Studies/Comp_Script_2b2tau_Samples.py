@@ -592,32 +592,27 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		n_3rdLeadTau = -1
 		n_4thLeadTau = -1
 
-		#Boosted tau selections
+        #Boosted tau selections
 		if (self.nTau_Selec > 0):
-			#Require events to have at least n boosted tau
-			tau = tau[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
-			boostedtau = boostedtau[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
-			AK8Jet = AK8Jet[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
-			Jet = Jet[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
-			electron = electron[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
-			muon = muon[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
-			event_level = event_level[ak.num(boostedtau,axis=1) >= self.nTau_Selec]
-
 			#Impose selections on leading boosted tau
-			pT_Cond = boostedtau[:,0].pt > 20
-			eta_Cond = np.abs(boostedtau[:,0].eta) < 2.3
-			decayMode_Cond = boostedtau[:,0].decay >= 0.5
-			DBT_Iso_Mode_Cond = boostedtau[:,0].DBT >= 0.5
-
-			tau_lead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
+			pT_Cond = boostedtau.pt > 20
+			eta_Cond = np.abs(boostedtau.eta) < 2.3
+			decayMode_Cond = boostedtau.decay >= 0.5
+			DBT_Iso_Cond = boostedtau.DBT >= 0.5
 			
-			tau = tau[tau_lead_selec]
-			boostedtau = boostedtau[tau_lead_selec]
-			AK8Jet = AK8Jet[tau_lead_selec]
-			Jet = Jet[tau_lead_selec]
-			electron = electron[tau_lead_selec]
-			muon = muon[tau_lead_selec]
-			event_level = event_level[tau_lead_selec]
+			tau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
+			boostedtau[tau_selec_cond] #Apply selections to all individual taus
+		
+			#Require events have at least 1 boosted tau
+			lead_tau_cond = ak.num(boostedtau,axis=1) >= 1
+				
+			tau = tau[lead_tau_cond]
+			boostedtau = boostedtau[lead_tau_cond]
+			AK8Jet = AK8Jet[lead_tau_cond]
+			Jet = Jet[lead_tau_cond]
+			electron = electron[lead_tau_cond]
+			muon = muon[lead_tau_cond]
+			event_level = event_level[lead_tau_cond]
 
 			#Fill post leading tau selection entries in skim and N-1 histograms
 			n_LeadTau = np.size(event_level.nFatJet)
@@ -628,20 +623,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			
 			#Impose selections on Subleading boosted tau
 			if (self.nTau_Selec > 1):
-				pT_Cond = boostedtau[:,1].pt > 20
-				eta_Cond = np.abs(boostedtau[:,1].eta) < 2.3
-				decayMode_Cond = boostedtau[:,1].decay >= 0.5
-				DBT_Iso_Mode_Cond = boostedtau[:,1].DBT >= 0.5
-
-				tau_sublead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
-				
-				tau = tau[tau_sublead_selec]
-				boostedtau = boostedtau[tau_sublead_selec]
-				AK8Jet = AK8Jet[tau_sublead_selec]
-				Jet = Jet[tau_sublead_selec]
-				electron = electron[tau_sublead_selec]
-				muon = muon[tau_sublead_selec]
-				event_level = event_level[tau_sublead_selec]
+				#Require events have at least 2 boosted tau
+				sublead_tau_cond = ak.num(boostedtau,axis=1) >= 2
+					
+				tau = tau[sublead_tau_cond]
+				boostedtau = boostedtau[sublead_tau_cond]
+				AK8Jet = AK8Jet[sublead_tau_cond]
+				Jet = Jet[sublead_tau_cond]
+				electron = electron[sublead_tau_cond]
+				muon = muon[sublead_tau_cond]
+				event_level = event_level[sublead_tau_cond]
 
 				#Fill post subl-leading tau selection entries in skim and N-1 histograms
 				n_SubLeadTau = np.size(event_level.nFatJet)
@@ -652,51 +643,43 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			
 			#Impose selections on third-leading boosted tau
 			if (self.nTau_Selec > 2):
-				pT_Cond = boostedtau[:,2].pt > 20
-				eta_Cond = np.abs(boostedtau[:,2].eta) < 2.3
-				decayMode_Cond = boostedtau[:,2].decay >= 0.5
-				DBT_Iso_Mode_Cond = boostedtau[:,2].DBT >= 0.5
-
-				tau_3lead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
-				
-				tau = tau[tau_3lead_selec]
-				boostedtau = boostedtau[tau_3lead_selec]
-				AK8Jet = AK8Jet[tau_3lead_selec]
-				Jet = Jet[tau_3lead_selec]
-				electron = electron[tau_3lead_selec]
-				muon = muon[tau_3lead_selec]
-				event_level = event_level[tau_3lead_selec]
+				#Require events have at least 2 boosted tau
+				thirdlead_tau_cond = ak.num(boostedtau,axis=1) >= 3
+					
+				tau = tau[thirdlead_tau_cond]
+				boostedtau = boostedtau[thirdlead_tau_cond]
+				AK8Jet = AK8Jet[thirdlead_tau_cond]
+				Jet = Jet[thirdlead_tau_cond]
+				electron = electron[thirdlead_tau_cond]
+				muon = muon[thirdlead_tau_cond]
+				event_level = event_level[thirdlead_tau_cond]
 
 				#Fill post 3rd leading tau selection entries in skim and N-1 histograms
 				n_3rdLeadTau = np.size(event_level.nFatJet)
 				h_CutFlow.fill("3rdLeadingTau",weight=n_3rdLeadTau)
 				h_NMinus1.fill("3rdLeadingTau",weight=n_SubLeadTau - n_3rdLeadTau)
 
-				n_PreTrigger = n_3rdLeadTau					
+				n_PreTrigger = n_3rdLeadTau				
 			
 			#Impose selections on fourth-leading boosted tau
 			if (self.nTau_Selec > 3):
-				pT_Cond = boostedtau[:,3].pt > 20
-				eta_Cond = np.abs(boostedtau[:,3].eta) < 2.3
-				decayMode_Cond = boostedtau[:,3].decay >= 0.5
-				DBT_Iso_Mode_Cond = boostedtau[:,3].DBT >= 0.5
-
-				tau_4lead_selec = np.bitwise_and(DBT_Iso_Mode_Cond,np.bitwise_and(decayMode_Cond,np.bitwise_and(pT_Cond,eta_Cond)))
-				
-				tau = tau[tau_4lead_selec]
-				boostedtau = boostedtau[tau_4lead_selec]
-				AK8Jet = AK8Jet[tau_4lead_selec]
-				Jet = Jet[tau_4lead_selec]
-				electron = electron[tau_4lead_selec]
-				muon = muon[tau_4lead_selec]
-				event_level = event_level[tau_4lead_selec]	
+				#Require events have at least 2 boosted tau
+				fourthlead_tau_cond = ak.num(boostedtau,axis=1) >= 4
+					
+				tau = tau[fourthlead_tau_cond]
+				boostedtau = boostedtau[fourthlead_tau_cond]
+				AK8Jet = AK8Jet[fourthlead_tau_cond]
+				Jet = Jet[fourthlead_tau_cond]
+				electron = electron[fourthlead_tau_cond]
+				muon = muon[fourthlead_tau_cond]
+				event_level = event_level[fourthlead_tau_cond]
 
 				#Fill post 4th leading tau selection entries in skim and N-1 histograms
 				n_4thLeadTau = np.size(event_level.nFatJet)
 				h_CutFlow.fill("4thLeadingTau",weight=n_4thLeadTau)
 				h_NMinus1.fill("4thLeadingTau",weight=n_3rdLeadTau - n_4thLeadTau)
 
-				n_PreTrigger = n_4thLeadTau
+				n_PreTrigger = n_4thLeadTau				
 
 		#############
 		#Trigger and Offline Cuts
