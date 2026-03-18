@@ -20,7 +20,7 @@ import datetime
 from distributed import Client
 from dask_jobqueue import HTCondorCluster
 import csv
-#import glob
+import glob
 
 
 #X509 function (for HTC)
@@ -449,10 +449,11 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_NMinus1.fill("SkimOnly",weight=0)
 		
 		#Obtain the cross section scale factor	
-		if (self.isData):
-			CrossSec_Weight = 1 
-		else:
-			CrossSec_Weight = weight_calc(dataset,sumWEvents_Dict[dataset])
+		CrossSec_Weight = 1 
+	#	if (self.isData):
+	#		CrossSec_Weight = 1 
+	#	else:
+	#		CrossSec_Weight = weight_calc(dataset,sumWEvents_Dict[dataset])
 
 		#Obtain MHT
 		Jet_MHT = Jet[Jet.pt > 30]
@@ -907,9 +908,15 @@ if __name__ == "__main__":
 	#Diretory for files
 	Skimmed_4tau_base_MC = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/"
 	Skimmed_4tau_base_Data = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/Data/"
+	Skimmed_4tau_loc_Data = "/hdfs/store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/Data/"
+
+	#Make full array of input files
+	input_files = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
 
 	file_dict_data_test = {
-		"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
+		#"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
+		#"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root"]
+		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in input_files] 
 	}
 	
 	file_dict_full = {
@@ -981,21 +988,21 @@ if __name__ == "__main__":
 	file_dict = file_dict_data_test
 
 	start_time = time.time()
-	for key_name, file_array in file_dict.items(): 
-		print(key_name)
-		if (key_name != "Data_Mu" and key_name != "Data_MET" ): 
-			numEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-			sumWEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-			for file in file_array:
-				with uproot.open(file) as tempFile:
-					print(file)
-					numEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventCount'].array()) #Fixed for nanoAOD 
-					sumWEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventSumw'].array()) #Fixed for nanoAOD 
-					print(key_name + "sum: %f"%numEvents_Dict[key_name])
+	#for key_name, file_array in file_dict.items(): 
+	#	print(key_name)
+	#	if (key_name != "Data_Mu" and key_name != "Data_MET" ): 
+	#		numEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
+	#		sumWEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
+	#		for file in file_array:
+	#			with uproot.open(file) as tempFile:
+	#				print(file)
+	#				numEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventCount'].array()) #Fixed for nanoAOD 
+	#				sumWEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventSumw'].array()) #Fixed for nanoAOD 
+	#				print(key_name + "sum: %f"%numEvents_Dict[key_name])
 
-		else: #Ignore data files
-			numEvents_Dict[key_name] = 1
-			sumWEvents_Dict[key_name] = 1
+	#	else: #Ignore data files
+	#		numEvents_Dict[key_name] = 1
+	#		sumWEvents_Dict[key_name] = 1
 
 	#Background names for single background plot file names
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
@@ -1058,16 +1065,15 @@ if __name__ == "__main__":
 	}
 	
 	print(os.getcwd())
-	output_array = []
 	for n_taus in range(4,5):
 		#print(os.getcwd())
+		print("About to run processor")
 		start_time = time.time()
 		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus, ApplyTrigger = False)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		
 		time_running = end_time-start_time
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
-		output_array.append(fourtau_out)
 		
         #Save coffea file
 		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec_SingleMu2018A.coffea")
