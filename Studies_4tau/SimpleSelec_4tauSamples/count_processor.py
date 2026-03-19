@@ -61,8 +61,8 @@ if __name__ == "__main__":
 	Ganesh_Skim_Loc_Data = "/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_17March26_0712_skim_Ganesh_Selections/"
 
 	#Make full array of input files
-	input_files = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
-	#input_files = glob.glob(Ganesh_Skim_Loc_Data + "singleFileSkimForSubmission-NANO_NANO_*.root")
+	#input_files = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	input_files = glob.glob(Ganesh_Skim_Loc_Data + "singleFileSkimForSubmission-NANO_NANO_*.root")
 
 	file_dict = {
 		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in input_files] 

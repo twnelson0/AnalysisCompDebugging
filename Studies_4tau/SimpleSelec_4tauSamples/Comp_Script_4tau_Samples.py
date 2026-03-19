@@ -1027,21 +1027,29 @@ if __name__ == "__main__":
 	file_dict = file_dict_data_test
 
 	start_time = time.time()
-	#for key_name, file_array in file_dict.items(): 
-	#	print(key_name)
-	#	if (key_name != "Data_Mu" and key_name != "Data_MET" ): 
-	#		numEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-	#		sumWEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-	#		for file in file_array:
-	#			with uproot.open(file) as tempFile:
-	#				print(file)
-	#				numEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventCount'].array()) #Fixed for nanoAOD 
-	#				sumWEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventSumw'].array()) #Fixed for nanoAOD 
-	#				print(key_name + "sum: %f"%numEvents_Dict[key_name])
+	for key_name, file_array in file_dict.items(): 
+		print(key_name)
+		if (key_name != "Data_Mu" and key_name != "Data_MET" ): 
+			numEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
+			sumWEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
+			for file in file_array:
+				#with uproot.open(file) as tempFile:
+				#print(file)
+				tempFile = uproot.dask(file + ":Runs")
+				numEvents_Dict[key_name] += np.sum(tempFile['genEventCount'].compute()[0]) #Fixed for nanoAOD 
+				sumWEvents_Dict[key_name] += np.sum(tempFile['genEventSumw'].compute()[0]) #Fixed for nanoAOD 
+				del tempFile
+			
+			#	numEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventCount'].array()) #Fixed for nanoAOD 
+			#	sumWEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventSumw'].array()) #Fixed for nanoAOD 
+			#	print(key_name + "sum: %f"%numEvents_Dict[key_name])
 
-	#	else: #Ignore data files
-	#		numEvents_Dict[key_name] = 1
-	#		sumWEvents_Dict[key_name] = 1
+		else: #Ignore data files
+			numEvents_Dict[key_name] = 1
+			sumWEvents_Dict[key_name] = 1
+	
+	end_time_0 = time.time()
+	print("Time to process all files: %d"%(end_time_0 - start_time))
 
 	#Background names for single background plot file names
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
