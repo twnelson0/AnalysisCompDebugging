@@ -4,10 +4,16 @@ __pycache__/
 *$py.class
 *.py.swp
 
+#Ignore Venv related files
+Venv/
+.evn/
+.local/share/jupyter/kernels/python3
+
 #Output files
 *.csv
 *.png
 *.coffea
+*.json
 
 #Note files not needed to be saved
 Simple_CrossSec.txt
@@ -17,6 +23,9 @@ Full_CrossSecDict.txt
 Studies_2b2tau/Old_Plots/
 Studies_4tau/SimpleSelec_2b2tauSamples/Plots_WithQCD/
 */SingleBackground_Dir/
+
+#Processor comparision files
+Processor_Only_Cpy*.py
 
 #Shell file
 shell

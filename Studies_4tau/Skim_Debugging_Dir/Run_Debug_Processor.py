@@ -127,16 +127,16 @@ if __name__ == "__main__":
 	#	"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
 	#}
 	file_dict_data_4tau = {
-		"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root",
-				Skimmed_4tau_base_Data + "SingleMu_Run2018B_15January26_0731_skim_Jan26Skim/SingleMu_Run2018B.root",
-				Skimmed_4tau_base_Data + "SingleMu_Run2018C_15January26_0740_skim_Jan26Skim/SingleMu_Run2018C.root",
-				Skimmed_4tau_base_Data + "SingleMu_Run2018D_15January26_0815_skim_Jan26Skim/SingleMu_Run2018D.root"]
+		"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root"]
+			#	Skimmed_4tau_base_Data + "SingleMu_Run2018B_15January26_0731_skim_Jan26Skim/SingleMu_Run2018B.root",
+			#	Skimmed_4tau_base_Data + "SingleMu_Run2018C_15January26_0740_skim_Jan26Skim/SingleMu_Run2018C.root",
+			#	Skimmed_4tau_base_Data + "SingleMu_Run2018D_15January26_0815_skim_Jan26Skim/SingleMu_Run2018D.root"]
 	}
 	file_dict_data_2b2tau = {
 		"Data_Mu": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018A.root",
-					Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018B.root",
-					Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018C.root",
-					Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D.root",
+				#	Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018B.root",
+				#	Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018C.root",
+				#	Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D.root",
 					]
 	}
 

@@ -449,7 +449,6 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_NMinus1.fill("SkimOnly",weight=0)
 		
 		#Obtain the cross section scale factor	
-		#CrossSec_Weight = 1 
 		if (self.isData):
 			CrossSec_Weight = 1 
 		else:
@@ -472,8 +471,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		del Jet_HT
 
 		#############
-        #Cut Selections
-        #############
+		#Cut Selections
+		#############
 
 		#MET selection
 		tau = tau[event_level.MET_pt > 100]
@@ -552,7 +551,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
         #Boosted tau selections
 		if (self.nTau_Selec > 0):
-			#Impose selections on leading boosted tau
+			#Impose selections boosted taus
 			pT_Cond = boostedtau.pt > 20
 			eta_Cond = np.abs(boostedtau.eta) < 2.3
 			decayMode_Cond = boostedtau.decay >= 0.5
@@ -640,9 +639,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				n_PreTrigger = n_4thLeadTau				
 		
 		#############
-        #Trigger and Offline Cuts
-        #############
-		
+		#Trigger and Offline Cuts
+		#############
 		if (self.ApplyTrigger):
 			#HLT Trigger(s)
 			boostedtau = boostedtau[event_level.Mu_Trigger]
@@ -825,6 +823,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 if __name__ == "__main__":
 	#Condor related stuff
+	run_on_condor = True
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	
 	#Xrootd crap
@@ -858,8 +857,6 @@ if __name__ == "__main__":
 			]
 	)
 	cluster.adapt(minimum=1, maximum=500)
-
-	run_on_condor = True 
 	
 	if (run_on_condor):
 		print("Run on Condor")
@@ -872,6 +869,7 @@ if __name__ == "__main__":
             #maxchunks = 1
 		)
 	else: #Iterative runner
+		print("Run Iteratively")
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
 	
 	four_tau_hist_list = [
@@ -912,10 +910,18 @@ if __name__ == "__main__":
 	Skimmed_4tau_loc_MC = "/hdfs/store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/"
 
 	#Make full arrays of single Muon data
-	SingleMuA_2018A = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
-	SingleMuA_2018B = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018B_15January26_0731_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
-	SingleMuA_2018C = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018C_15January26_0740_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
-	SingleMuA_2018D = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018D_15January26_0815_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	SingleMu_2018A = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	SingleMu_2018B = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018B_15January26_0731_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	SingleMu_2018C = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018C_15January26_0740_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	SingleMu_2018D = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018D_15January26_0815_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+
+	#Single MuonA debugging production
+	SingleMu_2018A_Debug = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0456_skim_4TauFixed_NonEmpty/singleFileSkimForSubmission-NANO_NANO_*.root")
+
+
+	#Offline debugging to test code for bugs
+	SingleMu_2018A_Offline_SingleFile = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_12.root")
+	ZZ4L_2018_Offline_SingleFile = glob.glob(Skimmed_4tau_loc_MC + "ZZTo4L_26August25_0757_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_12.root")
 
 	#Make full arrays of backgrounds
 	TTToSemiLeptonic_2018 = glob.glob(Skimmed_4tau_loc_MC + "TTToSemiLeptonic_35August25_0448_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
@@ -969,9 +975,11 @@ if __name__ == "__main__":
 	file_dict_data_test = {
 		#"Data_Mu" : [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
 		#"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root"]
-		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in SingleMuA_2018A] 
+		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in SingleMu_2018A_Debug],
+		#"Data_Mu": [file for file in SingleMu_2018A_Debug] 
+		#"Data_Mu": [] 
 	}
-	
+
 	file_dict_full = {
 			"TTToSemiLeptonic": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTToSemiLeptonic_2018],
 			"TTTo2L2Nu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],
@@ -1014,7 +1022,7 @@ if __name__ == "__main__":
 			"WJetsToLNu_HT-800To1200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT800To1200_2018],
 			"WJetsToLNu_HT-1200To2500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT1200To2500_2018],
 			"WJetsToLNu_HT-2500ToInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT2500ToInf_2018],
-			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMuA_2018A, np.append(SingleMuA_2018B, np.append(SingleMuA_2018C,SingleMuA_2018D)))]
+			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMu_2018A, np.append(SingleMu_2018B, np.append(SingleMu_2018C,SingleMu_2018D)))]
 		}
 	
 	#Background lists 
@@ -1024,8 +1032,8 @@ if __name__ == "__main__":
 	background_list_none = [] #No backgrounds for data only testing
 	
 	#Set file dictionary and list of backgrounds prior to running processor
-	#file_dict = file_dict_data_test
-	file_dict = file_dict_full
+	file_dict = file_dict_data_test
+	#file_dict = file_dict_full
 
 	#Pull in the weight and event count prior to skimming information
 	with open("genWeightSum_JSON.json") as json_file:
@@ -1036,29 +1044,6 @@ if __name__ == "__main__":
 	
 
 	start_time = time.time()
-#	for key_name, file_array in file_dict.items(): 
-#		print(key_name)
-#		if (key_name != "Data_Mu" and key_name != "Data_MET" ): 
-#			numEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-#			sumWEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-#			for file in file_array:
-#				#with uproot.open(file) as tempFile:
-#				#print(file)
-#				tempFile = uproot.dask(file + ":Runs")
-#				numEvents_Dict[key_name] += np.sum(tempFile['genEventCount'].compute()[0]) #Fixed for nanoAOD 
-#				sumWEvents_Dict[key_name] += np.sum(tempFile['genEventSumw'].compute()[0]) #Fixed for nanoAOD 
-#				del tempFile
-#			
-#			#	numEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventCount'].array()) #Fixed for nanoAOD 
-#			#	sumWEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventSumw'].array()) #Fixed for nanoAOD 
-#			#	print(key_name + "sum: %f"%numEvents_Dict[key_name])
-#
-#		else: #Ignore data files
-#			numEvents_Dict[key_name] = 1
-#			sumWEvents_Dict[key_name] = 1
-	
-	end_time_0 = time.time()
-	print("Time to process all files: %d"%(end_time_0 - start_time))
 
 	#Background names for single background plot file names
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
@@ -1125,6 +1110,7 @@ if __name__ == "__main__":
 		#print(os.getcwd())
 		print("About to run processor")
 		start_time = time.time()
+		#print(file_dict["Data_Mu"])
 		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus, ApplyTrigger = False)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		

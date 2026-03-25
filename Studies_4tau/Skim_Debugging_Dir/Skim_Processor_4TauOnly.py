@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import mplhep as hep
 from coffea import processor, nanoevents
-from coffea.analysis_tools import PackedSelection
 from coffea.nanoevents import NanoEventsFactory, NanoAODSchema, BaseSchema
 from coffea.nanoevents.methods import candidate, vector
 from coffea import util
@@ -22,7 +21,7 @@ from distributed import Client
 from dask_jobqueue import HTCondorCluster
 import csv
 import glob
-
+import json
 
 #X509 function (for HTC)
 def move_X509():
@@ -372,7 +371,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet = ak.zip(
 			{
 				"pt": events.Jet_pt,
-				#"PFLooseId": events.JetPFLooseId,
+                #"PFLooseId": events.JetPFLooseId,
 				"JetId": events.Jet_jetId, #Not sure that this is correct
 				"eta": events.Jet_eta,
 				"phi": events.Jet_phi,
@@ -393,48 +392,6 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		if not(self.isData):
 			print("Is MC events are equal to gen weights")
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
-
-		#Set up the packed selection object
-		selection = PackedSelection()
-
-		#Flag conditions
-		# Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
-		# flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
-		
-		# for flag in Flag_Array:
-		#	flag_cond = flag_cond & event_level[flag]
-
-		# selection.add("Trigger", event_level.Mu_Trigger)
-		# selection.add("OfflineSelec",ak.any(muon.nMu > 0, axis = 1) & ak.any(muon.pt > 52, axis=1))
-		# selection.add("MuIDISo",muon[:,0].IDSelec_Med & muon[:,0].RelIso < 0.10)
-		# selection.add("METSelec",event_level.MET_pt > 100)
-		# selection.add("nFatJet",event_level.nFatJet > 0)
-		# selection.add("Flags",flag_cond)
-		# selection.add("PVSelec",event_level.PV_ndof > 4 & np.abs(event_level.PV_z) < 24 & np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2)
-		# if (slef.nTau_Selec > 0):
-		#	pT_Cond1 = boostedtau[:,0].pt > 20
-		#	eta_Cond1 = np.abs(boostedtau[:,0].eta) < 2.3
-		#	decayMode_Cond1 = boostedtau[:,0].decay >= 0.5
-		#	DBT_Iso_Mode_Cond1 = boostedtau[:,0].DBT >= 0.5
-		#	selection.add("LeadingTauSelec", pT_Cond1 & eta_Cond1 & decayMode_Cond1 & DBT_Iso_Mode_Cond1)
-		# if (slef.nTau_Selec > 1):
-		#	pT_Cond2 = boostedtau[:,1].pt > 20
-		#	eta_Cond2 = np.abs(boostedtau[:,1].eta) < 2.3
-		#	decayMode_Cond2 = boostedtau[:,1].decay >= 0.5
-		#	DBT_Iso_Mode_Cond2 = boostedtau[:,1].DBT >= 0.5
-		#	selection.add("SubLeadingTauSelec", pT_Cond2 & eta_Cond2 & decayMode_Cond2 & DBT_Iso_Mode_Cond2)
-		# if (slef.nTau_Selec > 2):
-		#	pT_Cond3 = boostedtau[:,2].pt > 20
-		#	eta_Cond3 = np.abs(boostedtau[:,2].eta) < 2.3
-		#	decayMode_Cond3 = boostedtau[:,2].decay >= 0.5
-		#	DBT_Iso_Mode_Cond3 = boostedtau[:,2].DBT >= 0.5
-		#	selection.add("3rdLeadingTauSelec", pT_Cond3 & eta_Cond3 & decayMode_Cond3 & DBT_Iso_Mode_Cond3)
-		# if (slef.nTau_Selec > 3):
-		#	pT_Cond4 = boostedtau[:,3].pt > 20
-		#	eta_Cond4 = np.abs(boostedtau[:,3].eta) < 2.3
-		#	decayMode_Cond4 = boostedtau[:,3].decay >= 0.5
-		#	DBT_Iso_Mode_Cond4 = boostedtau[:,3].DBT >= 0.5
-		#	selection.add("4thLeadingTauSelec", pT_Cond4 & eta_Cond4 & decayMode_Cond4 & DBT_Iso_Mode_Cond4)
 
 		#Basic Kinematic histograms Boosted tau
 		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
@@ -483,14 +440,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			h_CutFlow = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau","Trigger"]).Double()
 			h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau","Trigger"]).Double()
 		else:
-			h_CutFlow = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau"]).Double()
-			h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau"]).Double()
-		
+			h_CutFlow = hist.Hist.new.StrCategory(["SkimOnly","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau"]).Double()
+			h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","LeadingTau","SubleadingTau","3rdLeadingTau","4thLeadingTau"]).Double()
+
 		#Fill initial entries in skim and N-1 histograms
 		n_Skim = np.size(event_level.nFatJet)
 		h_CutFlow.fill("SkimOnly",weight=n_Skim)
 		h_NMinus1.fill("SkimOnly",weight=0)
-
+		
 		#Obtain the cross section scale factor	
 		if (self.isData):
 			CrossSec_Weight = 1 
@@ -518,75 +475,75 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#############
 
 		#MET selection
-		tau = tau[event_level.MET_pt > 100]
-		boostedtau = boostedtau[event_level.MET_pt > 100]
-		AK8Jet = AK8Jet[event_level.MET_pt > 100]
-		Jet = Jet[event_level.MET_pt > 100]
-		electron = electron[event_level.MET_pt > 100]
-		muon = muon[event_level.MET_pt > 100]
-		event_level = event_level[event_level.MET_pt > 100]		
+	#	tau = tau[event_level.MET_pt > 100]
+	#	boostedtau = boostedtau[event_level.MET_pt > 100]
+	#	AK8Jet = AK8Jet[event_level.MET_pt > 100]
+	#	Jet = Jet[event_level.MET_pt > 100]
+	#	electron = electron[event_level.MET_pt > 100]
+	#	muon = muon[event_level.MET_pt > 100]
+	#	event_level = event_level[event_level.MET_pt > 100]	
 
-		#Fill post MET entries in skim and N-1 histograms
-		n_MET = np.size(event_level.nFatJet)
-		h_CutFlow.fill("METCut",weight=n_MET)
-		h_NMinus1.fill("METCut",weight=n_Skim - n_MET)	
+	#	#Fill post MET entries in skim and N-1 histograms
+	#	n_MET = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("METCut",weight=n_MET)
+	#	h_NMinus1.fill("METCut",weight=n_Skim - n_MET)	
 
-		#Impose all events have at least one fat Jet
-		tau = tau[event_level.nFatJet > 0]
-		boostedtau = boostedtau[event_level.nFatJet > 0]
-		AK8Jet = AK8Jet[event_level.nFatJet > 0]
-		Jet = Jet[event_level.nFatJet > 0]
-		electron = electron[event_level.nFatJet > 0]
-		muon = muon[event_level.nFatJet > 0]
-		event_level = event_level[event_level.nFatJet > 0]	
+	#	#Impose all events have at least one fat Jet
+	#	tau = tau[event_level.nFatJet > 0]
+	#	boostedtau = boostedtau[event_level.nFatJet > 0]
+	#	AK8Jet = AK8Jet[event_level.nFatJet > 0]
+	#	Jet = Jet[event_level.nFatJet > 0]
+	#	electron = electron[event_level.nFatJet > 0]
+	#	muon = muon[event_level.nFatJet > 0]
+	#	event_level = event_level[event_level.nFatJet > 0]	
 
-		#Fill post FatJet entries in skim and N-1 histograms
-		n_FatJet = np.size(event_level.nFatJet)
-		h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
-		h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
+	#	#Fill post FatJet entries in skim and N-1 histograms
+	#	n_FatJet = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
+	#	h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
 
-		#Flag conditions
-		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
-		flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
-		
-		for flag in Flag_Array:
-			flag_cond = flag_cond & event_level[flag]
-		
-		tau = tau[flag_cond]
-		boostedtau = boostedtau[flag_cond]
-		AK8Jet = AK8Jet[flag_cond]
-		Jet = Jet[flag_cond]
-		electron = electron[flag_cond]
-		muon = muon[flag_cond]
-		event_level = event_level[flag_cond]	
+	#	#Flag conditions
+	#	Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
+	#	flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
+	#	
+	#	for flag in Flag_Array:
+	#		flag_cond = flag_cond & event_level[flag]
+	#	
+	#	tau = tau[flag_cond]
+	#	boostedtau = boostedtau[flag_cond]
+	#	AK8Jet = AK8Jet[flag_cond]
+	#	Jet = Jet[flag_cond]
+	#	electron = electron[flag_cond]
+	#	muon = muon[flag_cond]
+	#	event_level = event_level[flag_cond]	
 
-		#Fill post flag selections entries in skim and N-1 histograms
-		n_FlagSelec = np.size(event_level.nFatJet)
-		h_CutFlow.fill("FlagReq",weight=n_FlagSelec)
-		h_NMinus1.fill("FlagReq",weight=n_FatJet - n_FlagSelec)
+	#	#Fill post flag selections entries in skim and N-1 histograms
+	#	n_FlagSelec = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("FlagReq",weight=n_FlagSelec)
+	#	h_NMinus1.fill("FlagReq",weight=n_FatJet - n_FlagSelec)
 
-		#PV selections
-		ndof_cond = event_level.PV_ndof > 4
-		PVz_cond = np.abs(event_level.PV_z) < 24
-		PVr_cond = np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2
-		PV_Cond = np.bitwise_and(ndof_cond,np.bitwise_and(PVz_cond,PVr_cond))
-		
-		tau = tau[PV_Cond]
-		boostedtau = boostedtau[PV_Cond]
-		AK8Jet = AK8Jet[PV_Cond]
-		Jet = Jet[PV_Cond]
-		electron = electron[PV_Cond]
-		muon = muon[PV_Cond]
-		event_level = event_level[PV_Cond]	
+	#	#PV selections
+	#	ndof_cond = event_level.PV_ndof > 4
+	#	PVz_cond = np.abs(event_level.PV_z) < 24
+	#	PVr_cond = np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2
+	#	PV_Cond = np.bitwise_and(ndof_cond,np.bitwise_and(PVz_cond,PVr_cond))
+	#	
+	#	tau = tau[PV_Cond]
+	#	boostedtau = boostedtau[PV_Cond]
+	#	AK8Jet = AK8Jet[PV_Cond]
+	#	Jet = Jet[PV_Cond]
+	#	electron = electron[PV_Cond]
+	#	muon = muon[PV_Cond]
+	#	event_level = event_level[PV_Cond]	
 
-		#Fill post PV selection entries in skim and N-1 histograms
-		n_PVSelec = np.size(event_level.nFatJet)
-		h_CutFlow.fill("PVSelec",weight=n_PVSelec)
-		h_NMinus1.fill("PVSelec",weight=n_FlagSelec - n_PVSelec)
+	#	#Fill post PV selection entries in skim and N-1 histograms
+	#	n_PVSelec = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("PVSelec",weight=n_PVSelec)
+	#	h_NMinus1.fill("PVSelec",weight=n_FlagSelec - n_PVSelec)
 
-		n_PreTrigger = n_PVSelec #Set number of events left before trigger seleciton to PV selection	
-		
-        #Temp values of the Tau selections
+		n_PreTrigger = n_Skim #Set number of events left before trigger seleciton to PV selection	
+
+		#Temp values of the Tau selections
 		n_LeadTau = -1
 		n_SubLeadTau = -1
 		n_3rdLeadTau = -1
@@ -594,14 +551,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
         #Boosted tau selections
 		if (self.nTau_Selec > 0):
-			#Impose selections on boosted taus
+			#Impose selections boosted taus
 			pT_Cond = boostedtau.pt > 20
 			eta_Cond = np.abs(boostedtau.eta) < 2.3
 			decayMode_Cond = boostedtau.decay >= 0.5
 			DBT_Iso_Cond = boostedtau.DBT >= 0.5
 			
 			tau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
-			boostedtau[tau_selec_cond] #Apply selections to all individual taus
+			boostedtau = boostedtau[tau_selec_cond] #Apply selections to all individual taus
 		
 			#Require events have at least 1 boosted tau
 			lead_tau_cond = ak.num(boostedtau,axis=1) >= 1
@@ -617,7 +574,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			#Fill post leading tau selection entries in skim and N-1 histograms
 			n_LeadTau = np.size(event_level.nFatJet)
 			h_CutFlow.fill("LeadingTau",weight=n_LeadTau)
-			h_NMinus1.fill("LeadingTau",weight=n_PVSelec - n_LeadTau)
+			h_NMinus1.fill("LeadingTau",weight=n_Skim - n_LeadTau)
 
 			n_PreTrigger = n_LeadTau				
 			
@@ -680,11 +637,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				h_NMinus1.fill("4thLeadingTau",weight=n_3rdLeadTau - n_4thLeadTau)
 
 				n_PreTrigger = n_4thLeadTau				
-
+		
 		#############
 		#Trigger and Offline Cuts
 		#############
-		
 		if (self.ApplyTrigger):
 			#HLT Trigger(s)
 			boostedtau = boostedtau[event_level.Mu_Trigger]
@@ -724,7 +680,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			muon = muon[np.bitwise_and(id_selec,Iso_selec)]
 			event_level = event_level[np.bitwise_and(id_selec,Iso_selec)]	
 
-			#Drop any events with no muons after selection
+	        #Drop any events with no muons after selection
 			tau = tau[ak.num(muon,axis=1)>0]
 			boostedtau = boostedtau[ak.num(muon,axis=1)>0]
 			AK8Jet = AK8Jet[ak.num(muon,axis=1)>0]
@@ -736,8 +692,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			#Fill post trigger entries in skim and N-1 histograms
 			n_Trigger = np.size(event_level.nFatJet)
 			h_CutFlow.fill("Trigger",weight=n_Trigger)
-			h_NMinus1.fill("Trigger",weight=n_PreTrigger - n_Trigger)				
-	
+			h_NMinus1.fill("Trigger",weight=n_PreTrigger - n_Trigger)
+
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
 		h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.pt))[0]))
@@ -801,10 +757,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Weight": ak.to_list(event_level.event_weight*CrossSec_Weight), 
 				"Event_Count": np.sum(ak.to_list(event_level.event_weight*CrossSec_Weight)),
 				"n_Skim": n_Skim,
-				"n_MET": n_MET,
-				"n_FatJet": n_FatJet,
-				"n_FlagSelec": n_FlagSelec,
-				"n_PVSelec": n_PVSelec,
+				#"n_MET": n_MET,
+				#"n_FatJet": n_FatJet,
+				#"n_FlagSelec": n_FlagSelec,
+				#"n_PVSelec": n_PVSelec,
 				"n_LeadTau": n_LeadTau,
 				"n_SubLeadTau": n_SubLeadTau,
 				"n_3rdLeadTau": n_3rdLeadTau,
@@ -836,7 +792,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"muon_pt_Trigg": h_muon_pT_Trigger,
 				"Leadingmuon_pt_Trigg": h_Leadingmuon_pT_Trigger,
 				"muon_eta_Trigg": h_muon_eta_Trigger,
-				"Leadingmuon_eta_Trigg": h_Leadingmuon_eta_Trigger,
+                "Leadingmuon_eta_Trigg": h_Leadingmuon_eta_Trigger,
 				"muon_phi_Trigg": h_muon_phi_Trigger,
 				
 				#Jet kineamtic distirubtions
@@ -867,6 +823,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 if __name__ == "__main__":
 	#Condor related stuff
+	run_on_condor = False
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	
 	#Xrootd crap
@@ -900,8 +857,6 @@ if __name__ == "__main__":
 			]
 	)
 	cluster.adapt(minimum=1, maximum=500)
-
-	run_on_condor = True 
 	
 	if (run_on_condor):
 		print("Run on Condor")
@@ -910,10 +865,11 @@ if __name__ == "__main__":
 			schema=BaseSchema,
 			skipbadfiles=True,
 			xrootdtimeout=1000,
-			#chunksize=500000,
-			#maxchunks = 1
+            #chunksize=500000,
+            #maxchunks = 1
 		)
 	else: #Iterative runner
+		print("Run Iteratively")
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
 	
 	four_tau_hist_list = [
@@ -948,109 +904,146 @@ if __name__ == "__main__":
 					}
 
 	#Diretory for files
-	Skimmed_Ganesh_base = "root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/"
-	
-	file_dict_test = {
-			"ZZ4l": [Skimmed_Ganesh_base + "ZZTo4L.root"],
-			"Data_Mu": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018A.root"]
-		}
+	Skimmed_4tau_base_MC = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/"
+	Skimmed_4tau_base_Data = "root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/Data/"
+	Skimmed_4tau_loc_Data = "/hdfs/store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/Data/"
+	Skimmed_4tau_loc_MC = "/hdfs/store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/"
 
-	My_2b2Tau_Selections = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_17March26_0712_skim_Ganesh_Selections/singleFileSkimForSubmission-NANO_NANO_*.root")
-	#My_2b2Tau_Selections = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_17March26_0934_skim_Ganesh_Selections_UpdatedSkimmer1/singleFileSkimForSubmission-NANO_NANO_*.root ")
-	
-	print(My_2b2Tau_Selections)
+	#Make full arrays of single Muon data
+	SingleMu_2018A = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	SingleMu_2018B = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018B_15January26_0731_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	SingleMu_2018C = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018C_15January26_0740_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	SingleMu_2018D = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018D_15January26_0815_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+
+	#Single MuonA debugging production
+	SingleMu_2018A_Debug = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0456_skim_4TauFixed_NonEmpty/singleFileSkimForSubmission-NANO_NANO_*.root")
+
+
+	#Offline debugging to test code for bugs
+	SingleMu_2018A_Offline_SingleFile = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_12.root")
+	ZZ4L_2018_Offline_SingleFile = glob.glob(Skimmed_4tau_loc_MC + "ZZTo4L_26August25_0757_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_12.root")
+
+	#Make full arrays of backgrounds
+	TTToSemiLeptonic_2018 = glob.glob(Skimmed_4tau_loc_MC + "TTToSemiLeptonic_35August25_0448_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	TTTo2L2Nu_2018 = glob.glob(Skimmed_4tau_loc_MC + "TTTo2L2Nu_26August25_0719_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	TTToHadronic_2018 = glob.glob(Skimmed_4tau_loc_MC + "TTToHadronic_25October25_0813_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ZZ4L_2018 = glob.glob(Skimmed_4tau_loc_MC + "ZZTo4L_26August25_0757_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ZZTo2L2Nu_2018 = glob.glob(Skimmed_4tau_loc_MC + "ZZTo2L2Nu_04March26_0503_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ZZTo2L2Q_2018 = glob.glob(Skimmed_4tau_loc_MC + "ZZTo2Q2L_26August25_1034_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ZZTo2Nu2Q_2018 = glob.glob(Skimmed_4tau_loc_MC + "ZZTo2Nu2Q_04March26_0510_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ZZTo4Q_2018 = glob.glob(Skimmed_4tau_loc_MC + "ZZTo4Q_04March26_0505_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	VV2l2nu_2018 = glob.glob(Skimmed_4tau_loc_MC + "WWTo2L2Nu_26August25_1040_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WWTo1L1Nu2Q_2018 = glob.glob(Skimmed_4tau_loc_MC + "WWTo2L2Nu_26August25_1040_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WWTo4Q_2018 = glob.glob(Skimmed_4tau_loc_MC + "WWTo4Q_04March26_0512_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WZ1l3nu_2018 = glob.glob(Skimmed_4tau_loc_MC + "WZTo1L3Nu_4f_26August25_1016_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ZZ2l2q_2018 = glob.glob(Skimmed_4tau_loc_MC + "ZZTo2Q2L_26August25_1034_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WZ2l2q_2018 = glob.glob(Skimmed_4tau_loc_MC + "WZTo2L2Q_26August25_0926_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WZ1l1nu2q_2018 = glob.glob(Skimmed_4tau_loc_MC + "WZTo1L1Nu2Q_26August25_0840_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M4to50_HT70to100_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-4to50_HT-70to100_12December25_1606_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M4to50_HT100to200_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-4to50_HT-100to200_12December25_1604_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M4to50_HT200to400_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-4to50_HT-200to400_12December25_1544_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M4to50_HT400to600_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-4to50_HT-400to600_12December25_1552_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M4to50_HT600toInf_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-4to50_HT-600toInf_12December25_1608_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT70to100_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-70to100_12December25_1556_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT100to200_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-100to200_12December25_1548_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT200to400_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-200to400_12December25_1559_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT400to600_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-400to600_12December25_1546_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT600to800_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-600to800_12December25_1555_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT800to1200_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-800to1200_12December25_1602_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT1200to2500_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-1200to2500_12December25_1547_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	DYJetsToLL_M50_HT2500toInf_2018 = glob.glob(Skimmed_4tau_loc_MC + "DYJetsToLL_M-50_HT-1200to2500_12December25_1547_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	Ttchan_2018 = glob.glob(Skimmed_4tau_loc_MC + "ST_t-channel_top_4f_InclusiveDecays_26August25_0843_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	Tbartchan_2018 = glob.glob(Skimmed_4tau_loc_MC + "ST_t-channel_antitop_4f_InclusiveDecays_26August25_0821_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	TtW_2018 = glob.glob(Skimmed_4tau_loc_MC + "ST_tW_top_5f_inclusiveDecays_26August25_0753_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	TbartW_2018 = glob.glob(Skimmed_4tau_loc_MC + "ST_tW_antitop_5f_inclusiveDecays_26August25_1030_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ST_schannel_4f_hadronicDecays_2018 = glob.glob(Skimmed_4tau_loc_MC + "ST_s-channel_4f_hadronicDecays_04March26_0506_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	ST_schannel_4f_leptonDecays_2018 = glob.glob(Skimmed_4tau_loc_MC + "ST_s-channel_4f_leptonDecays_04March26_0507_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WJetsToLNu_HT70To100_2018 = glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-70To100_04March26_0515_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WJetsToLNu_HT100To200_2018 = glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-100To200_26August25_0810_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WJetsToLNu_HT200To400_2018 = glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-200To400_26August25_0709_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	WJetsToLNu_HT400To600_2018 = np.append(glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-400To600_26August25_1014_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"),
+		glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-400To600_OtherPart_26August25_1032_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"))
+	WJetsToLNu_HT600To800_2018 = np.append(glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-600To800_26August25_0755_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"),
+		glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-600To800_OtherPart_26August25_0752_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"))
+	WJetsToLNu_HT800To1200_2018 = np.append(glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-800To1200_26August25_0708_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"),
+		glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-800To1200_OtherPart_26August25_0925_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"))
+	WJetsToLNu_HT1200To2500_2018 = np.append(glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-120)0To2500_26August25_1016_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"),
+		glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-1200To2500_OtherPart_26August25_1041_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"))
+	WJetsToLNu_HT2500ToInf_2018 = np.append(glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-2500ToInf_26August25_1047_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"),
+		glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-2500ToInf_OtherPart_26August25_1043_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"))
+
 	file_dict_data_test = {
-			#"Data_Mu": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018A.root"]
-			#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in My_2b2Tau_Selections]
-			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in My_2b2Tau_Selections]
-		}
-	
+		#"Data_Mu" : [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
+		#"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root"]
+		#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in SingleMu_2018A_Debug],
+		#"Data_Mu": [file for file in SingleMu_2018A_Debug] 
+		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0937_skim_NullSkimming/singleFileSkimForSubmission-NANO_NANO_402.root"] 
+	}
+
 	file_dict_full = {
-			"TTToSemiLeptonic": list(np.append([Skimmed_Ganesh_base + "TTToSemiLeptonic_" + str(j) + ".root" for j in range(2,5)], Skimmed_Ganesh_base + "TTToSemiLeptonic.root")),
-			"TTTo2L2Nu": [Skimmed_Ganesh_base + "TTTo2L2Nu.root", Skimmed_Ganesh_base + "TTTo2L2Nu_2.root"],
-			"TTToHadronic": [Skimmed_Ganesh_base + "TTToHadronic.root"],
-			"ZZ4l": [Skimmed_Ganesh_base + "ZZTo4L.root"],
-			"ZZTo2L2Nu": [Skimmed_Ganesh_base + "ZZTo2L2Nu.root"],
-			"ZZTo2Nu2Q": [Skimmed_Ganesh_base + "ZZTo2Nu2Q_5f.root"],
-			"ZZTo4Q": [Skimmed_Ganesh_base + "ZZTo4Q_5f.root"],
-			"VV2l2nu": [Skimmed_Ganesh_base + "WWTo2L2Nu.root"],
-			"WWTo1L1Nu2Q": [Skimmed_Ganesh_base + "WWTo1L1Nu2Q_4f.root"],
-			"WWTo4Q": [Skimmed_Ganesh_base + "WWTo4Q_4f.root"],
-			"WZ1l3nu": [Skimmed_Ganesh_base + "WZTo1L3Nu_4f.root"],
-			"ZZ2l2q": [Skimmed_Ganesh_base + "ZZTo2Q2L_mllmin4p0.root"],
-			"WZ2l2q": [Skimmed_Ganesh_base + "WZTo2Q2L_mllmin4p0.root"],
-			"WZ1l1nu2q" : [Skimmed_Ganesh_base + "WZTo1L1Nu2Q_4f.root"],
-			"DYJetsToLL_M-4to50_HT-70to100": [Skimmed_Ganesh_base + "DYJetsToLL_M-4to50_HT-70to100.root"],
-			"DYJetsToLL_M-4to50_HT-100to200": [Skimmed_Ganesh_base + "DYJetsToLL_M-4to50_HT-100to200.root"],
-			"DYJetsToLL_M-4to50_HT-200to400": [Skimmed_Ganesh_base + "DYJetsToLL_M-4to50_HT-200to400.root"],
-			"DYJetsToLL_M-4to50_HT-400to600": [Skimmed_Ganesh_base + "DYJetsToLL_M-4to50_HT-400to600.root"],
-			"DYJetsToLL_M-4to50_HT-600toInf": [Skimmed_Ganesh_base + "DYJetsToLL_M-4to50_HT-600toInf.root"],
-			"DYJetsToLL_M-50_HT-70to100": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-70to100.root"],
-			"DYJetsToLL_M-50_HT-100to200": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-100to200.root"],
-			"DYJetsToLL_M-50_HT-200to400": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-200to400.root"],
-			"DYJetsToLL_M-50_HT-400to600": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-400to600.root"],
-			"DYJetsToLL_M-50_HT-600to800": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-600to800.root"],
-			"DYJetsToLL_M-50_HT-800to1200": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-800to1200.root"],
-			"DYJetsToLL_M-50_HT-1200to2500": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-1200to2500.root"],
-			"DYJetsToLL_M-50_HT-2500toInf": [Skimmed_Ganesh_base + "DYJetsToLL_M-50_HT-2500toInf.root"],
-			"T-tchan": [Skimmed_Ganesh_base + "ST_t-channel_top_4f_InclusiveDecays.root"],
-			"Tbar-tchan": [Skimmed_Ganesh_base + "ST_t-channel_antitop_4f_InclusiveDecays.root"],
-			"T-tW": [Skimmed_Ganesh_base + "ST_tW_top_5f_inclusiveDecays.root"],
-			"Tbar-tW": [Skimmed_Ganesh_base + "ST_tW_antitop_5f_inclusiveDecays.root"],
-			"ST_s-channel_4f_hadronicDecays": [Skimmed_Ganesh_base + "ST_s-channel_4f_hadronicDecays.root"],
-			"ST_s-channel_4f_leptonDecays": [Skimmed_Ganesh_base + "ST_s-channel_4f_leptonDecays.root"],
-			"WJetsToLNu_HT-70To100": [Skimmed_Ganesh_base + "WJetsToLNu_HT-70To100.root"],
-			"WJetsToLNu_HT-100To200": [Skimmed_Ganesh_base + "WJetsToLNu_HT-100To200.root"],
-			"WJetsToLNu_HT-200To400": [Skimmed_Ganesh_base + "WJetsToLNu_HT-200To400.root"],
-			"WJetsToLNu_HT-400To600": [Skimmed_Ganesh_base + "WJetsToLNu_HT-400To600.root",
-				Skimmed_Ganesh_base +"WJetsToLNu_HT-400To600_2.root"],
-			"WJetsToLNu_HT-600To800": [Skimmed_Ganesh_base + "WJetsToLNu_HT-600To800.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-600To800_2.root"],
-			"WJetsToLNu_HT-800To1200": [Skimmed_Ganesh_base + "WJetsToLNu_HT-800To1200.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-800To1200_2.root"],
-			"WJetsToLNu_HT-1200To2500": [Skimmed_Ganesh_base + "WJetsToLNu_HT-1200To2500.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-1200To2500_2.root"],
-			"WJetsToLNu_HT-2500ToInf": [Skimmed_Ganesh_base + "WJetsToLNu_HT-2500ToInf.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-2500ToInf_2.root"],
-			#QCD Samples
-			#"QCD_HT50to100": [Skimmed_Ganesh_base + "QCD_HT50to100.root"], "QCD_HT100to200": [Skimmed_Ganesh_base + "QCD_HT100to200.root"], 
-			#"QCD_HT200to300": [Skimmed_Ganesh_base + "QCD_HT200to300.root"], "QCD_HT300to500": [Skimmed_Ganesh_base + "QCD_HT300to500.root"],
-			#"QCD_HT500to700": [Skimmed_Ganesh_base + "QCD_HT500to700.root"], "QCD_HT700to1000": [Skimmed_Ganesh_base + "QCD_HT700to1000.root"],
-			#"QCD_HT1000to1500": [Skimmed_Ganesh_base + "QCD_HT1000to1500.root"], "QCD_HT1500to2000": [Skimmed_Ganesh_base + "QCD_HT1500to2000.root"],
-			#"QCD_HT2000toInf": [Skimmed_Ganesh_base + "QCD_HT2000toInf.root"],
-			"Data_Mu": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018A.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018B.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018C.root",
-				Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_2.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_3.root",
-				Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_4.root"]
-			#"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root",Skimmed_Ganesh_base + "MET/MET_Run2018B.root",Skimmed_Ganesh_base + "MET/MET_Run2018C.root",
-			#	Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
-			#	Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]
+			"TTToSemiLeptonic": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTToSemiLeptonic_2018],
+			"TTTo2L2Nu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],
+			"TTToHadronic": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTToHadronic_2018],
+			"ZZ4l": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in ZZ4L_2018],
+			"ZZTo2L2Nu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in ZZTo2L2Nu_2018],
+			"ZZTo2Nu2Q": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in ZZTo2Nu2Q_2018],
+			"VV2l2nu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in VV2l2nu_2018],
+			"ZZTo4Q" : ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in ZZTo4Q_2018],
+			"WWTo1L1Nu2Q": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WWTo1L1Nu2Q_2018],
+			"WWTo4Q": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WWTo4Q_2018],
+			"WZ1l3nu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WZ1l3nu_2018],
+			"ZZ2l2q": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in ZZ2l2q_2018],
+			"WZ2l2q": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WZ2l2q_2018],
+			"WZ1l1nu2q" : ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WZ1l1nu2q_2018],
+			"DYJetsToLL_M-4to50_HT-70to100": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M4to50_HT70to100_2018],
+			"DYJetsToLL_M-4to50_HT-100to200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M4to50_HT100to200_2018],
+			"DYJetsToLL_M-4to50_HT-200to400": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M4to50_HT200to400_2018],
+			"DYJetsToLL_M-4to50_HT-400to600": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M4to50_HT400to600_2018],
+			"DYJetsToLL_M-4to50_HT-600toInf":["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M4to50_HT600toInf_2018],
+			"DYJetsToLL_M-50_HT-70to100": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT70to100_2018],
+			"DYJetsToLL_M-50_HT-100to200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT100to200_2018],
+			"DYJetsToLL_M-50_HT-200to400": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT200to400_2018],
+			"DYJetsToLL_M-50_HT-400to600": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT400to600_2018],
+			"DYJetsToLL_M-50_HT-600to800": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT600to800_2018],
+			"DYJetsToLL_M-50_HT-800to1200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT800to1200_2018],
+			"DYJetsToLL_M-50_HT-1200to2500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT1200to2500_2018],
+			"DYJetsToLL_M-50_HT-2500toInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT2500toInf_2018],
+			"T-tchan": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in Ttchan_2018],
+			"Tbar-tchan": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in Tbartchan_2018],
+			"T-tW": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TtW_2018],
+			"Tbar-tW": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TbartW_2018],
+			"ST_s-channel_4f_hadronicDecays": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in ST_schannel_4f_hadronicDecays_2018],
+			"ST_s-channel_4f_leptonDecays": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in ST_schannel_4f_leptonDecays_2018],
+			"WJetsToLNu_HT-70To100": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT70To100_2018],
+			"WJetsToLNu_HT-100To200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT100To200_2018],
+			"WJetsToLNu_HT-200To400": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT200To400_2018],
+			"WJetsToLNu_HT-400To600": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT400To600_2018],
+			"WJetsToLNu_HT-600To800": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT600To800_2018],
+			"WJetsToLNu_HT-800To1200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT800To1200_2018],
+			"WJetsToLNu_HT-1200To2500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT1200To2500_2018],
+			"WJetsToLNu_HT-2500ToInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT2500ToInf_2018],
+			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMu_2018A, np.append(SingleMu_2018B, np.append(SingleMu_2018C,SingleMu_2018D)))]
 		}
 	
 	#Background lists 
+	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"] #Full background list (with QCD)
 	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"] #Full background list
 	background_list_test = [r"$ZZ \rightarrow 4l$"] #Only ZZ4l background for testing
 	background_list_none = [] #No backgrounds for data only testing
 	
 	#Set file dictionary and list of backgrounds prior to running processor
-	#file_dict = file_dict_full
 	file_dict = file_dict_data_test
+	#file_dict = file_dict_full
+
+	#Pull in the weight and event count prior to skimming information
+	with open("genWeightSum_JSON.json") as json_file:
+		sumWEvents_Dict = json.load(json_file)
+
+	with open("numEvents_JSON.json") as json_file:
+		numEvents_Dict = json.load(json_file)
+	
 
 	start_time = time.time()
-	for key_name, file_array in file_dict.items(): 
-		print(key_name)
-		if (key_name != "Data_Mu" and key_name != "Data_MET" ): 
-			numEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-			sumWEvents_Dict[key_name] = 0 #Initialize the number of events dictionary
-			for file in file_array:
-				with uproot.open(file) as tempFile:
-					print(file)
-					numEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventCount'].array()) #Fixed for nanoAOD 
-					sumWEvents_Dict[key_name] += np.sum(tempFile['Runs/genEventSumw'].array()) #Fixed for nanoAOD 
-					print(key_name + "sum: %f"%numEvents_Dict[key_name])
-
-		else: #Ignore data files
-			numEvents_Dict[key_name] = 1
-			sumWEvents_Dict[key_name] = 1
 
 	#Background names for single background plot file names
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
@@ -1113,20 +1106,19 @@ if __name__ == "__main__":
 	}
 	
 	print(os.getcwd())
-	output_array = []
 	for n_taus in range(4,5):
 		#print(os.getcwd())
-		start_time = time.time()
 		print("About to run processor")
+		start_time = time.time()
+		#print(file_dict["Data_Mu"])
 		fourtau_out = runner(file_dict, treename="Events", processor_instance=PlottingScriptProcessor(nBoostedTaus = n_taus, ApplyTrigger = False)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		
 		time_running = end_time-start_time
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
-		output_array.append(fourtau_out)
 		
-		#Save coffea file
-		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec_SingleMu2018A_MyCopyOfSkims.coffea")
+        #Save coffea file
+		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec_SingleMu2018A_Only4TauSkimApplied.coffea")
 		#outfile = "~/Analysis/BoostedTau/ControlPlots/DebuggingStudies/AnalysisCompDebugging/Studies_4tau/SimpleSelec_2b2tauSamples/QCD_Studies/" + f"output_{n_taus}_boosted_tau_selec.coffea"
 		#timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 		#outfile = os.path.join(os.getcwd(), f"output_2018_run{timestamp}.coffea")

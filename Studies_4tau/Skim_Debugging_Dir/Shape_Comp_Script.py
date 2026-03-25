@@ -5,9 +5,6 @@ from hist import intervals
 import matplotlib.pyplot as plt
 import numpy as np
 import mplhep as hep
-from coffea import processor, nanoevents
-from coffea.nanoevents import NanoEventsFactory, NanoAODSchema, BaseSchema
-from coffea.nanoevents.methods import candidate, vector
 from coffea import util
 from math import pi
 import numba 
@@ -17,8 +14,6 @@ import vector
 import os
 import time
 import datetime
-from distributed import Client
-from dask_jobqueue import HTCondorCluster
 import csv
 import sys
 import argparse
