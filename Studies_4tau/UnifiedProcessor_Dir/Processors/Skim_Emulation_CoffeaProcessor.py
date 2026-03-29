@@ -424,8 +424,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			decayMode_Cond = boostedtau.decay >= 0.5
 			DBT_Iso_Cond = boostedtau.DBT >= 0.5
 			
-			tau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
-			boostedtau = boostedtau[tau_selec_cond] #Apply selections to all individual taus
+			boostedtau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
+			boostedtau = boostedtau[boostedtau_selec_cond] #Apply selections to all individual taus
 		
 			#Require events have at least 1 boosted tau
 			lead_tau_cond = ak.num(boostedtau,axis=1) >= 1

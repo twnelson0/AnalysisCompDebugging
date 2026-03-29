@@ -558,7 +558,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			DBT_Iso_Cond = boostedtau.DBT >= 0.5
 			
 			tau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
-			boostedtau[tau_selec_cond] #Apply selections to all individual taus
+			boostedtau = boostedtau[tau_selec_cond] #Apply selections to all individual taus
 		
 			#Require events have at least 1 boosted tau
 			lead_tau_cond = ak.num(boostedtau,axis=1) >= 1
@@ -847,6 +847,7 @@ if __name__ == "__main__":
 				"transfer_executable": "false",
 				"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
 				"Requirements": "HasSingularityJobStart",
+				#"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10",
 				"InitialDir": f'/scratch/{os.environ["USER"]}',
 				'transfer_input_files': f"{_x509_path}",
 

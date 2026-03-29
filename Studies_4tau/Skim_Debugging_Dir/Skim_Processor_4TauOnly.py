@@ -823,7 +823,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 if __name__ == "__main__":
 	#Condor related stuff
-	run_on_condor = False
+	run_on_condor = True 
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	
 	#Xrootd crap
@@ -1118,7 +1118,7 @@ if __name__ == "__main__":
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
         #Save coffea file
-		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec_SingleMu2018A_Only4TauSkimApplied.coffea")
+		outfile = os.path.join(os.getcwd(), f"output_{n_taus}_boosted_tau_selec_SingleMu2018A_Only4TauSkimApplied_Test.coffea")
 		#outfile = "~/Analysis/BoostedTau/ControlPlots/DebuggingStudies/AnalysisCompDebugging/Studies_4tau/SimpleSelec_2b2tauSamples/QCD_Studies/" + f"output_{n_taus}_boosted_tau_selec.coffea"
 		#timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 		#outfile = os.path.join(os.getcwd(), f"output_2018_run{timestamp}.coffea")
