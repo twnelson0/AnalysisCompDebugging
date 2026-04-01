@@ -24,6 +24,7 @@ import glob
 import json
 from Processors import Skim_Emulation_CoffeaProcessor as SkimProcessor
 import cowtools.jobqueue
+import cloudpickle
 
 #X509 function (for HTC)
 def move_X509():
@@ -58,8 +59,8 @@ if __name__ == "__main__":
 
 	cluster = HTCondorCluster(
 			cores=1,
-			memory="6 GB",
-			disk="4 GB",
+			memory="4 GB",
+			disk="2 GB",
 			death_timeout = '60',
             #python = "/usr/local/bin/python3",
 			job_extra_directives={
@@ -70,8 +71,12 @@ if __name__ == "__main__":
 				"should_transfer_files": "yes",
 				"when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
 				"transfer_executable": "false",
-				# "+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
-				# "Requirements": "HasSingularityJobStart",
+			#	"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
+			#	"Requirements": "HasSingularityJobStart",
+				
+				#"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
+				#"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
+				#"Requirements": "HasSingularityJobStart",
 				#"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10",
 				"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10",
 				"InitialDir": f'/scratch/{os.environ["USER"]}',
@@ -103,6 +108,10 @@ if __name__ == "__main__":
             #chunksize=500000,
             #maxchunks = 1
 		)
+
+		#Pass modules to HTC
+		cloudpickle.register_pickle_by_value(SkimProcessor)
+    
 	else: #Iterative runner
 		print("Run Iteratively")
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
@@ -253,6 +262,7 @@ if __name__ == "__main__":
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
         #Save coffea file
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMu2018A_OfflineTest_AF.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_Full4TauSamples_NewArch.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMu2018A4TauSamples_NewArch.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

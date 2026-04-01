@@ -5,7 +5,7 @@ cat <<EOF > shell
 
 
 if [ "\$1" == "" ]; then
-	export COFFEA_IMAGE=coffeateam/coffea-dask-cc7:latest-py3.10
+	export COFFEA_IMAGE=coffeateam/coffea-base-almalinux9:0.7.25-py3.10
 else
 	export COFFEA_IMAGE=\$1
 fi

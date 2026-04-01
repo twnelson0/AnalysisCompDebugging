@@ -153,10 +153,10 @@ if __name__ == "__main__":
 	print("Number of events after FatJet selection: %d"%coffea_input["Data_Mu"]["n_FatJet"])
 	print("Number of events after quality flag selection: %d"%coffea_input["Data_Mu"]["n_FlagSelec"])
 	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_Mu"]["n_PVSelec"])
-	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_LeadTau"])
-	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_SubLeadTau"])
-	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_3rdLeadTau"])
-	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_4thLeadTau"])
+	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_LeadBoostedTau"])
+	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_SubLeadBoostedTau"])
+	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_3rdLeadBoostedTau"])
+	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_4thLeadBoostedTau"])
 
 
 	#Produce N-1 and cutflow plots for data
