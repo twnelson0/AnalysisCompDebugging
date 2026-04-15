@@ -84,7 +84,7 @@ if __name__ == "__main__":
 	)
 	cluster.adapt(minimum=1, maximum=500)
 
-	run_on_condor = False 
+	run_on_condor = True
 	
 	if (run_on_condor):
 		print("Run on Condor")
@@ -208,13 +208,13 @@ if __name__ == "__main__":
 	for n_taus in range(4,5):
 		start_time = time.time()
 		print("About to run processor")
-		fourtau_out = runner(file_dict, treename="Events", processor_instance=SkimProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = False)) #Modified for NanoAOD (changd treename)
+		fourtau_out = runner(file_dict, treename="Events", processor_instance=SkimProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = True)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		
 		time_running = end_time-start_time
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
 		#Save coffea file
-		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_Full2b2TauSamples_NewArch.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_Full2b2TauSamples_WithTrigger.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	
