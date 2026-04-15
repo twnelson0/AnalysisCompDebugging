@@ -536,15 +536,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 			#Apply isolation and ID selections on muons
 			id_selec = muon[:,0].IDSelec_Med
-			Iso_selec = muon[:,0].RelIso < 0.10
 			
-			tau = tau[np.bitwise_and(id_selec,Iso_selec)]
-			boostedtau = boostedtau[np.bitwise_and(id_selec,Iso_selec)]
-			AK8Jet = AK8Jet[np.bitwise_and(id_selec,Iso_selec)]
-			Jet = Jet[np.bitwise_and(id_selec,Iso_selec)]
-			electron = electron[np.bitwise_and(id_selec,Iso_selec)]
-			muon = muon[np.bitwise_and(id_selec,Iso_selec)]
-			event_level = event_level[np.bitwise_and(id_selec,Iso_selec)]	
+			tau = tau[id_selec]
+			boostedtau = boostedtau[id_selec]
+			AK8Jet = AK8Jet[id_selec]
+			Jet = Jet[id_selec]
+			electron = electron[id_selec]
+			muon = muon[id_selec]
+			event_level = event_level[id_selec]	
 
 	        #Drop any events with no muons after selection
 			tau = tau[ak.num(muon,axis=1)>0]
@@ -631,6 +630,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"n_SubLeadBoostedTau": n_SubLeadBoostedTau,
 				"n_3rdLeadBoostedTau": n_3rdLeadBoostedTau,
 				"n_4thLeadBoostedTau": n_4thLeadBoostedTau,
+				"n_Trigger": n_Trigger,
 				
 				#Boosted Tau kineamtic distirubtions
 				"boostedtau_pt_Trigg": h_boostedtau_pT_Trigger,
