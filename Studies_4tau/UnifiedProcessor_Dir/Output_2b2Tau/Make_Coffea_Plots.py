@@ -145,28 +145,28 @@ if __name__ == "__main__":
 
 	#Print the abount of data
 	print("=============================================")
-	print("Number of data events after all selections: %d"%coffea_input["Data_Mu"]["Event_Count"])
+	print("Number of data events after all selections: %d"%coffea_input["Data_MET"]["Event_Count"])
 	print("=============================================")
 
-	print("Number of events prior to selections: %d"%coffea_input["Data_Mu"]["n_Skim"])
-	print("Number of events after MET selection: %d"%coffea_input["Data_Mu"]["n_MET"])
-	print("Number of events after FatJet selection: %d"%coffea_input["Data_Mu"]["n_FatJet"])
-	print("Number of events after quality flag selection: %d"%coffea_input["Data_Mu"]["n_FlagSelec"])
-	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_Mu"]["n_PVSelec"])
-	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_LeadBoostedTau"])
-	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_SubLeadBoostedTau"])
-	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_3rdLeadBoostedTau"])
-	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_4thLeadBoostedTau"])
-	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_Trigger"])
+	print("Number of events prior to selections: %d"%coffea_input["Data_MET"]["n_Skim"])
+	print("Number of events after MET selection: %d"%coffea_input["Data_MET"]["n_MET"])
+	print("Number of events after FatJet selection: %d"%coffea_input["Data_MET"]["n_FatJet"])
+	print("Number of events after quality flag selection: %d"%coffea_input["Data_MET"]["n_FlagSelec"])
+	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_MET"]["n_PVSelec"])
+	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_LeadBoostedTau"])
+	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_SubLeadBoostedTau"])
+	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_3rdLeadBoostedTau"])
+	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_4thLeadBoostedTau"])
+	print("Number of events after Trigger: %d"%coffea_input["Data_MET"]["n_Trigger"])
 
 
 	#Produce N-1 and cutflow plots for data
 	figcut, axcut = plt.subplots()
-	coffea_input["Data_Mu"]["Mini_Cutflow"].plot1d(ax = axcut)
+	coffea_input["Data_MET"]["Mini_Cutflow"].plot1d(ax = axcut)
 	plt.savefig("Data_Cutflow_Plot.png")
     
 	figcut, axcut = plt.subplots()
-	coffea_input["Data_Mu"]["Mini_NMinus1"].plot1d(ax = axcut)
+	coffea_input["Data_MET"]["Mini_NMinus1"].plot1d(ax = axcut)
 	plt.savefig("Data_NMinus_Plot.png")
 	
 	#Dictionaries of histograms for background, signal and data
@@ -260,7 +260,7 @@ if __name__ == "__main__":
 		
 		#Obtain data distributions
 		#print("==================Hist %s================"%hist_name)
-		hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
+		hist_dict_data[hist_name] = coffea_input["Data_MET"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
 		
@@ -277,9 +277,9 @@ if __name__ == "__main__":
 		if (hist_name == "Leadingmuon_eta_Trigg"):
 			axis_label = r"Leading $\mu$ $\eta$"
 		else:
-			axis_label = coffea_input["Data_Mu"][hist_name].axes[0].label
+			axis_label = coffea_input["Data_MET"][hist_name].axes[0].label
 		fig, ax_main, ax_comp = hep.comp.data_model(
-			data_hist = coffea_input["Data_Mu"][hist_name],
+			data_hist = coffea_input["Data_MET"][hist_name],
 			stacked_components = background_array,
 			stacked_colors = TABLEAU_COLORS[:len(background_list)],
 			stacked_labels = background_list,

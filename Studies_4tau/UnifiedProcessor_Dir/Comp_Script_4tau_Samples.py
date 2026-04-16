@@ -127,6 +127,11 @@ if __name__ == "__main__":
 	SingleMu_2018B = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018B_15January26_0731_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
 	SingleMu_2018C = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018C_15January26_0740_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
 	SingleMu_2018D = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018D_15January26_0815_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	
+	MET_2018A = glob.glob(Skimmed_4tau_loc_Data + "MET_Run2018A_14April26_1337_skim_4Tau_Selections/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	MET_2018B = glob.glob(Skimmed_4tau_loc_Data + "MET_Run2018B_14April26_1334_skim_4Tau_Selections/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	MET_2018C = glob.glob(Skimmed_4tau_loc_Data + "MET_Run2018C_14April26_1331_skim_4Tau_Selections/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	MET_2018D = glob.glob(Skimmed_4tau_loc_Data + "MET_Run2018D_14April26_1343_skim_4Tau_Selections/singleFileSkimForSubmission-NANO_NANO_*.root") 
 
 	#Single MuonA debugging production
 	SingleMu_2018A_Debug = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0456_skim_4TauFixed_NonEmpty/singleFileSkimForSubmission-NANO_NANO_*.root")
@@ -236,6 +241,7 @@ if __name__ == "__main__":
 			"WJetsToLNu_HT-1200To2500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT1200To2500_2018],
 			"WJetsToLNu_HT-2500ToInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT2500ToInf_2018],
 			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMu_2018A, np.append(SingleMu_2018B, np.append(SingleMu_2018C,SingleMu_2018D)))]
+			#"Data_MET": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(MET_2018A, np.append(MET_2018B, np.append(MET_2018C,MET_2018D)))]
 		}
 	
 	#Set file dictionary and list of backgrounds prior to running processor
@@ -255,7 +261,7 @@ if __name__ == "__main__":
 	for n_taus in range(4,5):
 		print("About to run processor")
 		start_time = time.time()
-		fourtau_out = runner(file_dict, treename="Events", processor_instance=SkimProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = False)) #Modified for NanoAOD (changd treename)
+		fourtau_out = runner(file_dict, treename="Events", processor_instance=SkimProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = True)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		
 		time_running = end_time-start_time
@@ -263,6 +269,6 @@ if __name__ == "__main__":
 		
         #Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_Full4TauSamples_NewArch.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMu2018A4TauSamples_NewArch.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMu2018A4TauSamples_MET_Trigger.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

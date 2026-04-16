@@ -96,6 +96,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Mu_Trigger": events.HLT_Mu50,
 				"MET_trigger1": events.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight,
 				"MET_trigger2": events.HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight,
+				"MET_trigger3": events.HLT_PFMET120_PFMHT120_IDTight,
 				"MET_pt": events.MET_pt,
 				"MET_Phi": events.MET_phi,
 				"event_weight": ak.ones_like(events.MET_pt), #*0.9,
@@ -509,13 +510,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#############
 		if (self.ApplyTrigger):
 			#HLT Trigger(s)
-			boostedtau = boostedtau[event_level.Mu_Trigger]
-			tau = tau[event_level.Mu_Trigger]
-			AK8Jet = AK8Jet[event_level.Mu_Trigger]
-			Jet = Jet[event_level.Mu_Trigger]
-			electron = electron[event_level.Mu_Trigger]
-			muon = muon[event_level.Mu_Trigger]
-			event_level = event_level[event_level.Mu_Trigger]
+			#trigger_cond = event_level.MET_trigger1 | event_level.MET_trigger2 | event_level.MET_trigger3 
+			trigger_cond = event_level.Mu_Trigger
+		
+			boostedtau = boostedtau[trigger_cond]
+			tau = tau[trigger_cond]
+			AK8Jet = AK8Jet[trigger_cond]
+			Jet = Jet[trigger_cond]
+			electron = electron[trigger_cond]
+			muon = muon[trigger_cond]
+			event_level = event_level[trigger_cond]
 
 			#Muon Trigger offline selection
 			tau = tau[ak.any(muon.nMu > 0, axis = 1)]
