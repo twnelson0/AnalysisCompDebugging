@@ -22,7 +22,7 @@ from distributed import Client
 from dask_jobqueue import HTCondorCluster
 import csv
 import glob
-from Processors import Skim_Emulation_CoffeaProcessor as SkimProcessor
+from Processors import Trigger_Processor as TriggerProcessor
 import cloudpickle
 
 #X509 function (for HTC)
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 		)
         
 		#Pass modules to HTC
-		cloudpickle.register_pickle_by_value(SkimProcessor)
+		cloudpickle.register_pickle_by_value(TriggerProcessor)
 	
 	else: #Iterative runner
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
@@ -168,11 +168,11 @@ if __name__ == "__main__":
 			"WJetsToLNu_HT-2500ToInf": [Skimmed_Ganesh_base + "WJetsToLNu_HT-2500ToInf.root",
 				Skimmed_Ganesh_base + "WJetsToLNu_HT-2500ToInf_2.root"],
 			#QCD Samples
-			#"QCD_HT50to100": [Skimmed_Ganesh_base + "QCD_HT50to100.root"], "QCD_HT100to200": [Skimmed_Ganesh_base + "QCD_HT100to200.root"], 
-			#"QCD_HT200to300": [Skimmed_Ganesh_base + "QCD_HT200to300.root"], "QCD_HT300to500": [Skimmed_Ganesh_base + "QCD_HT300to500.root"],
-			#"QCD_HT500to700": [Skimmed_Ganesh_base + "QCD_HT500to700.root"], "QCD_HT700to1000": [Skimmed_Ganesh_base + "QCD_HT700to1000.root"],
-			#"QCD_HT1000to1500": [Skimmed_Ganesh_base + "QCD_HT1000to1500.root"], "QCD_HT1500to2000": [Skimmed_Ganesh_base + "QCD_HT1500to2000.root"],
-			#"QCD_HT2000toInf": [Skimmed_Ganesh_base + "QCD_HT2000toInf.root"],
+			"QCD_HT50to100": [Skimmed_Ganesh_base + "QCD_HT50to100.root"], "QCD_HT100to200": [Skimmed_Ganesh_base + "QCD_HT100to200.root"], 
+			"QCD_HT200to300": [Skimmed_Ganesh_base + "QCD_HT200to300.root"], "QCD_HT300to500": [Skimmed_Ganesh_base + "QCD_HT300to500.root"],
+			"QCD_HT500to700": [Skimmed_Ganesh_base + "QCD_HT500to700.root"], "QCD_HT700to1000": [Skimmed_Ganesh_base + "QCD_HT700to1000.root"],
+			"QCD_HT1000to1500": [Skimmed_Ganesh_base + "QCD_HT1000to1500.root"], "QCD_HT1500to2000": [Skimmed_Ganesh_base + "QCD_HT1500to2000.root"],
+			"QCD_HT2000toInf": [Skimmed_Ganesh_base + "QCD_HT2000toInf.root"],
 			"Data_Mu": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018A.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018B.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018C.root",
 				Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_2.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_3.root",
 				Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_4.root"]
@@ -205,16 +205,16 @@ if __name__ == "__main__":
 			numEvents_Dict[key_name] = 1
 			sumWEvents_Dict[key_name] = 1
 	
-	for n_taus in range(4,5):
+	for n_taus in range(0,1):
 		start_time = time.time()
 		print("About to run processor")
-		fourtau_out = runner(file_dict, treename="Events", processor_instance=SkimProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = True)) #Modified for NanoAOD (changd treename)
+		fourtau_out = runner(file_dict, treename="Events", processor_instance=TriggerProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = True)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		
 		time_running = end_time-start_time
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
 		#Save coffea file
-		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_Full2b2TauSamples_WithTrigger.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_Full2b2TauSamplesQCD_SingleMu.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

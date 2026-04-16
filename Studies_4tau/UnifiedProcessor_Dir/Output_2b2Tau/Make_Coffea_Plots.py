@@ -54,6 +54,8 @@ if __name__ == "__main__":
 			"MET","HT","MHT" #, "Mini_Cutflow", "Mini_NMinus1"
 			]
 
+	#four_tau_hist_list = ["Leadingmuon_pt_Trigg"]
+
 	#Additional boosted tau distributions to pull based on boosted tau requirements
 	add_var = []
 	n_tau = int(args.NumberTau)
@@ -72,10 +74,11 @@ if __name__ == "__main__":
 
 	four_tau_hist_list = add_var + four_tau_hist_list
 	
-	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"] #,"QCD"]
+	background_list_full = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$"] 
+	background_list_full_QCD = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"]
 	background_list_test = [r"$ZZ \rightarrow 4l$"]
 	background_list_none = []
-	background_list = background_list_full
+	background_list = background_list_full_QCD
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
 			r"$t\bar{t}$ 2L2Nu" : "_ttbar2L2Nu_", r"Drell-Yan+Jets": "_DYJets_", "Di-Bosons" : "_DiBosons_", "Single Top": "_SingleTop_", "QCD" : "_QCD_", 
 			"W+Jets" : "_WJets_", r"$ZZ \rightarrow 4l$" : "_ZZ4l_", r"$ZZ \rightarrow 4l$ Test": "_ZZ4lTest_", r"$ZZ \rightarrow 4l$ Control": "_ZZ4lControl_",
@@ -96,7 +99,7 @@ if __name__ == "__main__":
 			"W+Jets HT 600-800 GeV": ["WJetsToLNu_HT-600To800"],"W+Jets HT 800-1200 GeV": ["WJetsToLNu_HT-800To1200"],
 			"W+Jets HT 1200-2500 GeV": ["WJetsToLNu_HT-1200To2500"], "W+Jets HT 2500-Inf GeV": ["WJetsToLNu_HT-2500ToInf"],
 			r"$ZZ \rightarrow 4l$" : ["ZZ4l"],
-			#"QCD": ["QCD_HT50to100","QCD_HT100to200","QCD_HT200to300","QCD_HT300to500","QCD_HT500to700","QCD_HT700to1000","QCD_HT1000to1500","QCD_HT1500to2000","QCD_HT2000toInf"],
+			"QCD": ["QCD_HT50to100","QCD_HT100to200","QCD_HT200to300","QCD_HT300to500","QCD_HT500to700","QCD_HT700to1000","QCD_HT1000to1500","QCD_HT1500to2000","QCD_HT2000toInf"],
 	}
 	
 	#Dictinary with file names
@@ -145,28 +148,28 @@ if __name__ == "__main__":
 
 	#Print the abount of data
 	print("=============================================")
-	print("Number of data events after all selections: %d"%coffea_input["Data_MET"]["Event_Count"])
+	print("Number of data events after all selections: %d"%coffea_input["Data_Mu"]["Event_Count"])
 	print("=============================================")
 
-	print("Number of events prior to selections: %d"%coffea_input["Data_MET"]["n_Skim"])
-	print("Number of events after MET selection: %d"%coffea_input["Data_MET"]["n_MET"])
-	print("Number of events after FatJet selection: %d"%coffea_input["Data_MET"]["n_FatJet"])
-	print("Number of events after quality flag selection: %d"%coffea_input["Data_MET"]["n_FlagSelec"])
-	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_MET"]["n_PVSelec"])
-	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_LeadBoostedTau"])
-	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_SubLeadBoostedTau"])
-	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_3rdLeadBoostedTau"])
-	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_MET"]["n_4thLeadBoostedTau"])
-	print("Number of events after Trigger: %d"%coffea_input["Data_MET"]["n_Trigger"])
+	print("Number of events prior to selections: %d"%coffea_input["Data_Mu"]["n_Skim"])
+#	print("Number of events after Mu selection: %d"%coffea_input["Data_Mu"]["n_Mu"])
+#	print("Number of events after FatJet selection: %d"%coffea_input["Data_Mu"]["n_FatJet"])
+#	print("Number of events after quality flag selection: %d"%coffea_input["Data_Mu"]["n_FlagSelec"])
+#	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_Mu"]["n_PVSelec"])
+#	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_LeadBoostedTau"])
+#	print("Number of events after Sub-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_SubLeadBoostedTau"])
+#	print("Number of events after 3rd-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_3rdLeadBoostedTau"])
+#	print("Number of events after 4th-Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_4thLeadBoostedTau"])
+	print("Number of events after Trigger: %d"%coffea_input["Data_Mu"]["n_Trigger"])
 
 
 	#Produce N-1 and cutflow plots for data
 	figcut, axcut = plt.subplots()
-	coffea_input["Data_MET"]["Mini_Cutflow"].plot1d(ax = axcut)
+	coffea_input["Data_Mu"]["Mini_Cutflow"].plot1d(ax = axcut)
 	plt.savefig("Data_Cutflow_Plot.png")
     
 	figcut, axcut = plt.subplots()
-	coffea_input["Data_MET"]["Mini_NMinus1"].plot1d(ax = axcut)
+	coffea_input["Data_Mu"]["Mini_NMinus1"].plot1d(ax = axcut)
 	plt.savefig("Data_NMinus_Plot.png")
 	
 	#Dictionaries of histograms for background, signal and data
@@ -260,7 +263,7 @@ if __name__ == "__main__":
 		
 		#Obtain data distributions
 		#print("==================Hist %s================"%hist_name)
-		hist_dict_data[hist_name] = coffea_input["Data_MET"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
+		hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
 		
@@ -277,9 +280,9 @@ if __name__ == "__main__":
 		if (hist_name == "Leadingmuon_eta_Trigg"):
 			axis_label = r"Leading $\mu$ $\eta$"
 		else:
-			axis_label = coffea_input["Data_MET"][hist_name].axes[0].label
+			axis_label = coffea_input["Data_Mu"][hist_name].axes[0].label
 		fig, ax_main, ax_comp = hep.comp.data_model(
-			data_hist = coffea_input["Data_MET"][hist_name],
+			data_hist = coffea_input["Data_Mu"][hist_name],
 			stacked_components = background_array,
 			stacked_colors = TABLEAU_COLORS[:len(background_list)],
 			stacked_labels = background_list,
@@ -288,8 +291,10 @@ if __name__ == "__main__":
 			comparison = "ratio",
             markersize = 10,
 			#linewidth=2,
-
 		)
+	#	if (hist_name == "Leadingmuon_pt_Trigg"):
+	#		ax_main.set_yscale('log')
+
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")
 		plt.close()
