@@ -215,6 +215,6 @@ if __name__ == "__main__":
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
 		#Save coffea file
-		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_Full2b2TauSamplesQCD_SingleMu.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_Full2b2TauSamplesQCD_SingleMu_TightSelec.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

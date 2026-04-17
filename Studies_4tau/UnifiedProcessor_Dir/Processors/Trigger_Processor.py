@@ -385,6 +385,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			muon = muon[id_selec]
 			event_level = event_level[id_selec]	
 
+			iso_selec = ak.all(muon.RelIso < 0.15,axis=1) #Based on working point
+			
+			tau = tau[iso_selec]
+			boostedtau = boostedtau[iso_selec]
+			AK8Jet = AK8Jet[iso_selec]
+			Jet = Jet[iso_selec]
+			electron = electron[iso_selec]
+			muon = muon[iso_selec]
+			event_level = event_level[iso_selec]	
+
 	        #Drop any events with no muons after selection
 			tau = tau[ak.num(muon,axis=1)>0]
 			boostedtau = boostedtau[ak.num(muon,axis=1)>0]
