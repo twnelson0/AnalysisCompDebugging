@@ -6,8 +6,13 @@ The directory sturcture is meant to allow multiple different studies to be done 
 The naming of directories/subdirectories is intended to document what selections are applied to all results (plots, coffea files, etc.) within the directory/subdirectory of interest.
 
 ## Running 4tau vs 2b2tau Studies
-The finalized code comparing the 4tau skims with the 2b2tau skims is located in `Studies_4tau/UnifiedProcessor_Dir`. As of writing this code is only known to work with regularity on the Wisconsin Analysis Facility using the image `coffea-base-almalinux9:0.7.30-py3.10`. 
+The finalized code comparing the 4tau skims with the 2b2tau skims is located in the directory `Studies_4tau/UnifiedProcessor_Dir`. 
+As of writing this code is only known to work with regularity on the Wisconsin Analysis Facility (AF) using the image `coffea-base-almalinux9:0.7.30-py3.10`, the code can simply be run in a terminal instance on the AF.
 
-To produce the 4tau plots navigate to the directory `Studies_4tau/UnifiedProcessor_Dir` in a terminal on the AF and run the script `Comp_Script_4tau_Samples.py`, once the file completes running naviagte to the directory `Output_4Tau` and generate plots by running the command `python3 Make_Coffea_Plots.py -f 'name_of_coffea_file' -n 4`. 
+To produce the 4tau plots navigate to the directory `Studies_4tau/UnifiedProcessor_Dir` in a terminal on the AF and run the script `Comp_Script_4tau_Samples.py`. 
+Presently the output file will be named `output_4_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger.coffea` and will be stored in the directory `Studies_4tau/UnifiedProcessor_Dir/Output_4Tau`.
+Once the file completes running naviagte to the directory `Output_4Tau` and generate plots by running the command `python3 Make_Coffea_Plots.py -f 'name_of_coffea_file' -n 4`. 
 
-To produce the 2b2tau plots navigate to the directory `Studies_4tau/UnifiedProcessor_Dir` in a terminal on the AF and run the script `Comp_Script_2b2tau_Samples.py`, once the file completes running naviagte to the directory `Output_2b2Tau` and generate plots by running the command `python3 Make_Coffea_Plots.py -f 'name_of_coffea_file' -n 4`. 
+To produce the 2b2tau plots navigate to the directory `Studies_4tau/UnifiedProcessor_Dir` in a terminal on the AF and run the script `Comp_Script_2b2tau_Samples.py`.
+Presently the output file will be named `output_4_boosted_tau_selec_SingleMuData_2b2TauSamples_WithSingleMuTrigger.coffea` and will be stored in the directory `Studies_4tau/UnifiedProcessor_Dir/Output_2b2Tau`.
+Once the file completes running naviagte to the directory `Output_2b2Tau` and generate plots by running the command `python3 Make_Coffea_Plots.py -f 'name_of_coffea_file' -n 4`. 
