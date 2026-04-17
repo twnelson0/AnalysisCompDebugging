@@ -374,6 +374,22 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			muon = muon[event_level.MHT > 130]
 			event_level = event_level[event_level.MHT > 130]	
 
+			#Apply muon selections
+			pt_cond = muon.pt > 15
+			eta_cond = np.abs(muon.eta) < 2.4
+			id_cond = muon.LooseId
+            isotight_cond = muon.RelIso < 0.15
+			muon_cond = np.bitwise_and(pt_cond, np.bitwise_and(eta_cond, id_cond))
+			muon_cond = np.bitwise_and(muon_cond,isotight_cond)
+
+			tau = tau[ak.any(muon_cond, axis=1)]
+			boostedtau = boostedtau[ak.any(muon_cond, axis=1)]
+			AK8Jet = AK8Jet[ak.any(muon_cond, axis=1)]
+			Jet = Jet[ak.any(muon_cond, axis=1)]
+			electron = electron[ak.any(muon_cond, axis=1)]
+			muon = muon[ak.any(muon_cond, axis=1)]
+			event_level = event_level[ak.any(muon_cond, axis=1)]	
+
 			#Fill post trigger entries in skim and N-1 histograms
 			n_Trigger = np.size(event_level.nFatJet)
 			h_CutFlow.fill("Trigger",weight=n_Trigger)
