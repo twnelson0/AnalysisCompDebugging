@@ -13,7 +13,7 @@ Venv/
 *.csv
 *.png
 *.coffea
-*.json
+#*.json
 
 #Note files not needed to be saved
 Simple_CrossSec.txt
