@@ -261,46 +261,46 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
 
 		#Basic Kinematic histograms Boosted tau
-		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ Leading $p_T$ [GeV]").Double()
-		h_Subleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ Subleading $p_T$ [GeV]").Double()
-		h_Thirdleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ 3rd-leading $p_T$ [GeV]").Double()
-		h_Fourthleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"Boosted $\tau$ 4th-leading $p_T$ [GeV]").Double()
-		h_boostedtau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$").Double()
-		h_boostedtau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$").Double()
-		h_boostedtau_raw_iso_Trigger = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score").Double()
+		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ $p_T$ [GeV]",overflow = True).Double()
+		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ Leading $p_T$ [GeV]",overflow = True).Double()
+		h_Subleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ Subleading $p_T$ [GeV]",overflow = True).Double()
+		h_Thirdleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ 3rd-leading $p_T$ [GeV]",overflow = True).Double()
+		h_Fourthleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ 4th-leading $p_T$ [GeV]",overflow = True).Double()
+		h_boostedtau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$",overflow = True).Double()
+		h_boostedtau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$",overflow = True).Double()
+		h_boostedtau_raw_iso_Trigger = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score",overflow = True).Double()
 		
 		#Basic Kinematic histograms of tau/HPS tau
-		h_tau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r" $\tau$ $p_T$ [GeV]").Double()
-		h_Leadingtau_pT_Trigger = hist.Hist.new.Regular(20,0,400,label = r"$\tau$ Leading $p_T$ [GeV]").Double()
-		h_tau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r" $\tau$ $\eta$").Double()
-		h_tau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$").Double()
+		h_tau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r" $\tau$ $p_T$ [GeV]",overflow = True).Double()
+		h_Leadingtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"$\tau$ Leading $p_T$ [GeV]",overflow = True).Double()
+		h_tau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r" $\tau$ $\eta$",overflow = True).Double()
+		h_tau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\tau$ $\phi$",overflow = True).Double()
 		
 		#Basic Kinematic histograms leptons (muons and electrons)
-		h_electron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e $p_T$ [GeV]").Double()
-		h_Leadingelectron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e Leading $p_T$ [GeV]").Double()
-		h_electron_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"e $\eta$").Double()
-		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"e Leading $\phi$").Double()
-		h_muon_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"$\mu$ $p_T$ [GeV]").Double()
-		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"$\mu$ Leading $p_T$ [GeV]").Double()
-		h_muon_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$").Double()
-		h_Leadingmuon_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$").Double()
-		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$").Double()
+		h_electron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e $p_T$ [GeV]",overflow = True).Double()
+		h_Leadingelectron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e Leading $p_T$ [GeV]",overflow = True).Double()
+		h_electron_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"e $\eta$",overflow = True).Double()
+		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"e Leading $\phi$",overflow = True).Double()
+		h_muon_pT_Trigger = hist.Hist.new.Regular(15,0,600,label = r"$\mu$ $p_T$ [GeV]",overflow = True).Double()
+		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(15,0,600,label = r"$\mu$ Leading $p_T$ [GeV]",overflow = True).Double()
+		h_muon_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$",overflow = True).Double()
+		h_Leadingmuon_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$",overflow = True).Double()
+		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$",overflow = True).Double()
 		
 		#Basic Kinematic histograms Jets (check which Jets most useful based on 
-		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"Jet $p_T$ [GeV]").Double()
-		h_LeadingJet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"Jet Leading $p_T$ [GeV]").Double()
-		h_Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$").Double()
-		h_Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$").Double()
-		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet $p_T$ [GeV]").Double()
-		h_LeadingAK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet Leading $p_T$ [GeV]").Double()
-		h_AK8Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$").Double()
-		h_AK8Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$").Double()
+		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"Jet $p_T$ [GeV]",overflow = True).Double()
+		h_LeadingJet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"Jet Leading $p_T$ [GeV]",overflow = True).Double()
+		h_Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Jet $\eta$",overflow = True).Double()
+		h_Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Jet $\phi$",overflow = True).Double()
+		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet $p_T$ [GeV]",overflow = True).Double()
+		h_LeadingAK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700,label = r"AK8Jet Leading $p_T$ [GeV]",overflow = True).Double()
+		h_AK8Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"AK8Jet $\eta$",overflow = True).Double()
+		h_AK8Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"AK8Jet $\phi$",overflow = True).Double()
 		
 		#Add MET, HT and MHT histogram
-		h_MET_Trigger = hist.Hist.new.Regular(20,0,500,label=r"MET [GeV]").Double()
-		h_HT_Trigger = hist.Hist.new.Regular(40,0,1200,label=r"HT [GeV]").Double()
-		h_MHT_Trigger = hist.Hist.new.Regular(20,0,500,label=r"MHT [GeV]").Double()
+		h_MET_Trigger = hist.Hist.new.Regular(20,0,500,label=r"MET [GeV]",overflow = True).Double()
+		h_HT_Trigger = hist.Hist.new.Regular(40,0,1200,label=r"HT [GeV]",overflow = True).Double()
+		h_MHT_Trigger = hist.Hist.new.Regular(20,0,500,label=r"MHT [GeV]",overflow = True).Double()
 
 		#Add cutflow and N-1 tables
 		if (self.ApplyTrigger):
@@ -568,16 +568,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.pt))[0]))
 		
 		if (self.nBoostedTau_Selec >= 1):
-			h_Leadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec][:,0].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec].event_weight*CrossSec_Weight))
+			h_Leadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[:,0].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		
 		if (self.nBoostedTau_Selec >= 2):
-			h_Subleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec][:,1].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec].event_weight*CrossSec_Weight))
+			h_Subleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[:,1].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		
 		if (self.nBoostedTau_Selec >= 3):
-			h_Thirdleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec][:,2].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec].event_weight*CrossSec_Weight))
+			h_Thirdleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[:,2].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		
 		if (self.nBoostedTau_Selec >= 4):
-			h_Fourthleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec][:,3].pt),weight=ak.ravel(event_level[ak.num(boostedtau,axis=1) >= self.nBoostedTau_Selec].event_weight*CrossSec_Weight))
+			h_Fourthleadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[:,3].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		
 		h_boostedtau_eta_Trigger.fill(ak.ravel(boostedtau.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.eta))[0]))
 		h_boostedtau_phi_Trigger.fill(ak.ravel(boostedtau.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(boostedtau.phi))[0]))
@@ -585,32 +585,32 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#HPS Taus
 		h_tau_pT_Trigger.fill(ak.ravel(tau.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(tau.pt))[0]))
-		h_Leadingtau_pT_Trigger.fill(ak.ravel(tau[ak.num(tau,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(tau,axis=1) > 0].event_weight*CrossSec_Weight))
+		#h_Leadingtau_pT_Trigger.fill(ak.ravel(tau[ak.num(tau,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(tau,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_tau_eta_Trigger.fill(ak.ravel(tau.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(tau.eta))[0]))
 		h_tau_phi_Trigger.fill(ak.ravel(tau.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(tau.phi))[0]))
 		
 		#Electrons
 		h_electron_pT_Trigger.fill(ak.ravel(electron.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(electron.pt))[0]))
-		h_Leadingelectron_pT_Trigger.fill(ak.ravel(electron[ak.num(electron,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(electron,axis=1) > 0].event_weight*CrossSec_Weight))
+		#h_Leadingelectron_pT_Trigger.fill(ak.ravel(electron[ak.num(electron,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(electron,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_electron_eta_Trigger.fill(ak.ravel(electron.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(electron.eta))[0]))
 		h_electron_phi_Trigger.fill(ak.ravel(electron.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(electron.phi))[0]))
 
 		#Muons
 		h_muon_pT_Trigger.fill(ak.ravel(muon.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.pt))[0]))
-		h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[ak.num(muon.pt,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(muon.pt,axis=1) > 0].event_weight*CrossSec_Weight))
+		#h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[:,0].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_muon_eta_Trigger.fill(ak.ravel(muon.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.eta))[0]))
-		h_Leadingmuon_eta_Trigger.fill(ak.ravel(muon[ak.num(muon.pt,axis=1) > 0][:,0].eta),weight=ak.ravel(event_level[ak.num(muon.pt,axis=1) > 0].event_weight*CrossSec_Weight))
+		#h_Leadingmuon_eta_Trigger.fill(ak.ravel(muon[:,0].eta),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_muon_phi_Trigger.fill(ak.ravel(muon.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.phi))[0]))
 
 		#Jets 
 		h_Jet_pT_Trigger.fill(ak.ravel(Jet.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(Jet.pt))[0]))
-		h_LeadingJet_pT_Trigger.fill(ak.ravel(Jet[ak.num(Jet,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(Jet,axis=1) > 0].event_weight*CrossSec_Weight))
+		#h_LeadingJet_pT_Trigger.fill(ak.ravel(Jet[ak.num(Jet,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(Jet,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_Jet_eta_Trigger.fill(ak.ravel(Jet.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(Jet.eta))[0]))
 		h_Jet_phi_Trigger.fill(ak.ravel(Jet.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(Jet.phi))[0]))
 		
 		#AK8/Fat Jets
 		h_AK8Jet_pT_Trigger.fill(ak.ravel(AK8Jet.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet.pt))[0]))
-		h_LeadingAK8Jet_pT_Trigger.fill(ak.ravel(AK8Jet[ak.num(AK8Jet,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(AK8Jet,axis=1) > 0].event_weight*CrossSec_Weight))
+		#h_LeadingAK8Jet_pT_Trigger.fill(ak.ravel(AK8Jet[ak.num(AK8Jet,axis=1) > 0][:,0].pt),weight=ak.ravel(event_level[ak.num(AK8Jet,axis=1) > 0].event_weight*CrossSec_Weight))
 		h_AK8Jet_eta_Trigger.fill(ak.ravel(AK8Jet.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet.eta))[0]))
 		h_AK8Jet_phi_Trigger.fill(ak.ravel(AK8Jet.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(AK8Jet.phi))[0]))
 
@@ -618,6 +618,9 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_MET_Trigger.fill(ak.ravel(event_level.MET_pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_HT_Trigger.fill(ak.ravel(event_level.HT),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_MHT_Trigger.fill(ak.ravel(event_level.MHT),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
+
+		if (self.ApplyTrigger):
+			n_Trigger = 0
 		
 		return{
 			dataset: {
