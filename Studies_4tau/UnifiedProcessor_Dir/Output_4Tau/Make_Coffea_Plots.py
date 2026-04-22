@@ -53,6 +53,7 @@ if __name__ == "__main__":
 			"AK8Jet_pt_Trigg","AK8Jet_eta_Trigg","AK8Jet_phi_Trigg",
 			"MET","HT","MHT" #, "Mini_Cutflow", "Mini_NMinus1"
 			]
+	#four_tau_hist_list = ["Leadingmuon_pt_Trigg"]
 
 	#Additional boosted tau distributions to pull based on boosted tau requirements
 	add_var = []
@@ -76,6 +77,7 @@ if __name__ == "__main__":
 	background_list_test = [r"$ZZ \rightarrow 4l$"]
 	background_list_none = []
 	background_list = background_list_full
+	#background_list = background_list_none
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
 			r"$t\bar{t}$ 2L2Nu" : "_ttbar2L2Nu_", r"Drell-Yan+Jets": "_DYJets_", "Di-Bosons" : "_DiBosons_", "Single Top": "_SingleTop_", "QCD" : "_QCD_", 
 			"W+Jets" : "_WJets_", r"$ZZ \rightarrow 4l$" : "_ZZ4l_", r"$ZZ \rightarrow 4l$ Test": "_ZZ4lTest_", r"$ZZ \rightarrow 4l$ Control": "_ZZ4lControl_",
@@ -149,8 +151,8 @@ if __name__ == "__main__":
 	print("=============================================")
 
 	print("Number of events prior to selections: %d"%coffea_input["Data_Mu"]["n_Skim"])
-	print("Number of events after MET selection: %d"%coffea_input["Data_Mu"]["n_MET"])
-	print("Number of events after FatJet selection: %d"%coffea_input["Data_Mu"]["n_FatJet"])
+#	print("Number of events after MET selection: %d"%coffea_input["Data_Mu"]["n_MET"])
+#	print("Number of events after FatJet selection: %d"%coffea_input["Data_Mu"]["n_FatJet"])
 	print("Number of events after quality flag selection: %d"%coffea_input["Data_Mu"]["n_FlagSelec"])
 	print("Number of events after Primary Vertex selection: %d"%coffea_input["Data_Mu"]["n_PVSelec"])
 	print("Number of events after Leading Boosted Tau selection: %d"%coffea_input["Data_Mu"]["n_LeadBoostedTau"])
@@ -191,19 +193,10 @@ if __name__ == "__main__":
 					
 					#Plot the cutflow for each background
 					if (hist_name == "cutflow_table"):
-						#print(coffea_input[background]["cutflow_table"].axes)
 						if (background == backgrounds[0]):
 							cutflow_hist = coffea_input[background]["cutflow_table"]
 						else:
 							cutflow_hist += coffea_input[background]["cutflow_table"]
-							
-					#	if (background == backgrounds[-1]):
-					#		fig2p5, ax2p5 = plt.subplots()
-					#		cutflow_hist.plot1d(ax=ax2p5)
-					#		plt.title(background_type + " Cutflow Table")
-					#		ax2p5.set_yscale('log')
-					#		plt.savefig("SingleBackground" + background_plot_names[background_type] + "CutFlowTable")
-					#		plt.close()
 							
 						#Plot the weights for each background
 						if (background == backgrounds[0]):
@@ -217,42 +210,16 @@ if __name__ == "__main__":
 							plt.savefig("SingleBackground" + background_plot_names[background_type] + "Weight")
 							plt.close()
 							
-					if (hist_name == "Radion_Charge_Arr"):
-						lumi_table_data["MC Sample"].append(background)
-						lumi_table_data["Luminosity"].append(coffea_input[background]["Lumi_Val"])
-						lumi_table_data["Cross Section (pb)"].append(coffea_input[background]["CrossSec_Val"])
-						#lumi_table_data["Number of Events"].append(coffea_input[background]["NEvent_Val"])
-						lumi_table_data["Gen SumW"].append(coffea_input[background]["SumWEvent_Val"])
-						lumi_table_data["Calculated Weight"].append(coffea_input[background]["Weight_Val"])
-							
 					if (hist_name != "Electron_tau_dR_Arr" and hist_name != "Muon_tau_dR_Arr"):
 						if (background == backgrounds[0]):
 							crnt_hist = coffea_input[background][hist_name]
-							#print("Background: " + background)
-							#print("Sum of entries: %f"%coffea_input[background][hist_name].sum())
 						else:
 							crnt_hist += coffea_input[background][hist_name]
-							#print("Background: " + background)
-							#print("Sum of entries: %f"%coffea_input[background][hist_name].sum())
 						if (background == backgrounds[-1]):
-							#fig2, ax2 = plt.subplots()
 							temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
-							#crnt_hist.plot1d(ax=ax2)
-							#if (hist_name == "FourTau_Mass_Arr"):
-							#print("Background: " + background_type)
-							#print("Sum of entries: %f"%crnt_hist.sum())
-							#print("Number of Entries: %d"%coffea_input[background]["num_events"])
-							#plt.title(background_type)
-							#plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
-							#plt.close()
 
 					else: #lepton-tau delta R 
-					#	fig2, ax2 = plt.subplots()
 						coffea_input[background][hist_name].plot1d(ax=ax2)
-					#	ax2.set_yscale('log')
-					#	plt.title(background_type)
-					#	plt.savefig("SingleBackground" + background_plot_names[background_type] + four_tau_names[hist_name])
-					#	plt.close()
 						
 
 		#Combine the backgrounds together
@@ -263,13 +230,9 @@ if __name__ == "__main__":
 		hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
-		
-		data_stack = hist_dict_data[hist_name] #.stack("data")    
-		#signal_array = [signal_stack["Signal"]]
-		data_array = [data_stack] #["Data"]]
 				
 		for background in background_list:
-			background_array.append(background_stack[background]) #Is this line fucking up your scaling??
+			background_array.append(background_stack[background]) 
 			#print("Background: " + background)
 			#print("Sum of stacked histogram: %f"%background_stack[background].sum())
 		
@@ -278,6 +241,8 @@ if __name__ == "__main__":
 			axis_label = r"Leading $\mu$ $\eta$"
 		else:
 			axis_label = coffea_input["Data_Mu"][hist_name].axes[0].label
+		
+		#hep.histplot(coffea_input["Data_Mu"][hist_name], ax=ax)
 		fig, ax_main, ax_comp = hep.comp.data_model(
 			data_hist = coffea_input["Data_Mu"][hist_name],
 			stacked_components = background_array,
@@ -287,10 +252,10 @@ if __name__ == "__main__":
 			model_uncertainty=True,
 			comparison = "ratio",
             markersize = 10,
+            flow = "sum",
 			#linewidth=2,
 
 		)
-		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")
 		plt.close()
 

@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
 
 	#Offline debugging to test code for bugs
-	SingleMu_2018A_Offline_SingleFile = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_12.root")
+	SingleMu_2018A_Offline_SingleFile = glob.glob(Skimmed_4tau_loc_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_657.root")
 	ZZ4L_2018_Offline_SingleFile = glob.glob(Skimmed_4tau_loc_MC + "ZZTo4L_26August25_0757_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_12.root")
 
 	#Make full arrays of backgrounds
@@ -195,7 +195,8 @@ if __name__ == "__main__":
 		#"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root"]
 		#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in SingleMu_2018A_Debug],
 		#"Data_Mu": [file for file in SingleMu_2018A_Debug] 
-		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0937_skim_NullSkimming/singleFileSkimForSubmission-NANO_NANO_402.root"] #Run a single file offline
+		#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0937_skim_NullSkimming/singleFileSkimForSubmission-NANO_NANO_402.root"] #Run a single file offline
+        "Data_Mu": SingleMu_2018A_Offline_SingleFile
 	}
 
 	file_dict_full = {
@@ -261,14 +262,16 @@ if __name__ == "__main__":
 	for n_taus in range(4,5):
 		print("About to run processor")
 		start_time = time.time()
-		fourtau_out = runner(file_dict, treename="Events", processor_instance=SkimProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = False)) #Modified for NanoAOD (changd treename)
+		fourtau_out = runner(file_dict, treename="Events", processor_instance=SkimProcessor.PlottingScriptProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = True)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
 		
 		time_running = end_time-start_time
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
         #Save coffea file
-		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_NoSingleMuTrigger.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_NoMETFatJetSelections_WithSingleMuTrigger_TightDBT_TightpT.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_SingleFile_4TauSamples_NoMETFatJetSelections_WithSingleMuTrigger.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_SingleFile_4TauSamples_NoMETFatJetSelections_NoSingleMuTrigger.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_NoSingleMuTrigger.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

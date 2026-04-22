@@ -280,9 +280,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_electron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e $p_T$ [GeV]",overflow = True).Double()
 		h_Leadingelectron_pT_Trigger = hist.Hist.new.Regular(15,0,300,label = r"e Leading $p_T$ [GeV]",overflow = True).Double()
 		h_electron_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"e $\eta$",overflow = True).Double()
-		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"e Leading $\phi$",overflow = True).Double()
+		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"e $\phi$",overflow = True).Double()
 		h_muon_pT_Trigger = hist.Hist.new.Regular(15,0,600,label = r"$\mu$ $p_T$ [GeV]",overflow = True).Double()
 		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(15,0,600,label = r"$\mu$ Leading $p_T$ [GeV]",overflow = True).Double()
+		#h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(50,0,200,label = r"$\mu$ Leading $p_T$ [GeV]",overflow = True).Double()
 		h_muon_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$",overflow = True).Double()
 		h_Leadingmuon_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"$\mu$ $\eta$",overflow = True).Double()
 		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"$\mu$ $\phi$",overflow = True).Double()
@@ -342,32 +343,32 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#############
 
 		#MET selection
-		tau = tau[event_level.MET_pt > 100]
-		boostedtau = boostedtau[event_level.MET_pt > 100]
-		AK8Jet = AK8Jet[event_level.MET_pt > 100]
-		Jet = Jet[event_level.MET_pt > 100]
-		electron = electron[event_level.MET_pt > 100]
-		muon = muon[event_level.MET_pt > 100]
-		event_level = event_level[event_level.MET_pt > 100]	
+	#	tau = tau[event_level.MET_pt > 100]
+	#	boostedtau = boostedtau[event_level.MET_pt > 100]
+	#	AK8Jet = AK8Jet[event_level.MET_pt > 100]
+	#	Jet = Jet[event_level.MET_pt > 100]
+	#	electron = electron[event_level.MET_pt > 100]
+	#	muon = muon[event_level.MET_pt > 100]
+	#	event_level = event_level[event_level.MET_pt > 100]	
 
-		#Fill post MET entries in skim and N-1 histograms
-		n_MET = np.size(event_level.nFatJet)
-		h_CutFlow.fill("METCut",weight=n_MET)
-		h_NMinus1.fill("METCut",weight=n_Skim - n_MET)	
+	#	#Fill post MET entries in skim and N-1 histograms
+	#	n_MET = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("METCut",weight=n_MET)
+	#	h_NMinus1.fill("METCut",weight=n_Skim - n_MET)	
 
-		#Impose all events have at least one fat Jet
-		tau = tau[event_level.nFatJet > 0]
-		boostedtau = boostedtau[event_level.nFatJet > 0]
-		AK8Jet = AK8Jet[event_level.nFatJet > 0]
-		Jet = Jet[event_level.nFatJet > 0]
-		electron = electron[event_level.nFatJet > 0]
-		muon = muon[event_level.nFatJet > 0]
-		event_level = event_level[event_level.nFatJet > 0]	
+	#	#Impose all events have at least one fat Jet
+	#	tau = tau[event_level.nFatJet > 0]
+	#	boostedtau = boostedtau[event_level.nFatJet > 0]
+	#	AK8Jet = AK8Jet[event_level.nFatJet > 0]
+	#	Jet = Jet[event_level.nFatJet > 0]
+	#	electron = electron[event_level.nFatJet > 0]
+	#	muon = muon[event_level.nFatJet > 0]
+	#	event_level = event_level[event_level.nFatJet > 0]	
 
-		#Fill post FatJet entries in skim and N-1 histograms
-		n_FatJet = np.size(event_level.nFatJet)
-		h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
-		h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
+	#	#Fill post FatJet entries in skim and N-1 histograms
+	#	n_FatJet = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
+	#	h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
 
 		#Flag conditions
 		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
@@ -387,7 +388,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#Fill post flag selections entries in skim and N-1 histograms
 		n_FlagSelec = np.size(event_level.nFatJet)
 		h_CutFlow.fill("FlagReq",weight=n_FlagSelec)
-		h_NMinus1.fill("FlagReq",weight=n_FatJet - n_FlagSelec)
+		h_NMinus1.fill("FlagReq",weight=n_Skim - n_FlagSelec)
 
 		#PV selections
 		ndof_cond = event_level.PV_ndof > 4
@@ -419,10 +420,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
         #Boosted tau selections
 		if (self.nBoostedTau_Selec > 0):
 			#Impose selections boosted taus
-			pT_Cond = boostedtau.pt > 20
+			pT_Cond = boostedtau.pt > 30
 			eta_Cond = np.abs(boostedtau.eta) < 2.3
 			decayMode_Cond = boostedtau.decay >= 0.5
-			DBT_Iso_Cond = boostedtau.DBT >= 0.5
+			DBT_Iso_Cond = boostedtau.DBT >= 0.9
 			
 			boostedtau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
 			boostedtau = boostedtau[boostedtau_selec_cond] #Apply selections to all individual taus
@@ -549,7 +550,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			muon = muon[id_selec]
 			event_level = event_level[id_selec]	
 
-	        #Drop any events with no muons after selection
+	        #Drop any events with no muons after selection (DOUBLE CHECK THIS ISN'T MESSING THINGS UP!!)
 			tau = tau[ak.num(muon,axis=1)>0]
 			boostedtau = boostedtau[ak.num(muon,axis=1)>0]
 			AK8Jet = AK8Jet[ak.num(muon,axis=1)>0]
@@ -562,6 +563,16 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			n_Trigger = np.size(event_level.nFatJet)
 			h_CutFlow.fill("Trigger",weight=n_Trigger)
 			h_NMinus1.fill("Trigger",weight=n_PreTrigger - n_Trigger)
+
+		else:
+			muon_cond = ak.num(muon,axis=1) > 0
+			tau = tau[muon_cond]
+			boostedtau = boostedtau[muon_cond]
+			AK8Jet = AK8Jet[muon_cond]
+			Jet = Jet[muon_cond]
+			electron = electron[muon_cond]
+			muon = muon[muon_cond]
+			event_level = event_level[muon_cond]
 
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
@@ -597,7 +608,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#Muons
 		h_muon_pT_Trigger.fill(ak.ravel(muon.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.pt))[0]))
-		#h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[:,0].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
+		#if (self.ApplyTrigger):
+		h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[:,0].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_muon_eta_Trigger.fill(ak.ravel(muon.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.eta))[0]))
 		#h_Leadingmuon_eta_Trigger.fill(ak.ravel(muon[:,0].eta),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_muon_phi_Trigger.fill(ak.ravel(muon.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.phi))[0]))
@@ -619,7 +631,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		h_HT_Trigger.fill(ak.ravel(event_level.HT),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_MHT_Trigger.fill(ak.ravel(event_level.MHT),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 
-		if (self.ApplyTrigger):
+		if (not(self.ApplyTrigger)):
 			n_Trigger = 0
 		
 		return{
@@ -629,8 +641,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"Weight": ak.to_list(event_level.event_weight*CrossSec_Weight), 
 				"Event_Count": np.sum(ak.to_list(event_level.event_weight*CrossSec_Weight)),
 				"n_Skim": n_Skim,
-				"n_MET": n_MET,
-				"n_FatJet": n_FatJet,
+			#	"n_MET": n_MET,
+			#	"n_FatJet": n_FatJet,
 				"n_FlagSelec": n_FlagSelec,
 				"n_PVSelec": n_PVSelec,
 				"n_LeadBoostedTau": n_LeadBoostedTau,

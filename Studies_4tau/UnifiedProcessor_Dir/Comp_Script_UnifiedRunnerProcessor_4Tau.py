@@ -693,6 +693,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			n_Trigger = np.size(event_level.nFatJet)
 			h_CutFlow.fill("Trigger",weight=n_Trigger)
 			h_NMinus1.fill("Trigger",weight=n_PreTrigger - n_Trigger)
+        if (not(self.ApplyTrigger)):
 
 		#Fill histograms after to trigger and all selections
 		#Boosted Taus
