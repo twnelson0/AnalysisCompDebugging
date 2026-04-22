@@ -340,6 +340,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#############
 		#Cut Selections
 		#############
+		#MET selection
+		tau = tau[event_level.MET_pt > 100]
+		boostedtau = boostedtau[event_level.MET_pt > 100]
+		AK8Jet = AK8Jet[event_level.MET_pt > 100]
+		Jet = Jet[event_level.MET_pt > 100]
+		electron = electron[event_level.MET_pt > 100]
+		muon = muon[event_level.MET_pt > 100]
+		event_level = event_level[event_level.MET_pt > 100]	
 		
 		#############
 		#Trigger and Offline Cuts
@@ -385,15 +393,15 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			muon = muon[id_selec]
 			event_level = event_level[id_selec]	
 
-			iso_selec = ak.all(muon.RelIso < 0.15,axis=1) #Based on working point
-			
-			tau = tau[iso_selec]
-			boostedtau = boostedtau[iso_selec]
-			AK8Jet = AK8Jet[iso_selec]
-			Jet = Jet[iso_selec]
-			electron = electron[iso_selec]
-			muon = muon[iso_selec]
-			event_level = event_level[iso_selec]	
+		#	iso_selec = ak.all(muon.RelIso < 0.15,axis=1) #Based on working point
+		#	
+		#	tau = tau[iso_selec]
+		#	boostedtau = boostedtau[iso_selec]
+		#	AK8Jet = AK8Jet[iso_selec]
+		#	Jet = Jet[iso_selec]
+		#	electron = electron[iso_selec]
+		#	muon = muon[iso_selec]
+		#	event_level = event_level[iso_selec]	
 
 	        #Drop any events with no muons after selection
 			tau = tau[ak.num(muon,axis=1)>0]
