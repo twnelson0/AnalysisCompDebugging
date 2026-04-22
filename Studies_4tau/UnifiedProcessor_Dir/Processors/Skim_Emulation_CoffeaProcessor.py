@@ -597,7 +597,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#Muons
 		h_muon_pT_Trigger.fill(ak.ravel(muon.pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.pt))[0]))
-		#h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[:,0].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
+		h_Leadingmuon_pT_Trigger.fill(ak.ravel(muon[:,0].pt),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_muon_eta_Trigger.fill(ak.ravel(muon.eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.eta))[0]))
 		#h_Leadingmuon_eta_Trigger.fill(ak.ravel(muon[:,0].eta),weight=ak.ravel(event_level.event_weight*CrossSec_Weight))
 		h_muon_phi_Trigger.fill(ak.ravel(muon.phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level.event_weight*CrossSec_Weight),ak.ones_like(muon.phi))[0]))
