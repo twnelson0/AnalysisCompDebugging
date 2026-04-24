@@ -189,6 +189,15 @@ if __name__ == "__main__":
 		glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-1200To2500_OtherPart_26August25_1041_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"))
 	WJetsToLNu_HT2500ToInf_2018 = np.append(glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-2500ToInf_26August25_1047_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"),
 		glob.glob(Skimmed_4tau_loc_MC + "WJetsToLNu_HT-2500ToInf_OtherPart_26August25_1043_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root"))
+	QCD_HT50To100 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT50to100_23April26_0525_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT100To200 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT100to200_23April26_0519_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT200To300 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT200to300_23April26_0542_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT300To500 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT300to500_23April26_0555_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT500To700 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT500to700_23April26_0512_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT700To1000 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT700to1000_23April26_0528_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT1000To1500 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT1000to1500_23April26_0536_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT1500To2000 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT1500to2000_23April26_0539_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+	QCD_HT2000ToInf = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT2000toInf_23April26_0541_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
 
 	file_dict_data_test = {
 		#"Data_Mu" : [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
@@ -240,6 +249,15 @@ if __name__ == "__main__":
 			"WJetsToLNu_HT-800To1200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT800To1200_2018],
 			"WJetsToLNu_HT-1200To2500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT1200To2500_2018],
 			"WJetsToLNu_HT-2500ToInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT2500ToInf_2018],
+			"QCD_HT50to100": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT50To100],
+			"QCD_HT100to200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT100To200],
+			"QCD_HT200to300": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT200To300],
+			"QCD_HT300to500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT300To500],
+			"QCD_HT500to700": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT500To700],
+			"QCD_HT700to1000": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT700To1000],
+			"QCD_HT1000to1500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT1000To1500],
+			"QCD_HT1500to2000": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT1500To2000],
+			"QCD_HT2000toInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT2000ToInf],
 			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMu_2018A, np.append(SingleMu_2018B, np.append(SingleMu_2018C,SingleMu_2018D)))]
 			#"Data_MET": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(MET_2018A, np.append(MET_2018B, np.append(MET_2018C,MET_2018D)))]
 		}
@@ -249,11 +267,12 @@ if __name__ == "__main__":
 	file_dict = file_dict_full
 
 	#Pull in the weight and event count prior to skimming information
-	with open("genWeightSum_JSON.json") as json_file:
+	#with open("genWeightSum_JSON.json") as json_file:
+	with open("genWeightSum_2018_WithQCD_JSON.json") as json_file:
 		sumWEvents_Dict = json.load(json_file)
 
-	with open("numEvents_JSON.json") as json_file:
-		numEvents_Dict = json.load(json_file)
+#	with open("numEvents_JSON.json") as json_file:
+#		numEvents_Dict = json.load(json_file)
 	
 
 	start_time = time.time()
@@ -269,6 +288,6 @@ if __name__ == "__main__":
 		
         #Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_FixedOfflineCode.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

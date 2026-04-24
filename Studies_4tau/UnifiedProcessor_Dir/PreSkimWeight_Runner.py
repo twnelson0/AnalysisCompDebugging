@@ -15,7 +15,8 @@ import csv
 import glob
 import json
 import argparse
-from Processors.Weight_CoffeaProcessor import CountingProcessor 
+from Processors import Weight_CoffeaProcessor as PreSkim 
+import cloudpickle
 
 #X509 function (for HTC)
 def move_X509():
@@ -168,8 +169,25 @@ if __name__ == "__main__":
 			#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMuA_2018A, np.append(SingleMuA_2018B, np.append(SingleMuA_2018C,SingleMuA_2018D)))]
 		}
 	
+	file_dict_QCD = {
+			"QCD_HT50To100": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT50To100],
+			"QCD_HT100To200": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT100To200],
+			"QCD_HT200To300": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT200To300],
+			"QCD_HT300To500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT300To500],
+			"QCD_HT500To700": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT500To700],
+			"QCD_HT700To1000": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT700To1000],
+			"QCD_HT1000To1500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT1000To1500],
+			"QCD_HT1500To2000": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT1500To2000],
+			"QCD_HT2000ToInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT2000ToInf],
+			}
+	
+	file_dict_QCD_Test = {
+			"QCD_HT50To100": [["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT50To100][0]],
+			}
+
 	#Set file dictionary and list of backgrounds prior to running processor
 	file_dict = file_dict_full
+	#file_dict = file_dict_QCD_Test
 	
 	#Condor related stuff
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
@@ -182,8 +200,8 @@ if __name__ == "__main__":
 
 	cluster = HTCondorCluster(
 			cores=1,
-			memory="8 GB",
-			disk="4 GB",
+			memory="4 GB",
+			disk="2 GB",
 			death_timeout = '60',
 			job_extra_directives={
 				"+JobFlavour": '"tomorrow"',
@@ -193,7 +211,7 @@ if __name__ == "__main__":
 				"should_transfer_files": "yes",
 				"when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
 				"transfer_executable": "false",
-				"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
+				"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
 				"Requirements": "HasSingularityJobStart",
 				"InitialDir": f'/scratch/{os.environ["USER"]}',
 				'transfer_input_files': f"{_x509_path}",
@@ -205,6 +223,7 @@ if __name__ == "__main__":
 			]
 	)
 	cluster.adapt(minimum=1, maximum=500)
+
 
 	run_on_condor = True 
 	
@@ -218,28 +237,33 @@ if __name__ == "__main__":
             #chunksize=500000,
             #maxchunks = 1
 		)
+		#Pass modules to HTC
+		cloudpickle.register_pickle_by_value(PreSkim)
+
 	else: #Iterative runner
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
 
 	print(f"https://cms01.hep.wisc.edu:8004/user/{os.environ['USER']}/{cluster.dashboard_link}")
 
 	start_time = time.time()
-	fourtau_out = runner(file_dict, treename="Runs", processor_instance=CountingProcessor()) 
+	fourtau_out = runner(file_dict, treename="Runs", processor_instance=PreSkim.CountingProcessor()) 
 	end_time = time.time()
 	
 	time_running = end_time-start_time
-	print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,4))
+	print("It takes about %.1f s to run"%time_running)
 	
-	numEvents_Dict = dict.fromkeys(file_dict_full) 
-	sumWEvents_Dict = dict.fromkeys(file_dict_full)
+	numEvents_Dict = dict.fromkeys(file_dict) 
+	sumWEvents_Dict = dict.fromkeys(file_dict)
 	
-	for key in file_dict_full.keys():
+	for key in file_dict.keys():
 		sumWEvents_Dict[key] = fourtau_out[key]["genWeightSum"]
 		numEvents_Dict[key] = int(fourtau_out[key]["n_events"])
 
 	#Save the sumW and counts as JSON files
 	with open("genWeightSum_2018_WithQCD_JSON.json", "w") as fp:
+	#with open("genWeightSum_2018_QCDOnly_JSON.json", "w") as fp:
 		json.dump(sumWEvents_Dict, fp)
 	
 	with open("numEvents_2018_WithQCD_JSON.json", "w") as fp:
+	#with open("numEvents_2018_QCDOnly_JSON.json", "w") as fp:
 		json.dump(numEvents_Dict, fp)
