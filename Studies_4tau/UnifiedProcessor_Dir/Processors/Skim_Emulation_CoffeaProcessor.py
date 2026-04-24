@@ -523,23 +523,25 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			event_level = event_level[trigger_cond]
 
 			#Muon Trigger offline selection
-			tau = tau[ak.any(muon.nMu > 0, axis = 1)]
-			boostedtau = boostedtau[ak.any(muon.nMu > 0, axis = 1)]
-			AK8Jet = AK8Jet[ak.any(muon.nMu > 0, axis = 1)]
-			Jet = Jet[ak.any(muon.nMu > 0, axis = 1)]
-			electron = electron[ak.any(muon.nMu > 0, axis = 1)]
-			muon = muon[ak.any(muon.nMu > 0, axis = 1)]
-			event_level = event_level[ak.any(muon.nMu > 0, axis = 1)]				
+			nMuon_Cond = ak.any(muon.nMu > 0, axis = 1) 
+			tau = tau[nMuon_Cond]
+			boostedtau = boostedtau[nMuon_Cond]
+			AK8Jet = AK8Jet[nMuon_Cond]
+			Jet = Jet[nMuon_Cond]
+			electron = electron[nMuon_Cond]
+			muon = muon[nMuon_Cond]
+			event_level = event_level[nMuon_Cond]				
 
-			tau = tau[ak.any(muon.pt > 52, axis=1)]
-			boostedtau = boostedtau[ak.any(muon.pt > 52, axis=1)]
-			AK8Jet = AK8Jet[ak.any(muon.pt > 52, axis=1)]
-			Jet = Jet[ak.any(muon.pt > 52, axis=1)]
-			electron = electron[ak.any(muon.pt > 52, axis=1)]
-			muon = muon[ak.any(muon.pt > 52, axis=1)]
-			event_level = event_level[ak.any(muon.pt > 52, axis=1)]	
+			pt_cond = ak.any(muon.pt > 52, axis=1)
+			tau = tau[pt_cond]
+			boostedtau = boostedtau[pt_cond]
+			AK8Jet = AK8Jet[pt_cond]
+			Jet = Jet[pt_cond]
+			electron = electron[pt_cond]
+			muon = muon[pt_cond]
+			event_level = event_level[pt_cond]	
 
-			#Apply isolation and ID selections on muons
+			#Apply ID selections on muons
 			id_selec = muon[:,0].IDSelec_Med
 			
 			tau = tau[id_selec]
@@ -550,14 +552,25 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			muon = muon[id_selec]
 			event_level = event_level[id_selec]	
 
-	        #Drop any events with no muons after selection (DOUBLE CHECK THIS ISN'T MESSING THINGS UP!!)
-			tau = tau[ak.num(muon,axis=1)>0]
-			boostedtau = boostedtau[ak.num(muon,axis=1)>0]
-			AK8Jet = AK8Jet[ak.num(muon,axis=1)>0]
-			Jet = Jet[ak.num(muon,axis=1)>0]
-			electron = electron[ak.num(muon,axis=1)>0]
-			muon = muon[ak.num(muon,axis=1)>0]
-			event_level = event_level[ak.num(muon,axis=1)>0]
+            #Apply Isolation selection
+		#	iso_selec = ak.all(muon.RelIso < 0.15,axis=1) #Based on working point
+		#	tau = tau[iso_selec]
+		#	boostedtau = boostedtau[iso_selec]
+		#	AK8Jet = AK8Jet[iso_selec]
+		#	Jet = Jet[iso_selec]
+		#	electron = electron[iso_selec]
+		#	muon = muon[iso_selec]
+		#	event_level = event_level[iso_selec]	
+
+	        #Drop any events with no muons after selection
+			muon_count_cond = ak.num(muon,axis=1)>0
+			tau = tau[muon_count_cond]
+			boostedtau = boostedtau[muon_count_cond]
+			AK8Jet = AK8Jet[muon_count_cond]
+			Jet = Jet[muon_count_cond]
+			electron = electron[muon_count_cond]
+			muon = muon[muon_count_cond]
+			event_level = event_level[muon_count_cond]
 
 			#Fill post trigger entries in skim and N-1 histograms
 			n_Trigger = np.size(event_level.nFatJet)
