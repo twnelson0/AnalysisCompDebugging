@@ -33,6 +33,7 @@ class CountingProcessor(processor.ProcessorABC):
 			self.isData = True
 
 		if (self.isData):
+			#event_count = np.sum(events.genEventCount)
 			event_count = 1 
 			genWeightSum = 1 
 		else:
