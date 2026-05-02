@@ -22,6 +22,7 @@ from dask_jobqueue import HTCondorCluster
 import csv
 import glob
 import json
+from enum import Enum
 
 #Global Variables
 WScaleFactor = 1.21
@@ -43,7 +44,7 @@ xSection_Dictionary = {"Signal": 0.01, #Chosen to make plots readable
 						#ZZ->4l
 						"ZZ4l": 1.325,
 						
-						"Tbar-tchan": 80.8, "T-tchan": 134.2, "Tbar-tW": 39.65, "T-tW": 39.65, "ST_s-channel_4f_leptonDecays": 3.588, "ST_s-channel_4f_hadronicDecays": 7.485,
+						"Tbar-tchan": 80.0, "T-tchan": 134.2, "Tbar-tW": 39.65, "T-tW": 39.65, "ST_s-channel_4f_leptonDecays": 3.588, "ST_s-channel_4f_hadronicDecays": 7.485,
 						#Drell-Yan Jets
 						"DYJetsToLL_M-4to50_HT-70to100": 314.8,
 						"DYJetsToLL_M-4to50_HT-100to200": 190.6,
@@ -72,6 +73,35 @@ Lumi_2018 = 59830
 
 def weight_calc(sample,numEvents=1):
 	return Lumi_2018*xSection_Dictionary[sample]/numEvents
+
+#Era Enumeration
+class RunEra_Enum(Enum):
+	2018MC=0
+	2018UL_A=1
+	2018UL_B=2
+	2018UL_C=3
+	2018UL_D=4
+
+#MET phi crrections
+def METPhi_Corrections(uncorMET_pt, uncorMET_phi, run_num, year=2018, isData, nPV):
+	MET_Phi_Corr = {"MET_pt_corr": uncorMET_pt, "MET_phi_corr": uncorMET_phi}
+	runera = -1
+
+	#Set run era
+	if (year == 2018):
+		if (not(isData)):
+			runera = RunEra_Enum(2018MC)
+		else:
+			if (ak.all(run_num) >= 315252 and ak.all(run_num) <= 316995):
+				runera = RunEra_Enum(2018UL_A)
+			if (ak.all(run_num) >= 316998 and ak.all(run_num) <= 319312):
+				runera = RunEra_Enum(2018UL_B)
+			if (ak.all(run_num) >= 319313 and ak.all(run_num) <= 320393):
+				runera = RunEra_Enum(2018UL_C)
+			if (ak.all(run_num) >= 320394 and ak.all(run_num) <= 325273):
+				runera = RunEra_Enum(2018UL_D)
+
+	return MET_Phi_Corr
 
 class PlottingScriptProcessor(processor.ProcessorABC):
 	def __init__(self, sumWEvents_Dict, nBoostedTaus = 0, ApplyTrigger = True): #Additional arguements can be added later

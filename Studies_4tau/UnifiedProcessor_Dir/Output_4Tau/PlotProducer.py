@@ -26,8 +26,11 @@ TABLEAU_COLORS = ['blue','orange','green','red','purple','brown','pink','gray','
 #Control Region dictionary
 region_dict = {"All": "",
 			"ZCR": "ZControlRegion",
+			"NotZCR": "NoZRegion",
 			"TCR": "TopControlRegion",
 			"NotTCR": "NotTopControlRegion",
+			"TightTCR": "TightTopControlRegion",
+			"LooseTCR": "LooseTopControlRegion",
 			"FakeCR": "FakeContorlRegion",
 		}
 

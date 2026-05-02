@@ -43,7 +43,7 @@ xSection_Dictionary = {"Signal": 0.01, #Chosen to make plots readable
 						#ZZ->4l
 						"ZZ4l": 1.325,
 						
-						"Tbar-tchan": 80.8, "T-tchan": 134.2, "Tbar-tW": 39.65, "T-tW": 39.65, "ST_s-channel_4f_leptonDecays": 3.588, "ST_s-channel_4f_hadronicDecays": 7.485,
+						"Tbar-tchan": 80.0, "T-tchan": 134.2, "Tbar-tW": 39.65, "T-tW": 39.65, "ST_s-channel_4f_leptonDecays": 3.588, "ST_s-channel_4f_hadronicDecays": 7.485,
 						#Drell-Yan Jets
 						"DYJetsToLL_M-4to50_HT-70to100": 314.8,
 						"DYJetsToLL_M-4to50_HT-100to200": 190.6,

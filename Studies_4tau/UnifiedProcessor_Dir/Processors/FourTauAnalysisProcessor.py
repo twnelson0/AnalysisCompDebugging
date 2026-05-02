@@ -43,7 +43,7 @@ xSection_Dictionary = {"Signal": 0.01, #Chosen to make plots readable
 						#ZZ->4l
 						"ZZ4l": 1.325,
 						
-						"Tbar-tchan": 80.8, "T-tchan": 134.2, "Tbar-tW": 39.65, "T-tW": 39.65, "ST_s-channel_4f_leptonDecays": 3.588, "ST_s-channel_4f_hadronicDecays": 7.485,
+						"Tbar-tchan": 80.0, "T-tchan": 134.2, "Tbar-tW": 39.65, "T-tW": 39.65, "ST_s-channel_4f_leptonDecays": 3.588, "ST_s-channel_4f_hadronicDecays": 7.485,
 						#Drell-Yan Jets
 						"DYJetsToLL_M-4to50_HT-70to100": 314.8,
 						"DYJetsToLL_M-4to50_HT-100to200": 190.6,
@@ -277,7 +277,8 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 
 		#Control Regions Axis
 		#region_array = ["All","ZCR","TCR","FakeCR"]
-		region_array = ["All","TCR","NotTCR"]
+		#region_array = ["All","TCR","NotTCR","ZCR","NotZCR"]
+		region_array = ["All","TightTCR","NotTCR","LooseTCR","ZCR","NotZCR"] #"NotZCR"]
 		#region_array = ["All"] 
 		category_axis = hist.axis.StrCategory(region_array, growth=False, name = "category")
 		
@@ -591,7 +592,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			#		MET_Cond = event_level.MET_pt > 110
 			#		MHT_Cond = event_level.MHT > 110
 			#		HTMETMHT_Selec = HT_Cond & MET_cond & MHT_Cond
-			#		
+					
 			#		boostedtau = boostedtau[HTMETMHT_Selec]
 			#		AK8Jet = AK8Jet[HTMETMHT_Selec]
 			#		Jet = Jet[HTMETMHT_Selec]
@@ -643,13 +644,13 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#		electron_HT = electron[np.bitwise_not(event_level.Mu_Trigger) & event_level.HTMETMHT_Trigger]
 		#		muon_HT = muon[np.bitwise_not(event_level.Mu_Trigger) & event_level.HTMETMHT_Trigger]
 		#		event_level_HT = event_level[np.bitwise_not(event_level.Mu_Trigger) & event_level.HTMETMHT_Trigger]
-		#			
+					
 		#		#Offline Cuts
 		#		HT_Cond = event_level_HT.HT > 550
 		#		MET_Cond = event_level_HT.MET_pt > 110
 		#		MHT_Cond = event_level_HT.MHT > 110
 		#		HTMETMHT_Selec = HT_Cond & MET_cond & MHT_Cond
-		#		
+				
 		#		boostedtau_HT = boostedtau_HT[HTMETMHT_Selec]
 		#		AK8Jet_HT = AK8Jet_HT[HTMETMHT_Selec]
 		#		Jet_HT = Jet_HT[HTMETMHT_Selec]
@@ -808,29 +809,29 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#############
 		if (ak.num(event_level,axis=0) > 0): #If there are events left
 			print("nBjets")
-	#		#Z Multiplicity function
-	#		def Z_Mult_Function(lepton,lep_flavor): 
-	#			#Make Good muon selection
-	#			if (lep_flavor == "mu"):
-	#				id_cond = muon.IDSelec 
-	#				d0_cond = np.abs(lepton.D0) < 0.045
-	#				dz_cond = np.abs(lepton.Dz) < 0.2
-	#				good_lepton_cond = id_cond & d0_cond & dz_cond
-	#				good_lepton = lepton[good_lepton_cond]
-	#				#else:
-	#					#good_lepton = lepton
-	#			#Make good electron selection
-	#			if (lep_flavor == "ele"):
-	#				cond1 = (np.abs(lepton.SCEta) <= 0.8) & (lepton.IDMVANoIso > 0.837)
-	#				cond2 = ((np.abs(lepton.SCEta) > 0.8) & (np.abs(lepton.SCEta) <= 1.5)) & (electron.IDMVANoIso > 0.715)
-	#				cond3 = (np.abs(lepton.SCEta) >= 1.5) & (electron.IDMVANoIso > 0.357)
-	#				good_lepton_cond = cond1 | cond2 | cond3
-	#				good_lepton = lepton[good_lepton_cond]
-	#			
-	#			#print("Number of lepton filled events before Z-multiplicty building: %d"%ak.num(good_lepton,axis=0))
-	#			Z_Mult = find_Z_Candidates(good_lepton,ak.ArrayBuilder()).snapshot() #Need to add this function to get the mulitplicity function working
+			#Z Multiplicity function
+			def Z_Mult_Function(lepton,lep_flavor): 
+				#Make Good muon selection
+				if (lep_flavor == "mu"):
+					id_cond = muon.IDSelec 
+					d0_cond = np.abs(lepton.D0) < 0.045
+					dz_cond = np.abs(lepton.Dz) < 0.2
+					good_lepton_cond = id_cond & d0_cond & dz_cond
+					good_lepton = lepton[good_lepton_cond]
+					#else:
+						#good_lepton = lepton
+				#Make good electron selection
+				if (lep_flavor == "ele"):
+					cond1 = (np.abs(lepton.SCEta) <= 0.8) & (lepton.IDMVANoIso > 0.837)
+					cond2 = ((np.abs(lepton.SCEta) > 0.8) & (np.abs(lepton.SCEta) <= 1.5)) & (electron.IDMVANoIso > 0.715)
+					cond3 = (np.abs(lepton.SCEta) >= 1.5) & (electron.IDMVANoIso > 0.357)
+					good_lepton_cond = cond1 | cond2 | cond3
+					good_lepton = lepton[good_lepton_cond]
+				
+				#print("Number of lepton filled events before Z-multiplicty building: %d"%ak.num(good_lepton,axis=0))
+				Z_Mult = find_Z_Candidates(good_lepton,ak.ArrayBuilder()).snapshot() #Need to add this function to get the mulitplicity function working
 
-	#			return Z_Mult
+				return Z_Mult
 
 			#Apply BJet multiplicity selection
 			#Apply pt, eta, loose ID, and deep csv tag cut
@@ -839,20 +840,24 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			#Jet_B = Jet_B[np.abs(Jet_B.eta) < 2.4]
 			#Jet_B = Jet[Jet.DeepCSVTags_b > 0.7527] #Old selectuion using btagCSVV2
 			#Jet_B = Jet[Jet.DeepCSVTags_b > 0.4168] 
-			Jet_B = Jet[Jet.DeepCSVTags_b > 0.7665] 
-			NumBJets = ak.num(Jet_B,axis=1)
+			#Jet_B = Jet[Jet.DeepCSVTags_b > 0.7665] 
+			NumBJets = ak.num(Jet[Jet.DeepCSVTags_b > 0.7665],axis=1)
 			event_level["nBJets"] = NumBJets
+			NLooseJets = ak.num(Jet[np.bitwise_and(Jet.DeepCSVTags_b > 0.1208, Jet.DeepCSVTags_b < 0.7665)],axis=1)
+			event_level["nBJetsLoose"] = NLooseJets
 
-	#		#Get Z_multiplicity	
-	#		electron_ZMult = Z_Mult_Function(electron,"ele")
-	#		muon_ZMult = Z_Mult_Function(muon,"mu")
-	#		event_level["ZMult"] = muon_ZMult + electron_ZMult
-	#		event_level["ZMult_e"] = electron_ZMult
-	#		event_level["ZMult_mu"] = muon_ZMult
+			#Get Z_multiplicity	
+			electron_ZMult = Z_Mult_Function(electron,"ele")
+			muon_ZMult = Z_Mult_Function(muon,"mu")
+			event_level["ZMult"] = muon_ZMult + electron_ZMult
+			event_level["ZMult_e"] = electron_ZMult
+			event_level["ZMult_mu"] = muon_ZMult
 
 		else:
 			print("No BJets")
 			event_level["nBJets"] = 0
+			event_level["nBJetsLoose"] = 0 
+			event_level["ZMult"] = 0
 
 #		#############
 #		#Get boosted tau pair objects and 4 boosted tau object
@@ -958,7 +963,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#if (ak.num(event_level,axis=0) > 0):
 		for region in region_array:
 			if (region == "ZCR"):
-				region_cond = (event_level.ZMult >= 1) & (event_level.nBJets < 1)
+				region_cond = (event_level.ZMult >= 1) & (event_level.nBJets < 1) & (event_level.nBJetsLoose < 1)
 			elif (region == "TCR"):
 				#print("Top Region")
 				#region_cond = (event_level.ZMult) < 1 & (event_level.nBJets >= 1)
@@ -966,10 +971,16 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				#print("Sum of true entries: " + str(ak.sum(region_cond)))
 			elif (region == "NotTCR"):
 				#print("Not Top Region")
-				region_cond = event_level.nBJets < 1
+				region_cond = (event_level.nBJets < 1) & (event_level.nBJetsLoose < 1)
 				#print("Sum of true entries: " + str(ak.sum(region_cond)))
 			elif (region == "FakeCR"):
 				region_cond = ((event_level.ZMult < 1) & (event_level.nBJets < 1)) & ((event_level.LeadingPair_Charge != 0) | (event_level.SubleadingPair_Charge != 0))
+			elif (region == "NotZCR"):
+				region_cond = (event_level.ZMult < 1) & (event_level.nBJets < 1) & (event_level.nBJetsLoose < 1)
+			elif (region == "TightTCR"):
+				region_cond = event_level.nBJets >= 1
+			elif (region == "LooseTCR"):
+				region_cond = (event_level.nBJets < 1) & (event_level.nBJetsLoose >= 1)
 			else:
 				#print("No Control Region")
 				#print(region)
@@ -1005,7 +1016,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			h_muon_pT_Trigger.fill(ak.ravel(muon[ak.ravel(region_cond)].pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(muon[ak.ravel(region_cond)].pt))[0]), region = region)
 			h_Leadingmuon_pT_Trigger.fill(ak.ravel(ak.firsts(muon[ak.ravel(region_cond)].pt)),weight=ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight), region = region)
 			h_muon_eta_Trigger.fill(ak.ravel(muon[ak.ravel(region_cond)].eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(muon[ak.ravel(region_cond)].eta))[0]), region = region)
-			h_Leadingmuon_eta_Trigger.fill(ak.ravel(ak.firsts(muon[region_cond].eta)),weight=ak.ravel(event_level[region_cond].event_weight*CrossSec_Weight), region = region)
+			#h_Leadingmuon_eta_Trigger.fill(ak.ravel(ak.firsts(muon[region_cond].eta)),weight=ak.ravel(event_level[region_cond].event_weight*CrossSec_Weight), region = region)
 			h_muon_phi_Trigger.fill(ak.ravel(muon[ak.ravel(region_cond)].phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(muon[ak.ravel(region_cond)].phi))[0]), region = region)
 
 			#Jets 
