@@ -82,10 +82,33 @@ class RunEra_Enum(Enum):
 	2018UL_C=3
 	2018UL_D=4
 
+#Phi corrections
+def PhiCorrections(x,y):
+	if (x == 0 and y > 0):
+		corrected_phi = np.pi
+	elif (x == 0 and y < 0):
+		corrected_phi = -np.pi
+	elif (x > 0):
+		corrected_phi = np.atan(y/x)
+	elif (x < 0 and y > 0):
+		corrected_phi = np.atan(y/x) + np.pi
+	elif (x < 0 and y < 0):
+		corrected_phi = np.atan(y/x) + np.pi
+	else:
+		corrected_phi = 0
+
+	return corrected_phi
+
+#Vectorize the phi corrections
+vec_PhiCorrections = np.vectorize(PhiCorrections)
+
 #MET phi crrections
-def METPhi_Corrections(uncorMET_pt, uncorMET_phi, run_num, year=2018, isData, nPV):
-	MET_Phi_Corr = {"MET_pt_corr": uncorMET_pt, "MET_phi_corr": uncorMET_phi}
+def METPhi_Corrections(uncorrMET_pt, uncorrMET_phi, run_num, year=2018, isData, nPV):
+	MET_Phi_Corr = {"MET_pt_corr": uncorrMET_pt, "MET_phi_corr": uncorrMET_phi}
 	runera = -1
+
+	#Correct nPV (if nPV >= 100 nPV = 100 done in array friendly manner)
+	nPV = np.floor((nPV % 100)/nPV)*nPV + np.floor(1/np.pow(2,np.floor(nPV % 100)/nPV))*100
 
 	#Set run era
 	if (year == 2018):
@@ -100,6 +123,35 @@ def METPhi_Corrections(uncorMET_pt, uncorMET_phi, run_num, year=2018, isData, nP
 				runera = RunEra_Enum(2018UL_C)
 			if (ak.all(run_num) >= 320394 and ak.all(run_num) <= 325273):
 				runera = RunEra_Enum(2018UL_D)
+
+	#METX and METY corrections
+	METX_Corr, METY_Corr = ak.zeros_like(MET_Phi_Corr["MET_pt_corr"])
+	if (run_era == RunEra_Enum(2018UL_A)):
+		METX_Corr = -(0.362865*npv -1.94505)
+		METY_Corr = -(0.0709085*npv -0.307365)
+	if (run_era == RunEra_Enum(2018UL_B)):
+		METX_Corr = -(0.492083*npv -2.93552)
+		METY_Corr = -(0.17874*npv -0.786844)
+	if (run_era == RunEra_Enum(2018UL_C)):
+		METX_Corr = -(0.521349*npv -1.44544)
+		METY_Corr = -(0.118956*npv -1.96434)
+	if (run_era == RunEra_Enum(2018UL_D)):
+		METX_Corr = -(0.531151*npv -1.37568)
+		METY_Corr = -(0.0884639*npv -1.57089)
+	if (run_era == RunEra_Enum(2018MC)):
+		METX_Corr = -(0.296713*npv -0.141506)
+		METY_Corr = -(0.115685*npv +0.0128193)
+
+	#Obtain corectected MET
+	CorrectedMET_x = uncorrMET_pt*np.cos(uncorrMET_phi) + METX_Corr
+	CorrectedMET_y = uncorrMET_pt*np.cos(uncorrMET_phi) + METX_Corr
+
+	CorrectedMET = np.sqrt(CorrectedMET_x**2 + CorrectedMET_y**2)
+
+	CorrectedPhi = vec_PhiCorrections(CorrectedMET_x,CorrectedMET_y)
+
+	MET_Phi_Corr["MET_pt_corr"] = CorrectedMET
+	MET_Phi_Corr["MET_phi_corr"] = 	CorrectedPhi
 
 	return MET_Phi_Corr
 
@@ -142,6 +194,7 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				"PV_z": events.PV_z,
 				"PV_x": events.PV_x,
 				"PV_y": events.PV_y,
+				"Num_PV": events.PV_npvs,
 				"nFatJet": events.nFatJet,
 				"Flag_goodVertices": events.Flag_goodVertices,
 				"Flag_globalSuperTightHalo2016Filter": events.Flag_globalSuperTightHalo2016Filter,
@@ -366,6 +419,12 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		Jet_HT = Jet_HT[Jet_HT.JetId > 0.5]
 		event_level["HT"] = ak.sum(Jet_HT.pt, axis=1, keepdims=False) 
 		del Jet_HT
+
+		#############
+		#Corrections
+		#############
+		METPhiCorrectiosn = METPhi_Corrections(event_level.MET_pt, event_level.MET_Phi, event_level.run_num, year=2018, isData = self.isData, event_level.Num_PV)
+
 
 		#############
 		#Cut Selections
