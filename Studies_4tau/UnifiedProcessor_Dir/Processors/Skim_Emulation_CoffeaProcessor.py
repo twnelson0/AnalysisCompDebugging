@@ -76,11 +76,11 @@ def weight_calc(sample,numEvents=1):
 
 #Era Enumeration
 class RunEra_Enum(Enum):
-	2018MC=0
-	2018UL_A=1
-	2018UL_B=2
-	2018UL_C=3
-	2018UL_D=4
+	MC_2018=0
+	UL_2018_A=1
+	UL_2018_B=2
+	UL_2018_C=3
+	UL_2018_D=4
 
 #Phi corrections
 def PhiCorrections(x,y):
@@ -89,11 +89,11 @@ def PhiCorrections(x,y):
 	elif (x == 0 and y < 0):
 		corrected_phi = -np.pi
 	elif (x > 0):
-		corrected_phi = np.atan(y/x)
+		corrected_phi = np.arctan(y/x)
 	elif (x < 0 and y > 0):
-		corrected_phi = np.atan(y/x) + np.pi
+		corrected_phi = np.arctan(y/x) + np.pi
 	elif (x < 0 and y < 0):
-		corrected_phi = np.atan(y/x) + np.pi
+		corrected_phi = np.arctan(y/x) + np.pi
 	else:
 		corrected_phi = 0
 
@@ -103,44 +103,46 @@ def PhiCorrections(x,y):
 vec_PhiCorrections = np.vectorize(PhiCorrections)
 
 #MET phi crrections
-def METPhi_Corrections(uncorrMET_pt, uncorrMET_phi, run_num, year=2018, isData, nPV):
+def METPhi_Corrections(uncorrMET_pt, uncorrMET_phi, run_num, isData, nPV, year=2018):
 	MET_Phi_Corr = {"MET_pt_corr": uncorrMET_pt, "MET_phi_corr": uncorrMET_phi}
 	runera = -1
 
 	#Correct nPV (if nPV >= 100 nPV = 100 done in array friendly manner)
-	nPV = np.floor((nPV % 100)/nPV)*nPV + np.floor(1/np.pow(2,np.floor(nPV % 100)/nPV))*100
+    #nPV = np.floor((nPV % 100)/nPV)*nPV + np.floor(1/np.pow(2,np.floor(nPV % 100)/nPV))*100
+	nPV = ak.where(nPV > 100, ak.ones_like(nPV)*100, nPV)
 
 	#Set run era
 	if (year == 2018):
 		if (not(isData)):
-			runera = RunEra_Enum(2018MC)
+			runera = RunEra_Enum["MC_2018"]
 		else:
 			if (ak.all(run_num) >= 315252 and ak.all(run_num) <= 316995):
-				runera = RunEra_Enum(2018UL_A)
+				runera = RunEra_Enum["UL_2018_A"]
 			if (ak.all(run_num) >= 316998 and ak.all(run_num) <= 319312):
-				runera = RunEra_Enum(2018UL_B)
+				runera = RunEra_Enum["UL_2018_B"]
 			if (ak.all(run_num) >= 319313 and ak.all(run_num) <= 320393):
-				runera = RunEra_Enum(2018UL_C)
+				runera = RunEra_Enum["UL_2018_C"]
 			if (ak.all(run_num) >= 320394 and ak.all(run_num) <= 325273):
-				runera = RunEra_Enum(2018UL_D)
+				runera = RunEra_Enum["UL_2018_D"]
 
 	#METX and METY corrections
-	METX_Corr, METY_Corr = ak.zeros_like(MET_Phi_Corr["MET_pt_corr"])
-	if (run_era == RunEra_Enum(2018UL_A)):
-		METX_Corr = -(0.362865*npv -1.94505)
-		METY_Corr = -(0.0709085*npv -0.307365)
-	if (run_era == RunEra_Enum(2018UL_B)):
-		METX_Corr = -(0.492083*npv -2.93552)
-		METY_Corr = -(0.17874*npv -0.786844)
-	if (run_era == RunEra_Enum(2018UL_C)):
-		METX_Corr = -(0.521349*npv -1.44544)
-		METY_Corr = -(0.118956*npv -1.96434)
-	if (run_era == RunEra_Enum(2018UL_D)):
-		METX_Corr = -(0.531151*npv -1.37568)
-		METY_Corr = -(0.0884639*npv -1.57089)
-	if (run_era == RunEra_Enum(2018MC)):
-		METX_Corr = -(0.296713*npv -0.141506)
-		METY_Corr = -(0.115685*npv +0.0128193)
+	METX_Corr = ak.zeros_like(MET_Phi_Corr["MET_pt_corr"])
+	METY_Corr = ak.zeros_like(MET_Phi_Corr["MET_pt_corr"])
+	if (runera == RunEra_Enum["UL_2018_A"]):
+		METX_Corr = -(0.362865*nPV -1.94505)
+		METY_Corr = -(0.0709085*nPV -0.307365)
+	if (runera == RunEra_Enum["UL_2018_B"]):
+		METX_Corr = -(0.492083*nPV -2.93552)
+		METY_Corr = -(0.17874*nPV -0.786844)
+	if (runera == RunEra_Enum["UL_2018_C"]):
+		METX_Corr = -(0.521349*nPV -1.44544)
+		METY_Corr = -(0.118956*nPV -1.96434)
+	if (runera == RunEra_Enum["UL_2018_D"]):
+		METX_Corr = -(0.531151*nPV -1.37568)
+		METY_Corr = -(0.0884639*nPV -1.57089)
+	if (runera == RunEra_Enum["MC_2018"]):
+		METX_Corr = -(0.296713*nPV -0.141506)
+		METY_Corr = -(0.115685*nPV +0.0128193)
 
 	#Obtain corectected MET
 	CorrectedMET_x = uncorrMET_pt*np.cos(uncorrMET_phi) + METX_Corr
@@ -423,21 +425,23 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 		#############
 		#Corrections
 		#############
-		METPhiCorrectiosn = METPhi_Corrections(event_level.MET_pt, event_level.MET_Phi, event_level.run_num, year=2018, isData = self.isData, event_level.Num_PV)
-
+		METPhiCorrections = METPhi_Corrections(uncorrMET_pt = event_level.MET_pt,uncorrMET_phi = event_level.MET_Phi, run_num = event_level.run, isData = self.isData, nPV = event_level.Num_PV, year=2018)
+		event_level["MET_pt"]= METPhiCorrections["MET_pt_corr"]
+		event_level["MET_Phi"]= METPhiCorrections["MET_phi_corr"]
 
 		#############
 		#Cut Selections
 		#############
 
 		#MET selection
-		tau = tau[event_level.MET_pt > 100]
-		boostedtau = boostedtau[event_level.MET_pt > 100]
-		AK8Jet = AK8Jet[event_level.MET_pt > 100]
-		Jet = Jet[event_level.MET_pt > 100]
-		electron = electron[event_level.MET_pt > 100]
-		muon = muon[event_level.MET_pt > 100]
-		event_level = event_level[event_level.MET_pt > 100]	
+		met_Cutoff = 80 #100
+		tau = tau[event_level.MET_pt > met_Cutoff]
+		boostedtau = boostedtau[event_level.MET_pt > met_Cutoff]
+		AK8Jet = AK8Jet[event_level.MET_pt > met_Cutoff]
+		Jet = Jet[event_level.MET_pt > met_Cutoff]
+		electron = electron[event_level.MET_pt > met_Cutoff]
+		muon = muon[event_level.MET_pt > met_Cutoff]
+		event_level = event_level[event_level.MET_pt > met_Cutoff]	
 
 		#Fill post MET entries in skim and N-1 histograms
 		n_MET = np.size(event_level.nFatJet)
@@ -641,14 +645,14 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 			event_level = event_level[id_selec]	
 
             #Apply Isolation selection
-		#	iso_selec = ak.all(muon.RelIso < 0.15,axis=1) #Based on working point
-		#	tau = tau[iso_selec]
-		#	boostedtau = boostedtau[iso_selec]
-		#	AK8Jet = AK8Jet[iso_selec]
-		#	Jet = Jet[iso_selec]
-		#	electron = electron[iso_selec]
-		#	muon = muon[iso_selec]
-		#	event_level = event_level[iso_selec]	
+			iso_selec = ak.all(muon.RelIso < 0.15,axis=1) #Based on working point
+			tau = tau[iso_selec]
+			boostedtau = boostedtau[iso_selec]
+			AK8Jet = AK8Jet[iso_selec]
+			Jet = Jet[iso_selec]
+			electron = electron[iso_selec]
+			muon = muon[iso_selec]
+			event_level = event_level[iso_selec]	
 
 	        #Drop any events with no muons after selection
 			muon_count_cond = ak.num(muon,axis=1)>0
