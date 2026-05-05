@@ -220,6 +220,6 @@ if __name__ == "__main__":
 		
 		#Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_QCD_2b2TauSamples_WithSingleMuTrigger_TightIsoMu.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_QCD_2b2TauSamples_WithSingleMuTrigger_HTC_METPhiCorrections.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_2b2Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_QCD_2b2TauSamples_WithSingleMuTrigger_HTC_METPhiCorrections_NewWeightHist.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

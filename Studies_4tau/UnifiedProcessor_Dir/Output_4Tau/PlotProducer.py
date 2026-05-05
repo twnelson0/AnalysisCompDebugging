@@ -24,7 +24,7 @@ hep.style.use(hep.style.CMS)
 TABLEAU_COLORS = ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']
 
 #Control Region dictionary
-region_dict = {"All": "",
+region_dict = {"All": "NoControlRegion",
 			"ZCR": "ZControlRegion",
 			"NotZCR": "NoZRegion",
 			"TCR": "TopControlRegion",

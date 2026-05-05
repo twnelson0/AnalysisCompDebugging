@@ -22,6 +22,7 @@ from dask_jobqueue import HTCondorCluster
 import csv
 import glob
 import json
+from enum import Enum
 
 #Global Variables
 WScaleFactor = 1.21
@@ -72,6 +73,89 @@ Lumi_2018 = 59830
 
 def weight_calc(sample,numEvents=1):
 	return Lumi_2018*xSection_Dictionary[sample]/numEvents
+
+#Era Enumeration
+class RunEra_Enum(Enum):
+	MC_2018=0
+	UL_2018_A=1
+	UL_2018_B=2
+	UL_2018_C=3
+	UL_2018_D=4
+
+#Phi corrections
+def PhiCorrections(x,y):
+	if (x == 0 and y > 0):
+		corrected_phi = np.pi
+	elif (x == 0 and y < 0):
+		corrected_phi = -np.pi
+	elif (x > 0):
+		corrected_phi = np.arctan(y/x)
+	elif (x < 0 and y > 0):
+		corrected_phi = np.arctan(y/x) + np.pi
+	elif (x < 0 and y < 0):
+		corrected_phi = np.arctan(y/x) + np.pi
+	else:
+		corrected_phi = 0
+
+	return corrected_phi
+
+#Vectorize the phi corrections
+vec_PhiCorrections = np.vectorize(PhiCorrections)
+
+#MET phi crrections
+def METPhi_Corrections(uncorrMET_pt, uncorrMET_phi, run_num, isData, nPV, year=2018):
+	MET_Phi_Corr = {"MET_pt_corr": uncorrMET_pt, "MET_phi_corr": uncorrMET_phi}
+	runera = -1
+
+	#Correct nPV (if nPV >= 100 nPV = 100 done in array friendly manner)
+    #nPV = np.floor((nPV % 100)/nPV)*nPV + np.floor(1/np.pow(2,np.floor(nPV % 100)/nPV))*100
+	nPV = ak.where(nPV > 100, ak.ones_like(nPV)*100, nPV)
+
+	#Set run era
+	if (year == 2018):
+		if (not(isData)):
+			runera = RunEra_Enum["MC_2018"]
+		else:
+			if (ak.all(run_num) >= 315252 and ak.all(run_num) <= 316995):
+				runera = RunEra_Enum["UL_2018_A"]
+			if (ak.all(run_num) >= 316998 and ak.all(run_num) <= 319312):
+				runera = RunEra_Enum["UL_2018_B"]
+			if (ak.all(run_num) >= 319313 and ak.all(run_num) <= 320393):
+				runera = RunEra_Enum["UL_2018_C"]
+			if (ak.all(run_num) >= 320394 and ak.all(run_num) <= 325273):
+				runera = RunEra_Enum["UL_2018_D"]
+
+	#METX and METY corrections
+	METX_Corr = ak.zeros_like(MET_Phi_Corr["MET_pt_corr"])
+	METY_Corr = ak.zeros_like(MET_Phi_Corr["MET_pt_corr"])
+	if (runera == RunEra_Enum["UL_2018_A"]):
+		METX_Corr = -(0.362865*nPV -1.94505)
+		METY_Corr = -(0.0709085*nPV -0.307365)
+	if (runera == RunEra_Enum["UL_2018_B"]):
+		METX_Corr = -(0.492083*nPV -2.93552)
+		METY_Corr = -(0.17874*nPV -0.786844)
+	if (runera == RunEra_Enum["UL_2018_C"]):
+		METX_Corr = -(0.521349*nPV -1.44544)
+		METY_Corr = -(0.118956*nPV -1.96434)
+	if (runera == RunEra_Enum["UL_2018_D"]):
+		METX_Corr = -(0.531151*nPV -1.37568)
+		METY_Corr = -(0.0884639*nPV -1.57089)
+	if (runera == RunEra_Enum["MC_2018"]):
+		METX_Corr = -(0.296713*nPV -0.141506)
+		METY_Corr = -(0.115685*nPV +0.0128193)
+
+	#Obtain corectected MET
+	CorrectedMET_x = uncorrMET_pt*np.cos(uncorrMET_phi) + METX_Corr
+	CorrectedMET_y = uncorrMET_pt*np.cos(uncorrMET_phi) + METX_Corr
+
+	CorrectedMET = np.sqrt(CorrectedMET_x**2 + CorrectedMET_y**2)
+
+	CorrectedPhi = vec_PhiCorrections(CorrectedMET_x,CorrectedMET_y)
+
+	MET_Phi_Corr["MET_pt_corr"] = CorrectedMET
+	MET_Phi_Corr["MET_phi_corr"] = 	CorrectedPhi
+
+	return MET_Phi_Corr
 
 #Use numba to speed up the loop
 @numba.njit
@@ -156,6 +240,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				"PV_z": events.PV_z,
 				"PV_x": events.PV_x,
 				"PV_y": events.PV_y,
+				"Num_PV": events.PV_npvs,
 				"nFatJet": events.nFatJet,
 				"Flag_goodVertices": events.Flag_goodVertices,
 				"Flag_globalSuperTightHalo2016Filter": events.Flag_globalSuperTightHalo2016Filter,
@@ -283,53 +368,53 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		category_axis = hist.axis.StrCategory(region_array, growth=False, name = "category")
 		
 		#Basic Kinematic histograms Boosted tau
-		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Subleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ Subleading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Thirdleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ 3rd-leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Fourthleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ 4th-leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_boostedtau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_boostedtau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_boostedtau_raw_iso_Trigger = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
+		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Subleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ Subleading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Thirdleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ 3rd-leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Fourthleadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ 4th-leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_boostedtau_eta_Trigger = hist.Hist.new.Regular(20,-4,4,label = r"Boosted $\tau$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_boostedtau_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi,label = r"Boosted$\tau$ $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_boostedtau_raw_iso_Trigger = hist.Hist.new.Regular(20,-1,1,label=r"Raw MVA Score",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		
 		#Basic Kinematic histograms leptons (muons and electrons)
-		h_electron_pT_Trigger = hist.Hist.new.Regular(15,0,300, label = r"e $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Leadingelectron_pT_Trigger = hist.Hist.new.Regular(15,0,300, label = r"e Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_electron_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"e $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"e Leading $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_muon_pT_Trigger = hist.Hist.new.Regular(15,0,600, label = r"$\mu$ $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(15,0,600, label = r"$\mu$ Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_muon_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"$\mu$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Leadingmuon_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"$\mu$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"$\mu$ $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
+		h_electron_pT_Trigger = hist.Hist.new.Regular(15,0,300, label = r"e $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Leadingelectron_pT_Trigger = hist.Hist.new.Regular(15,0,300, label = r"e Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_electron_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"e $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"e Leading $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_muon_pT_Trigger = hist.Hist.new.Regular(15,0,600, label = r"$\mu$ $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(15,0,600, label = r"$\mu$ Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_muon_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"$\mu$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Leadingmuon_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"$\mu$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"$\mu$ $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		
 		#Basic Kinematic histograms Jets (check which Jets most useful based on 
-		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"Jet $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_LeadingJet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"Jet Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"Jet $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"Jet $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"AK8Jet $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_LeadingAK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"AK8Jet Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_AK8Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"AK8Jet $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_AK8Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"AK8Jet $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_nAK8Jet_Trigger = hist.Hist.new.Regular(10,0,10, label=r"Number of AK8Jets",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
+		h_Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"Jet $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_LeadingJet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"Jet Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"Jet $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"Jet $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_AK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"AK8Jet $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_LeadingAK8Jet_pT_Trigger = hist.Hist.new.Regular(50,0,700, label = r"AK8Jet Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_AK8Jet_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"AK8Jet $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_AK8Jet_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"AK8Jet $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_nAK8Jet_Trigger = hist.Hist.new.Regular(10,0,10, label=r"Number of AK8Jets",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		
 		#Add MET, HT and MHT histogram
-		h_MET_Trigger = hist.Hist.new.Regular(20,0,500, label=r"MET [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_HT_Trigger = hist.Hist.new.Regular(40,0,1200, label=r"HT [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_MHT_Trigger = hist.Hist.new.Regular(20,0,500, label=r"MHT [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
+		h_MET_Trigger = hist.Hist.new.Regular(20,0,500, label=r"MET [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_HT_Trigger = hist.Hist.new.Regular(40,0,1200, label=r"HT [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_MHT_Trigger = hist.Hist.new.Regular(20,0,500, label=r"MHT [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 
 		#Add Z Multiplicity and BJet multiplicity
-		h_ZMult = hist.Hist.new.Regular(6,0,6, label=r"Z Boson Multiplicity",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_bJetMult = hist.Hist.new.Regular(6,0,6, label = r"b-Jet Multiplicity",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
+		h_ZMult = hist.Hist.new.Regular(6,0,6, label=r"Z Boson Multiplicity",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_bJetMult = hist.Hist.new.Regular(6,0,6, label = r"b-Jet Multiplicity",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 
 
 		#di-boosted tau delta Rs
-		h_leading_boostedtau_deltaR = hist.Hist.new.Regular(10,0,5, label = r"Leading boosted \tau pair \Delta R",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
-		h_nextleading_boostedtau_deltaR = hist.Hist.new.Regular(10,0,5, label = r"Next leading boosted \tau pair \Delta R",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
+		h_leading_boostedtau_deltaR = hist.Hist.new.Regular(10,0,5, label = r"Leading boosted \tau pair \Delta R",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_nextleading_boostedtau_deltaR = hist.Hist.new.Regular(10,0,5, label = r"Next leading boosted \tau pair \Delta R",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 
 		#Reconstructed Mass
-		h_FourTau_Mass = hist.Hist.new.Regular(15,0,3000,label=r"Reconstructed Radion Mass [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Double()
+		h_FourTau_Mass = hist.Hist.new.Regular(15,0,3000,label=r"Reconstructed Radion Mass [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 
 		#Add cutflow and N-1 tables
 		if (self.ApplyTrigger):
@@ -365,6 +450,13 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		Jet_HT = Jet_HT[Jet_HT.JetId > 0.5]
 		event_level["HT"] = ak.sum(Jet_HT.pt, axis=1, keepdims=False) 
 		del Jet_HT
+		
+		#############
+		#Corrections
+		#############
+		METPhiCorrections = METPhi_Corrections(uncorrMET_pt = event_level.MET_pt,uncorrMET_phi = event_level.MET_Phi, run_num = event_level.run, isData = self.isData, nPV = event_level.Num_PV, year=2018)
+		event_level["MET_pt"]= METPhiCorrections["MET_pt_corr"]
+		event_level["MET_Phi"]= METPhiCorrections["MET_phi_corr"]
 
 		#############
 		#Cut Selections
@@ -808,7 +900,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#Z-Multiplicity and b-Jet Multiplicity
 		#############
 		if (ak.num(event_level,axis=0) > 0): #If there are events left
-			print("nBjets")
+			#print("nBjets")
 			#Z Multiplicity function
 			def Z_Mult_Function(lepton,lep_flavor): 
 				#Make Good muon selection
@@ -836,12 +928,12 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			#Apply BJet multiplicity selection
 			#Apply pt, eta, loose ID, and deep csv tag cut
 			#Jet_B = Jet[Jet.JetId > 0.5]
-			#Jet_B = Jet_B[Jet_B.pt > 30]
-			#Jet_B = Jet_B[np.abs(Jet_B.eta) < 2.4]
+			Jet_B = Jet[Jet.pt > 30]
+			Jet_B = Jet_B[np.abs(Jet_B.eta) < 2.4]
 			#Jet_B = Jet[Jet.DeepCSVTags_b > 0.7527] #Old selectuion using btagCSVV2
 			#Jet_B = Jet[Jet.DeepCSVTags_b > 0.4168] 
 			#Jet_B = Jet[Jet.DeepCSVTags_b > 0.7665] 
-			NumBJets = ak.num(Jet[Jet.DeepCSVTags_b > 0.7665],axis=1)
+			NumBJets = ak.num(Jet_B[Jet_B.DeepCSVTags_b > 0.7665],axis=1)
 			event_level["nBJets"] = NumBJets
 			NLooseJets = ak.num(Jet[np.bitwise_and(Jet.DeepCSVTags_b > 0.1208, Jet.DeepCSVTags_b < 0.7665)],axis=1)
 			event_level["nBJetsLoose"] = NLooseJets
