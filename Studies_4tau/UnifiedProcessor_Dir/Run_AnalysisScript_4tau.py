@@ -59,8 +59,8 @@ if __name__ == "__main__":
 
 	cluster = HTCondorCluster(
 			cores=1,
-			memory="4 GB",
-			disk="2 GB",
+			memory="6 GB",
+			disk="3 GB",
 			death_timeout = '60',
             #python = "/usr/local/bin/python3",
 			job_extra_directives={
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 				#"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
 				#"Requirements": "HasSingularityJobStart",
 				#"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10",
-				"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10",
+				"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.30-py3.10",
 				"InitialDir": f'/scratch/{os.environ["USER"]}',
 				'transfer_input_files': f"{_x509_path}",
 

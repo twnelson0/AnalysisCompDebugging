@@ -935,7 +935,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			#Jet_B = Jet[Jet.DeepCSVTags_b > 0.7665] 
 			NumBJets = ak.num(Jet_B[Jet_B.DeepCSVTags_b > 0.7665],axis=1)
 			event_level["nBJets"] = NumBJets
-			NLooseJets = ak.num(Jet[np.bitwise_and(Jet.DeepCSVTags_b > 0.1208, Jet.DeepCSVTags_b < 0.7665)],axis=1)
+			NLooseJets = ak.num(Jet_B[np.bitwise_and(Jet_B.DeepCSVTags_b > 0.1208, Jet_B.DeepCSVTags_b < 0.7665)],axis=1)
 			event_level["nBJetsLoose"] = NLooseJets
 
 			#Get Z_multiplicity	
