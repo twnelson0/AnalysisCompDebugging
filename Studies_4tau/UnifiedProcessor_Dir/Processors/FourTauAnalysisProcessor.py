@@ -535,11 +535,11 @@ class Analysis4TauProcessor(processor.ProcessorABC):
         #Boosted tau selections
 		if (self.nBoostedTau_Selec > 0):
 			#Impose selections boosted taus
-			pT_Cond = boostedtau.pt > 20
+			pT_Cond = boostedtau.pt > 30
 			eta_Cond = np.abs(boostedtau.eta) < 2.3
 			decayMode_Cond = boostedtau.decay >= 0.5
-			#DBT_Iso_Cond = boostedtau.DBT >= 0.9 #0.85
-			DBT_Iso_Cond = boostedtau.DBT >= 0.5 #0.85
+			DBT_Iso_Cond = boostedtau.DBT >= 0.9 #0.85
+			#DBT_Iso_Cond = boostedtau.DBT >= 0.5 #0.85
 			
 			boostedtau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
 			boostedtau = boostedtau[boostedtau_selec_cond] #Apply selections to all individual taus

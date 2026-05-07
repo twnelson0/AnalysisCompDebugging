@@ -136,6 +136,7 @@ if __name__ == "__main__":
 	#Single MuonA debugging production
 	SingleMu_2018A_Debug = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0456_skim_4TauFixed_NonEmpty/singleFileSkimForSubmission-NANO_NANO_*.root")
 	SingleMu_2018A_Debug = np.random.choice(SingleMu_2018A_Debug, 10)
+	#print(SingleMu_2018A_Debug)
 
 
 	#Offline debugging to test code for bugs
@@ -290,7 +291,7 @@ if __name__ == "__main__":
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
         #Save coffea file
-		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_AddRegions.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_Test.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTauSelec.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

@@ -5,6 +5,24 @@ All code should be run on the singularity shells. Shell scripts to set up the si
 The directory sturcture is meant to allow multiple different studies to be done efficienctly in parallel keeping plots produced with different selections seperated to avoid confusion.
 The naming of directories/subdirectories is intended to document what selections are applied to all results (plots, coffea files, etc.) within the directory/subdirectory of interest.
 
+## Installation/Setup
+### Python Virtual Environnement for Plotting
+Due to how the AF works, in order to run the plotting script a python virtual environment must be set up so that a more recent version of the package mplhep can be used. 
+
+To set up the virtual environment for plotting navigate to the directory `Studies_4tau/UnifiedProcessor_Dir`
+In the analysis facility create a shallow virtual environment by running the command:
+`new-af-venv PlottingEnv`
+Start up the environment via `source PlottingEnv/bin/activate` and run the following command:
+```
+pip install --force-reinstall -v "mplhep==1.1.0"
+```
+Then install version 1.24.0 of numpy in the environment using the following command:
+```
+pip install --force-reinstall -v "numpy==1.24.0"
+```
+
+All plotting scripts can only be run from the virtual environment due to the current mismatch in mplhep versions.
+
 ## Running 4tau vs 2b2tau Studies
 The finalized code comparing the 4tau skims with the 2b2tau skims is located in the directory `Studies_4tau/UnifiedProcessor_Dir`. 
 As of writing this code is only known to work with regularity on the Wisconsin Analysis Facility (AF) using the image `coffea-base-almalinux9:0.7.30-py3.10`, the code can simply be run in a terminal instance on the AF.

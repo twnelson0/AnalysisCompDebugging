@@ -8,6 +8,7 @@ __pycache__/
 Venv/
 .evn/
 .local/share/jupyter/kernels/python3
+Studies_4tau/UnifiedProcessor_Dir/PlottingEnv
 
 #Output files
 *.csv

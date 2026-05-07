@@ -264,8 +264,8 @@ if __name__ == "__main__":
 		}
 	
 	#Set file dictionary and list of backgrounds prior to running processor
-	#file_dict = file_dict_data_test
-	file_dict = file_dict_full
+	file_dict = file_dict_data_test
+	#file_dict = file_dict_full
 
 	#Pull in the weight and event count prior to skimming information
 	#with open("genWeightSum_JSON.json") as json_file:
@@ -289,6 +289,7 @@ if __name__ == "__main__":
 		
         #Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_TestSample.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	
