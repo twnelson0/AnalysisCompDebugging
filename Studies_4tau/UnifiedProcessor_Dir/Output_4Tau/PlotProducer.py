@@ -1,7 +1,7 @@
-import awkward as ak
 import uproot
 import hist
 from hist import intervals
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import mplhep as hep
@@ -18,9 +18,23 @@ import datetime
 import csv
 import sys
 import argparse
+import itertools
 
 #Plot style variables defined
 hep.style.use(hep.style.CMS)
+#cmap = mpl.colormaps['PiYG'] 
+#cmap = mpl.colormaps['plasma'] 
+cmap = mpl.colormaps['hsv'] 
+
+#Collection of color maps
+cmap0 = mpl.colormaps['Reds']
+cmap1 = mpl.colormaps['Greens']
+cmap2 = mpl.colormaps['Blues']
+cmap3 = mpl.colormaps['Oranges']
+cmap4 = mpl.colormaps['Greys']
+cmap5 = mpl.colormaps['Purples']
+cmap_array = [cmap0,cmap1,cmap2,cmap3,cmap4,cmap5]
+
 TABLEAU_COLORS = ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']
 
 #Control Region dictionary
@@ -89,8 +103,8 @@ if __name__ == "__main__":
 			"W+Jets HT 1200-2500 GeV" : "_WJetsHT1200-2500_","W+Jets HT 2500-Inf GeV" : "_WJetsHT2500-Inf_"} #For file names
 	
 	#Background names to samples dictionary
-	background_dict = {r"$t\bar{t}$" : ["TTToSemiLeptonic","TTTo2L2Nu","TTToHadronic"], r"$t\bar{t}$ Hadronic" : ["TTToHadronic"], 
-			r"$t\bar{t}$ Semileptonic" : ["TTToSemiLeptonic"], r"$t\bar{t}$ 2L2Nu" : ["TTTo2L2Nu"],
+	background_dict = {r"$t\bar{t}$" : ["TTToSemiLeptonic","TTTo2L2Nu","TTToHadronic"], 
+			r"$t\bar{t}$ Hadronic" : ["TTToHadronic"], r"$t\bar{t}$ Semileptonic" : ["TTToSemiLeptonic"], r"$t\bar{t}$ 2L2Nu" : ["TTTo2L2Nu"],
 			r"Drell-Yan+Jets": ["DYJetsToLL_M-4to50_HT-70to100","DYJetsToLL_M-4to50_HT-100to200","DYJetsToLL_M-4to50_HT-200to400","DYJetsToLL_M-4to50_HT-400to600",
 			"DYJetsToLL_M-4to50_HT-600toInf","DYJetsToLL_M-50_HT-70to100","DYJetsToLL_M-50_HT-100to200","DYJetsToLL_M-50_HT-200to400",
 			"DYJetsToLL_M-50_HT-400to600","DYJetsToLL_M-50_HT-600to800","DYJetsToLL_M-50_HT-800to1200","DYJetsToLL_M-50_HT-1200to2500","DYJetsToLL_M-50_HT-2500toInf"], 
@@ -103,6 +117,22 @@ if __name__ == "__main__":
 			r"$ZZ \rightarrow 4l$" : ["ZZ4l"],
 			"QCD": ["QCD_HT50to100","QCD_HT100to200","QCD_HT200to300","QCD_HT300to500","QCD_HT500to700","QCD_HT700to1000","QCD_HT1000to1500","QCD_HT1500to2000","QCD_HT2000toInf"],
 	}
+
+	all_sample_array = []
+	for background in background_list:
+		all_sample_array.append(background_dict[background])
+	
+	#Make the colors easier on the eyes
+	all_sample_array = list(itertools.chain.from_iterable(all_sample_array))
+	background_list = all_sample_array #Produce list of all backgrounds rather than combining them
+	#TABLEAU_COLORS = []
+	
+	#for background_type in background_dict.keys():
+#	for i in range(len(background_list_full)):
+#		TABLEAU_COLORS.append(cmap_array[i](np.linspace(0,1,len(background_dict[background_list_full[i]]))))
+	TABLEAU_COLORS = cmap(np.linspace(0,1,len(background_list)))
+
+	print(TABLEAU_COLORS)
 	
 	#Dictinary with file names
 	trigger_name = "SingleMu_Trigger"
@@ -180,13 +210,23 @@ if __name__ == "__main__":
 
 		temp_hist_dict = dict.fromkeys(background_list) # create dictionary of histograms for each background type
 				
-		for background_type in background_list:
+		#for background_type in background_list:
+		for dummy_indx in range(1): #Do this for plotting all samples (Not combined)
 			#print("Background type %s"%background_type)
 			background_array = []
-			backgrounds = background_dict[background_type]
+			#backgrounds = background_dict[background_type]
+			backgrounds = background_list #only for plotting all samples
+
 						
 			#Loop over all backgrounds
+			MC_Sum = 0
 			for background in backgrounds:
+				if (hist_name == "boostedtau_pt_Trigg"): #Show the number of events lefter after selections in all backgrounds once
+					if (background == "TTToSemiLeptonic"):
+						print("Number of events after Trigger selection in data: %f"%coffea_input["Data_Mu"]["Event_Count"])
+					MC_Sum += coffea_input[background]["Event_Count"]
+					print("Number of events after Trigger selection in %s: %f"%(background,coffea_input[background]["Event_Count"]))
+
 				#Plot the cutflow for each background
 				if (hist_name == "cutflow_table"):
 					if (background == backgrounds[0]):
@@ -207,16 +247,22 @@ if __name__ == "__main__":
 						plt.close()
 						
 				if (hist_name != "Electron_tau_dR_Arr" and hist_name != "Muon_tau_dR_Arr"):
-					if (background == backgrounds[0]):
-						crnt_hist = coffea_input[background][hist_name][{"region": args.ControlRegion}]
-					else:
-						crnt_hist += coffea_input[background][hist_name][{"region": args.ControlRegion}]
-					if (background == backgrounds[-1]):
-						temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
+				#	if (background == backgrounds[0]):
+				#		crnt_hist = coffea_input[background][hist_name][{"region": args.ControlRegion}]
+				#	else:
+				#		crnt_hist += coffea_input[background][hist_name][{"region": args.ControlRegion}]
+				#	if (background == backgrounds[-1]):
+				#		temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
+					
+					#These are for plotting all samples only
+					crnt_hist = coffea_input[background][hist_name][{"region": args.ControlRegion}]
+					temp_hist_dict[background] = crnt_hist #Try to fix stacking bug
 
 				else: #lepton-tau delta R 
 					coffea_input[background][hist_name].plot1d(ax=ax2)
 
+			if (hist_name == "boostedtau_pt_Trigg"): #Show the number of events lefter after selections in all backgrounds once
+				print("Total number of MC events after Trigger Selection: %f"%MC_Sum)
 		#Combine the backgrounds together
 		hist_dict_background[hist_name] = hist.Stack.from_dict(temp_hist_dict) #This could be causing the problems 
 		
@@ -244,16 +290,19 @@ if __name__ == "__main__":
 		fig, ax_main, ax_comp = hep.comp.data_model(
 			data_hist = coffea_input["Data_Mu"][hist_name][{"region": args.ControlRegion}],
 			stacked_components = background_array,
-			stacked_colors = TABLEAU_COLORS[:len(background_list)],
+			#stacked_colors = TABLEAU_COLORS[:len(background_list)],
+			stacked_colors = TABLEAU_COLORS,
 			stacked_labels = background_list,
 			xlabel = axis_label,
 			model_uncertainty=True,
 			comparison = "ratio",
             markersize = 10,
-			flow = "sum",
+			#flow = "sum",
 			#linewidth=2,
 
 		)
+		ax_main.legend(fontsize = 8)
+		hep.yscale_legend(ax_main)
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")
 		plt.close()
