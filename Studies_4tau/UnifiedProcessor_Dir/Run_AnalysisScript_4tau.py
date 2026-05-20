@@ -59,8 +59,8 @@ if __name__ == "__main__":
 
 	cluster = HTCondorCluster(
 			cores=1,
-			memory="6 GB",
-			disk="3 GB",
+			memory="4 GB",
+			disk="2 GB",
 			death_timeout = '60',
             #python = "/usr/local/bin/python3",
 			job_extra_directives={
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 				
 				#"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
 				#"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
-				#"Requirements": "HasSingularityJobStart",
+				"Requirements": "HasSingularityJobStart",
 				#"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10",
 				"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.30-py3.10",
 				"InitialDir": f'/scratch/{os.environ["USER"]}',
@@ -292,7 +292,7 @@ if __name__ == "__main__":
 		
         #Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_Test.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_TightBoostedTau_WithQCD.coffea")
-		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTauSelec.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_FixedMuonSelec_WithQCD.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTauSelec.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

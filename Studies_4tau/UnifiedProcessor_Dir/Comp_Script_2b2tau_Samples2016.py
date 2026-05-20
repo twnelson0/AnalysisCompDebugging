@@ -105,8 +105,7 @@ if __name__ == "__main__":
 		runner = processor.Runner(executor = processor.IterativeExecutor(), schema=BaseSchema)
 	
 	#Diretory for files
-	Skimmed_Ganesh_base = "root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2018/"
-	Skimmed_Ganesh_base_2016 = "root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2016/"
+	Skimmed_Ganesh_base = "root://cmsxrootd.hep.wisc.edu//store/user/gparida/HHbbtt/Hadded_Skimmed_Files/Full_Production_CMSSW_13_0_13_Nov24_23/LooseSelection_MET_gt_80_nFatJet_gt_0_Skim/2016/"
 	
 	file_dict_test = {
 			"ZZ4l": [Skimmed_Ganesh_base + "ZZTo4L.root"],
@@ -123,8 +122,8 @@ if __name__ == "__main__":
 		}
 	
 	file_dict_full = {
-			"TTToSemiLeptonic": list(np.append([Skimmed_Ganesh_base + "TTToSemiLeptonic_" + str(j) + ".root" for j in range(2,5)], Skimmed_Ganesh_base + "TTToSemiLeptonic.root")),
-			"TTTo2L2Nu": [Skimmed_Ganesh_base + "TTTo2L2Nu.root", Skimmed_Ganesh_base + "TTTo2L2Nu_2.root"],
+			"TTToSemiLeptonic": [Skimmed_Ganesh_base + "TTToSemiLeptonic.root"], 
+			"TTTo2L2Nu": [Skimmed_Ganesh_base + "TTTo2L2Nu.root"],
 			"TTToHadronic": [Skimmed_Ganesh_base + "TTToHadronic.root"],
 			"ZZ4l": [Skimmed_Ganesh_base + "ZZTo4L.root"],
 			"ZZTo2L2Nu": [Skimmed_Ganesh_base + "ZZTo2L2Nu.root"],
@@ -159,16 +158,11 @@ if __name__ == "__main__":
 			"WJetsToLNu_HT-70To100": [Skimmed_Ganesh_base + "WJetsToLNu_HT-70To100.root"],
 			"WJetsToLNu_HT-100To200": [Skimmed_Ganesh_base + "WJetsToLNu_HT-100To200.root"],
 			"WJetsToLNu_HT-200To400": [Skimmed_Ganesh_base + "WJetsToLNu_HT-200To400.root"],
-			"WJetsToLNu_HT-400To600": [Skimmed_Ganesh_base + "WJetsToLNu_HT-400To600.root",
-				Skimmed_Ganesh_base +"WJetsToLNu_HT-400To600_2.root"],
-			"WJetsToLNu_HT-600To800": [Skimmed_Ganesh_base + "WJetsToLNu_HT-600To800.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-600To800_2.root"],
-			"WJetsToLNu_HT-800To1200": [Skimmed_Ganesh_base + "WJetsToLNu_HT-800To1200.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-800To1200_2.root"],
-			"WJetsToLNu_HT-1200To2500": [Skimmed_Ganesh_base + "WJetsToLNu_HT-1200To2500.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-1200To2500_2.root"],
-			"WJetsToLNu_HT-2500ToInf": [Skimmed_Ganesh_base + "WJetsToLNu_HT-2500ToInf.root",
-				Skimmed_Ganesh_base + "WJetsToLNu_HT-2500ToInf_2.root"],
+			"WJetsToLNu_HT-400To600": [Skimmed_Ganesh_base + "WJetsToLNu_HT-400To600.root"],
+			"WJetsToLNu_HT-600To800": [Skimmed_Ganesh_base + "WJetsToLNu_HT-600To800.root"],
+			"WJetsToLNu_HT-800To1200": [Skimmed_Ganesh_base + "WJetsToLNu_HT-800To1200.root"],
+			"WJetsToLNu_HT-1200To2500": [Skimmed_Ganesh_base + "WJetsToLNu_HT-1200To2500.root"],
+			"WJetsToLNu_HT-2500ToInf": [Skimmed_Ganesh_base + "WJetsToLNu_HT-2500ToInf.root"],
 			#QCD Samples
 			"QCD_HT50to100": [Skimmed_Ganesh_base + "QCD_HT50to100.root"], "QCD_HT100to200": [Skimmed_Ganesh_base + "QCD_HT100to200.root"], 
 			"QCD_HT200to300": [Skimmed_Ganesh_base + "QCD_HT200to300.root"], "QCD_HT300to500": [Skimmed_Ganesh_base + "QCD_HT300to500.root"],
@@ -179,9 +173,7 @@ if __name__ == "__main__":
 		#	"Data_MuB": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018B.root"],
 		#	"Data_MuC": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018C.root"],
 		#	"Data_MuD": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_2.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_3.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_4.root"]
-			"Data_Mu": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018A.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018B.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018C.root",
-				Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_2.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_3.root",
-				Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018D_4.root"]
+			"Data_Mu": [Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018F.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018G.root",Skimmed_Ganesh_base + "SingleMu/SingleMu_Run2018H.root"]
 	#		"Data_MET": [Skimmed_Ganesh_base + "MET/MET_Run2018A.root",Skimmed_Ganesh_base + "MET/MET_Run2018B.root",Skimmed_Ganesh_base + "MET/MET_Run2018C.root",
 	#			Skimmed_Ganesh_base + "MET/MET_Run2018D.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_2.root",Skimmed_Ganesh_base + "MET/MET_Run2018D_3.root",
 	#			Skimmed_Ganesh_base + "MET/MET_Run2018D_4.root"]

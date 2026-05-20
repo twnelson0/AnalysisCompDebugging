@@ -10,11 +10,15 @@ Venv/
 .local/share/jupyter/kernels/python3
 Studies_4tau/UnifiedProcessor_Dir/PlottingEnv
 
-#Output files
+#Output files (Generally ignore these files)
 *.csv
 *.png
 *.coffea
+*.root 
 #*.json
+
+#Output file ignore exceptions
+!ZorW_NLO_corrections.root
 
 #Note files not needed to be saved
 Simple_CrossSec.txt

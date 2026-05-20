@@ -94,7 +94,7 @@ if __name__ == "__main__":
 	background_list_fullQCD = [r"$t\bar{t}$", r"Drell-Yan+Jets", "Di-Bosons", "Single Top", "W+Jets", r"$ZZ \rightarrow 4l$","QCD"]
 	background_list_test = [r"$ZZ \rightarrow 4l$"]
 	background_list_none = []
-	background_list = background_list_fullQCD
+	background_list = background_list_full
 	background_plot_names = {r"$t\bar{t}$" : "_ttbar_", r"$t\bar{t}$ Hadronic" : "_ttbarHadronic_", r"$t\bar{t}$ Semileptonic" : "_ttbarSemilepton_",
 			r"$t\bar{t}$ 2L2Nu" : "_ttbar2L2Nu_", r"Drell-Yan+Jets": "_DYJets_", "Di-Bosons" : "_DiBosons_", "Single Top": "_SingleTop_", "QCD" : "_QCD_", 
 			"W+Jets" : "_WJets_", r"$ZZ \rightarrow 4l$" : "_ZZ4l_", r"$ZZ \rightarrow 4l$ Test": "_ZZ4lTest_", r"$ZZ \rightarrow 4l$ Control": "_ZZ4lControl_",
@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
 		temp_hist_dict = dict.fromkeys(background_list) # create dictionary of histograms for each background type
 				
-		#for background_type in background_list:
+		#for background_type in background_list: #When combining samples into larger categories need to restore this logic
 		for dummy_indx in range(1): #Do this for plotting all samples (Not combined)
 			#print("Background type %s"%background_type)
 			background_array = []
@@ -301,7 +301,7 @@ if __name__ == "__main__":
 			#linewidth=2,
 
 		)
-		ax_main.legend(fontsize = 8)
+		ax_main.legend(fontsize = 6)
 		hep.yscale_legend(ax_main)
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")

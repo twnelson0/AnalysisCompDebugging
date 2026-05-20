@@ -310,7 +310,8 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				"E": np.sqrt(events.Muon_pt**2 + (events.Muon_pt/np.tan(2*np.arctan(np.exp(-events.Muon_eta))))**2 + events.Muon_mass**2),
 				"nMu": events.nMuon,
 				"mass": events.Muon_mass, 
-				"IDSelec": events.Muon_mediumId,
+				#"IDSelec": events.Muon_mediumId,
+				"IDSelec": events.Muon_tightId,
 				"D0": events.Muon_dxy,
 				"Dz": events.Muon_dz,
 				"LooseId": events.Muon_looseId,
@@ -644,33 +645,45 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 					muon = muon[nMuon_Cond]
 					event_level = event_level[nMuon_Cond]				
 
-					#pT selection
-					pt_cond = ak.any(muon.pt > 52, axis=1)
-					boostedtau = boostedtau[pt_cond]
-					AK8Jet = AK8Jet[pt_cond]
-					Jet = Jet[pt_cond]
-					electron = electron[pt_cond]
-					muon = muon[pt_cond]
-					event_level = event_level[pt_cond]	
-
-					#Apply eta selection on leading muon
+					#Combined pT eta and ID selection
+					pt_cond = muon[:,0].pt > 52
 					eta_cond = np.abs(muon[:,0].eta) < 2.4
-					boostedtau = boostedtau[eta_cond]
-					AK8Jet = AK8Jet[eta_cond]
-					Jet = Jet[eta_cond]
-					electron = electron[eta_cond]
-					muon = muon[eta_cond]
-					event_level = event_level[eta_cond]	
-
-					#Apply ID selections on muons
 					id_selec = muon[:,0].IDSelec
-					
-					boostedtau = boostedtau[id_selec]
-					AK8Jet = AK8Jet[id_selec]
-					Jet = Jet[id_selec]
-					electron = electron[id_selec]
-					muon = muon[id_selec]
-					event_level = event_level[id_selec]	
+					combined_cond = pt_cond & eta_cond & id_selec
+					boostedtau = boostedtau[combined_cond]
+					AK8Jet = AK8Jet[combined_cond]
+					Jet = Jet[combined_cond]
+					electron = electron[combined_cond]
+					muon = muon[combined_cond]
+					event_level = event_level[combined_cond]	
+
+					#pT selection
+				#	pt_cond = ak.any(muon.pt > 52, axis=1)
+				#	boostedtau = boostedtau[pt_cond]
+				#	AK8Jet = AK8Jet[pt_cond]
+				#	Jet = Jet[pt_cond]
+				#	electron = electron[pt_cond]
+				#	muon = muon[pt_cond]
+				#	event_level = event_level[pt_cond]	
+
+				#	#Apply eta selection on leading muon
+				#	eta_cond = np.abs(muon[:,0].eta) < 2.4
+				#	boostedtau = boostedtau[eta_cond]
+				#	AK8Jet = AK8Jet[eta_cond]
+				#	Jet = Jet[eta_cond]
+				#	electron = electron[eta_cond]
+				#	muon = muon[eta_cond]
+				#	event_level = event_level[eta_cond]	
+
+				#	#Apply ID selections on muons
+				#	id_selec = muon[:,0].IDSelec
+				#	
+				#	boostedtau = boostedtau[id_selec]
+				#	AK8Jet = AK8Jet[id_selec]
+				#	Jet = Jet[id_selec]
+				#	electron = electron[id_selec]
+				#	muon = muon[id_selec]
+				#	event_level = event_level[id_selec]	
 					
 					#Require events NOT to pass JetHT trigger
 				#	boostedtau = boostedtau[np.bitwise_not(event_level.METHTMHT_Trigger)]
@@ -720,34 +733,46 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				electron = electron[nMuon_Cond]
 				muon = muon[nMuon_Cond]
 				event_level = event_level[nMuon_Cond]				
-
-				#pT Condition
-				pt_cond = ak.any(muon.pt > 52, axis=1)
-				boostedtau = boostedtau[pt_cond]
-				AK8Jet = AK8Jet[pt_cond]
-				Jet = Jet[pt_cond]
-				electron = electron[pt_cond]
-				muon = muon[pt_cond]
-				event_level = event_level[pt_cond]	
 					
-				#Apply eta selection on leading muon
+				#Combined pT eta and ID selection
+				pt_cond = muon[:,0].pt > 52
 				eta_cond = np.abs(muon[:,0].eta) < 2.4
-				boostedtau = boostedtau[eta_cond]
-				AK8Jet = AK8Jet[eta_cond]
-				Jet = Jet[eta_cond]
-				electron = electron[eta_cond]
-				muon = muon[eta_cond]
-				event_level = event_level[eta_cond]	
-
-				#Apply ID selections on muons
 				id_selec = muon[:,0].IDSelec
-					
-				boostedtau = boostedtau[id_selec]
-				AK8Jet = AK8Jet[id_selec]
-				Jet = Jet[id_selec]
-				electron = electron[id_selec]
-				muon = muon[id_selec]
-				event_level = event_level[id_selec]	
+				combined_cond = pt_cond & eta_cond & id_selec
+				boostedtau = boostedtau[combined_cond]
+				AK8Jet = AK8Jet[combined_cond]
+				Jet = Jet[combined_cond]
+				electron = electron[combined_cond]
+				muon = muon[combined_cond]
+				event_level = event_level[combined_cond]	
+
+			#	#pT Condition
+			#	pt_cond = ak.any(muon.pt > 52, axis=1)
+			#	boostedtau = boostedtau[pt_cond]
+			#	AK8Jet = AK8Jet[pt_cond]
+			#	Jet = Jet[pt_cond]
+			#	electron = electron[pt_cond]
+			#	muon = muon[pt_cond]
+			#	event_level = event_level[pt_cond]	
+			#		
+			#	#Apply eta selection on leading muon
+			#	eta_cond = np.abs(muon[:,0].eta) < 2.4
+			#	boostedtau = boostedtau[eta_cond]
+			#	AK8Jet = AK8Jet[eta_cond]
+			#	Jet = Jet[eta_cond]
+			#	electron = electron[eta_cond]
+			#	muon = muon[eta_cond]
+			#	event_level = event_level[eta_cond]	
+
+			#	#Apply ID selections on muons
+			#	id_selec = muon[:,0].IDSelec
+			#		
+			#	boostedtau = boostedtau[id_selec]
+			#	AK8Jet = AK8Jet[id_selec]
+			#	Jet = Jet[id_selec]
+			#	electron = electron[id_selec]
+			#	muon = muon[id_selec]
+			#	event_level = event_level[id_selec]	
 
 				#Fail Single Muon trigger and pass Jet HT Trigger
 		#		boostedtau_HT = boostedtau[np.bitwise_not(event_level.Mu_Trigger) & event_level.HTMETMHT_Trigger]
