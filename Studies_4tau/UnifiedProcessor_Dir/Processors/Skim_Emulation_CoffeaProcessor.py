@@ -158,12 +158,13 @@ def METPhi_Corrections(uncorrMET_pt, uncorrMET_phi, run_num, isData, nPV, year=2
 	return MET_Phi_Corr
 
 class PlottingScriptProcessor(processor.ProcessorABC):
-	def __init__(self, sumWEvents_Dict, nBoostedTaus = 0, ApplyTrigger = True): #Additional arguements can be added later
+	def __init__(self, sumWEvents_Dict, nBoostedTaus = 0, ApplyTrigger = True, year = "2018"): #Additional arguements can be added later
 		self.isData = False #Default assumption is MC
 		self.nBoostedTau_Selec = nBoostedTaus #Number of tau selections
 		self.ApplyTrigger = ApplyTrigger
 		#self.numEvents_Dict = numEvents_Dict
 		self.sumWEvents_Dict = sumWEvents_Dict
+		self.year = year
 		#pass
 
 	def process(self, events):
@@ -448,8 +449,8 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 	#	event_level["MET_pt"]= METPhiCorrections["MET_pt_corr"]
 	#	event_level["MET_Phi"]= METPhiCorrections["MET_phi_corr"]
 
-		#Top pT and QCD + EWK reweighting
-		if (not(self.isData)):
+		#Corrections to be applied to inidiviual backgrounds
+		if (not(self.isData)): 
 			#Top pT reweighting
 			if ("TTTo" in dataset):
 				gen_top = GenPart[(GenPart.id == 6) & (GenPart.Status == 22)] 
@@ -458,7 +459,9 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				SF_antitop = 0.103*np.exp(-0.0118*gen_antitop.pt) - 1.34e-4*gen_antitop.pt + 0.973
 				topPtWeight = ak.firsts(np.sqrt(SF_top*SF_antitop))
 			else:
-				topPtWeight = ak.ones_like(event_level.run))
+				topPtWeight = ak.ones_like(event_level.run)
+
+			event_level.event_weight *= topPtWeight #Update event_weight
 		
 			#QCD EWK Corrections 
 			if ("DYJetsToLL_M-50" in dataset):
@@ -473,6 +476,10 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 				combinedWZgenpTWeight = ewkZWeight*qcdZWeight*0.9135
 			else:
 				combinedWZgenpTWeight = ak.ones_like(event_level.run)
+
+			event_level.event_weight *= combinedWZgenpTWeight #Update event_weight
+
+
 		
 		#############
 		#Trigger and Offline Cuts

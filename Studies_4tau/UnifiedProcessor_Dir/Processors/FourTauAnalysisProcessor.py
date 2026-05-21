@@ -23,6 +23,7 @@ import csv
 import glob
 import json
 from enum import Enum
+from Corrections import kFactor as kFactor
 
 #Global Variables
 WScaleFactor = 1.21
@@ -204,12 +205,13 @@ def four_mass(part_arr): #Four Particle mass assuming each event has 4 particles
 		(part_arr[0].Pz + part_arr[1].Pz + part_arr[2].Pz + part_arr[3].Pz)**2)
 
 class Analysis4TauProcessor(processor.ProcessorABC):
-	def __init__(self, sumWEvents_Dict, nBoostedTaus = 0, ApplyTrigger = True): #Additional arguements can be added later
+	def __init__(self, sumWEvents_Dict, nBoostedTaus = 0, ApplyTrigger = True, year = "2018"): #Additional arguements can be added later
 		self.isData = False #Default assumption is MC
 		self.nBoostedTau_Selec = nBoostedTaus #Number of tau selections
 		self.ApplyTrigger = ApplyTrigger
 		#self.numEvents_Dict = numEvents_Dict
 		self.sumWEvents_Dict = sumWEvents_Dict
+		self.year = year
 		#pass
 
 	def process(self, events):
@@ -352,6 +354,19 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			with_name="PFJetArray",
 			behavior=candidate.behavior,
 		)
+
+		#Gen level information
+		if (not(self.isData)):
+			GenPart = ak.zip(
+					{
+						"pt": events.GenPart_pt,
+						"id": events.GenPart_pdgId,
+						"status": events.GenPart_status,
+						"mother_id": events.GenPart_genPartIdxMother,
+					},
+					with_name="GenParticleArray",
+					behavior=candidate.behavior, 
+			)
 		
 		print("!!!=====Dataset=====!!!!")	
 		print(type(dataset))
@@ -360,6 +375,11 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		if not(self.isData):
 			print("Is MC events are equal to gen weights")
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
+		
+
+		#############
+		#Set Up Histograms
+		#############	
 
 		#Control Regions Axis
 		#region_array = ["All","ZCR","TCR","FakeCR"]
@@ -367,7 +387,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		region_array = ["All","TightTCR","NotTCR","LooseTCR","ZCR","NotZCR"] #"NotZCR"]
 		#region_array = ["All"] 
 		category_axis = hist.axis.StrCategory(region_array, growth=False, name = "category")
-		
+
 		#Basic Kinematic histograms Boosted tau
 		h_boostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		h_Leadingboostedtau_pT_Trigger = hist.Hist.new.Regular(20,0,600,label = r"Boosted $\tau$ Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
@@ -458,6 +478,36 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		METPhiCorrections = METPhi_Corrections(uncorrMET_pt = event_level.MET_pt,uncorrMET_phi = event_level.MET_Phi, run_num = event_level.run, isData = self.isData, nPV = event_level.Num_PV, year=2018)
 		event_level["MET_pt"]= METPhiCorrections["MET_pt_corr"]
 		event_level["MET_Phi"]= METPhiCorrections["MET_phi_corr"]
+
+		#Corrections to be applied to inidiviual backgrounds
+		if (not(self.isData)): 
+			#Top pT reweighting
+			if ("TTTo" in dataset):
+				gen_top = GenPart[(GenPart.id == 6) & (GenPart.Status == 22)] 
+				gen_antitop = GenPart[(GenPart.id == -6) & (GenPart.Status == 22)]
+				SF_top = 0.103*np.exp(-0.0118*gen_top.pt) - 1.34e-4*gen_top.pt + 0.973
+				SF_antitop = 0.103*np.exp(-0.0118*gen_antitop.pt) - 1.34e-4*gen_antitop.pt + 0.973
+				topPtWeight = ak.firsts(np.sqrt(SF_top*SF_antitop))
+			else:
+				topPtWeight = ak.ones_like(event_level.run)
+
+			event_level.event_weight *= topPtWeight #Update event_weight
+		
+			#QCD EWK Corrections 
+			if ("DYJetsToLL_M-50" in dataset):
+				gen_Z = GenPart[(GenPart.id == 23) & (GenPart.Status == 22)]	
+				ewkZWeight = kFactor.getEWKZ(ak.firsts(gen_Z.pt))
+				qcdZWeight = kFactor.getQCDZ(ak.firsts(gen_Z.pt))	 
+				combinedWZgenpTWeight = ewkZWeight*qcdZWeight*0.934
+			elif ("WJets" in dataset):
+				gen_W = GenPart[(abs(GenPart.id) == 24) & (GenPart.Status == 22)]	
+				ewkWWeight = kFactor.getEWKW(ak.firsts(gen_W.pt))	 
+				qcdWWeight = kFactor.getQCDW(ak.firsts(gen_W.pt))	 
+				combinedWZgenpTWeight = ewkZWeight*qcdZWeight*0.9135
+			else:
+				combinedWZgenpTWeight = ak.ones_like(event_level.run)
+
+			event_level.event_weight *= combinedWZgenpTWeight #Update event_weight
 
 		#############
 		#Cut Selections

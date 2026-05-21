@@ -16,13 +16,25 @@ evaluator = ext.make_evaluator()
 
 #k Factor Functions
 def getEWKW(pt):
-	return evaluator["nlo_EW_WJets"](pt)
+	if (pt == None):
+		return 1
+	else:
+		return evaluator["nlo_EW_WJets"](pt)
 
 def getEWKZ(pt):
-	return evaluator["nlo_EW_ZJets"](pt)
+	if (pt == None):
+		return 1
+	else:
+		return evaluator["nlo_EW_ZJets"](pt)
 
 def getQCDW(pt):
-	return evaluator["nlo_QCD_WJets"](pt)
+	if (pt == None):
+		return 1
+	else:
+		return evaluator["nlo_QCD_WJets"](pt)
 
 def getQCDZ(pt):
-	return evaluator["nlo_QCD_ZJets"](pt)
+	if (pt == None):
+		return 1
+	else:
+		return evaluator["nlo_QCD_ZJets"](pt)

@@ -48,7 +48,7 @@ def move_X509():
 
 if __name__ == "__main__":
 	#Condor related stuff
-	run_on_condor = True
+	run_on_condor = False
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	
 	#Xrootd setup
@@ -209,6 +209,13 @@ if __name__ == "__main__":
 		#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0937_skim_NullSkimming/singleFileSkimForSubmission-NANO_NANO_402.root"] #Run a single file offline
 	}
 
+	file_dict_Test_Reweighting = {
+		"TTTo2L2Nu": np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],1),
+		"DYJetsToLL_M-50_HT-70to100": np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT70to100_2018],1),
+		"WJetsToLNu_HT-70To100": np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT70To100_2018],1),
+
+	}
+
 	file_dict_full = {
 			"TTToSemiLeptonic": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTToSemiLeptonic_2018],
 			"TTTo2L2Nu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],
@@ -266,7 +273,8 @@ if __name__ == "__main__":
 	
 	#Set file dictionary and list of backgrounds prior to running processor
 	#file_dict = file_dict_data_test
-	file_dict = file_dict_full
+	#file_dict = file_dict_full
+	file_dict = file_dict_Test_Reweighting
 
 	#Pull in the weight and event count prior to skimming information
 	#with open("genWeightSum_JSON.json") as json_file:
