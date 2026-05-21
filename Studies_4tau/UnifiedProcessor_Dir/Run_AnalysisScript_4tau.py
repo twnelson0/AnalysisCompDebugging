@@ -210,9 +210,9 @@ if __name__ == "__main__":
 	}
 
 	file_dict_Test_Reweighting = {
-		"TTTo2L2Nu": np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],1),
-		"DYJetsToLL_M-50_HT-70to100": np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT70to100_2018],1),
-		"WJetsToLNu_HT-70To100": np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT70To100_2018],1),
+		"TTTo2L2Nu": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],1)],
+		"DYJetsToLL_M-50_HT-70to100": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT70to100_2018],1)],
+		"WJetsToLNu_HT-70To100": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT70To100_2018],1)],
 
 	}
 
@@ -301,6 +301,7 @@ if __name__ == "__main__":
         #Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_Test.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_FixedMuonSelec_WithQCD.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTauSelec.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTauSelec.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_kFactorWeight_Test.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	
