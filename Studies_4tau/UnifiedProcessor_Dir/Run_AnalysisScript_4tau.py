@@ -23,6 +23,7 @@ import csv
 import glob
 import json
 from Processors import FourTauAnalysisProcessor as AnalysisProcessor
+import Corrections
 import cowtools.jobqueue
 import cloudpickle
 
@@ -48,7 +49,7 @@ def move_X509():
 
 if __name__ == "__main__":
 	#Condor related stuff
-	run_on_condor = False
+	run_on_condor = True
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	
 	#Xrootd setup
@@ -111,6 +112,7 @@ if __name__ == "__main__":
 
 		#Pass modules to HTC
 		cloudpickle.register_pickle_by_value(AnalysisProcessor)
+		cloudpickle.register_pickle_by_value(Corrections)
     
 	else: #Iterative runner
 		print("Run Iteratively")
@@ -210,9 +212,10 @@ if __name__ == "__main__":
 	}
 
 	file_dict_Test_Reweighting = {
-		"TTTo2L2Nu": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],1)],
-		"DYJetsToLL_M-50_HT-70to100": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT70to100_2018],1)],
-		"WJetsToLNu_HT-70To100": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT70To100_2018],1)],
+		#"TTTo2L2Nu": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in TTTo2L2Nu_2018],3)],
+		#"DYJetsToLL_M-50_HT-70to100": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJetsToLL_M50_HT70to100_2018],3)],
+		#"WJetsToLNu_HT-70To100": [file for file in np.random.choice(["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in WJetsToLNu_HT70To100_2018],3)],
+		"DYJetsToLL_M-50_HT-2500toInf": ["root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/MC/DYJetsToLL_M-50_HT-1200to2500_12December25_1547_skim_Oldskim/singleFileSkimForSubmission-NANO_NANO_61.root"],
 
 	}
 
@@ -273,8 +276,8 @@ if __name__ == "__main__":
 	
 	#Set file dictionary and list of backgrounds prior to running processor
 	#file_dict = file_dict_data_test
-	#file_dict = file_dict_full
-	file_dict = file_dict_Test_Reweighting
+	file_dict = file_dict_full
+	#file_dict = file_dict_Test_Reweighting
 
 	#Pull in the weight and event count prior to skimming information
 	#with open("genWeightSum_JSON.json") as json_file:
@@ -301,7 +304,7 @@ if __name__ == "__main__":
         #Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_Test.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_FixedMuonSelec_WithQCD.coffea")
-		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTauSelec.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_kFactorWeight_Test.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_V2.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_kFactorWeight_Test.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

@@ -301,7 +301,7 @@ if __name__ == "__main__":
 			#linewidth=2,
 
 		)
-		ax_main.legend(fontsize = 6)
+		ax_main.legend(fontsize = 4)
 		hep.yscale_legend(ax_main)
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")

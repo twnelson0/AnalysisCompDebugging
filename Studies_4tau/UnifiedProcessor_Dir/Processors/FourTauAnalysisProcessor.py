@@ -494,7 +494,11 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			#print("Top weight: %d"%ak.num(topPtWeight,axis=0))
 			#print("Event Weight: %d"%ak.num(event_level.event_weight,axis=0))
 
-			event_level.event_weight = event_level.event_weight*topPtWeight #Update event_weight
+		#	print("Weights before top pT Reweighting applied: ")
+		#	print(event_level.event_weight)
+			event_level["event_weight"] = event_level.event_weight*topPtWeight #Update event_weight
+		#	print("Weights after top pT reweighting applied: ")
+		#	print(event_level.event_weight)
 		
 			#QCD EWK Corrections 
 			if ("DYJetsToLL_M-50" in dataset):
@@ -506,14 +510,25 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				gen_W = GenPart[(abs(GenPart.id) == 24) & (GenPart.status == 22)]	
 				ewkWWeight = kFactor.getEWKW(ak.firsts(gen_W.pt))	 
 				qcdWWeight = kFactor.getQCDW(ak.firsts(gen_W.pt))	 
-				combinedWZgenpTWeight = ewkZWeight*qcdZWeight*0.9135
+				combinedWZgenpTWeight = ewkWWeight*qcdWWeight*0.9135
 			else:
 				combinedWZgenpTWeight = ak.ones_like(event_level.run)
 			
-			#print("Combined WZ Weight: %d"%ak.num(topPtWeight,axis=0))
-			#print("Event Weight: %d"%ak.num(event_level.event_weight,axis=0))
+		#	print("Count of Combined WZ Weight: %d"%ak.num(topPtWeight,axis=0))
+		#	print("Count of Event Weight: %d"%ak.num(event_level.event_weight,axis=0))
 
-			event_level.event_weight = event_level.event_weight*combinedWZgenpTWeight #Update event_weight
+			#print("Weights before k-factor corrections applied: ")
+			#print(event_level.event_weight)
+			event_level["event_weight"] = event_level.event_weight*combinedWZgenpTWeight #Update event_weight
+			event_level["event_weight"] = ak.fill_none(event_level.event_weight,1) #Edge cases
+			#print("Weights after k-factor corrections applied: ")
+			#print(event_level.event_weight)
+		#print("=============================================================")
+		#print("Weights after all selections applied: ")
+		#print(event_level.event_weight)
+		#print("Count of event weight: %d"%ak.num(event_level.event_weight,axis=0))
+		#drop_test = ak.ravel(ak.fill_none(event_level.event_weight,-9999999))
+		#print("Count of events after drop none: %d"%ak.num(drop_test[drop_test != -9999999],axis=0))
 
 		#############
 		#Cut Selections
@@ -1179,9 +1194,15 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				#print(region)
 				region_cond = ak.ones_like(event_level.event_num) == 1
 				#print("Sum of true entries: " + str(ak.sum(region_cond)))
+			
+			print("Event Weights: ")
+			print(event_level[ak.ravel(region_cond)].event_weight)
+
+			print("Number of boosted tau pT")
+			print(boostedtau.pt)
 		
 			#Boosted Taus
-			h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.ravel(region_cond)].pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(boostedtau[ak.ravel(region_cond)].pt))[0]), region = region)
+			#h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.ravel(region_cond)].pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(boostedtau[ak.ravel(region_cond)].pt))[0]), region = region)
 			
 			if (self.nBoostedTau_Selec >= 1):
 				h_Leadingboostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.ravel(region_cond)][:,0].pt),weight=ak.ravel(event_level[ak.ravel(region_cond)][ak.num(boostedtau[ak.ravel(region_cond)],axis=1) >= self.nBoostedTau_Selec].event_weight*CrossSec_Weight), region = region)
