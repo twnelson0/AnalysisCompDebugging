@@ -451,33 +451,39 @@ class PlottingScriptProcessor(processor.ProcessorABC):
 
 		#Corrections to be applied to inidiviual backgrounds
 		if (not(self.isData)): 
-			#Top pT reweighting
-			if ("TTTo" in dataset):
+		    #Top pT reweighting
+			if ("TTTo" in dataset): # or "ST_" in dataset):
 				gen_top = GenPart[(GenPart.id == 6) & (GenPart.status == 22)] 
 				gen_antitop = GenPart[(GenPart.id == -6) & (GenPart.status == 22)]
 				SF_top = 0.103*np.exp(-0.0118*gen_top.pt) - 1.34e-4*gen_top.pt + 0.973
 				SF_antitop = 0.103*np.exp(-0.0118*gen_antitop.pt) - 1.34e-4*gen_antitop.pt + 0.973
 				topPtWeight = ak.firsts(np.sqrt(SF_top*SF_antitop))
+			elif ("ST_" in dataset):
+				gen_top = GenPart[(abs(GenPart.id) == 6) & (GenPart.status == 22)]
+				SF_top = 0.103*np.exp(-0.0118*gen_top.pt) - 1.34e-4*gen_top.pt + 0.973
+				topPtWeight = ak.firsts(SF_top)
 			else:
 				topPtWeight = ak.ones_like(event_level.run)
-
-			event_level.event_weight = event_level.event_weight*topPtWeight #Update event_weight
+			event_level["event_weight"] = event_level.event_weight*topPtWeight #Update event_weight
 		
 			#QCD EWK Corrections 
-			if ("DYJetsToLL_M-50" in dataset):
+			if ("DYJetsToLL_M-50" in dataset or "DYJetstoLL_M-4To50" in dataset):
 				gen_Z = GenPart[(GenPart.id == 23) & (GenPart.status == 22)]	
-				ewkZWeight = kFactor.getEWKZ(ak.firsts(gen_Z.pt))
 				qcdZWeight = kFactor.getQCDZ(ak.firsts(gen_Z.pt))	 
+				genZ_pt_NoneHandling = ak.fill_none(gen_Z.pt,-999)
+                ewkZWeight = kFactor.getEWKZ(ak.firsts(genZ_pt_NoneHandling))
 				combinedWZgenpTWeight = ewkZWeight*qcdZWeight*0.934
 			elif ("WJets" in dataset):
 				gen_W = GenPart[(abs(GenPart.id) == 24) & (GenPart.status == 22)]	
-				ewkWWeight = kFactor.getEWKW(ak.firsts(gen_W.pt))	 
 				qcdWWeight = kFactor.getQCDW(ak.firsts(gen_W.pt))	 
-				combinedWZgenpTWeight = ewkZWeight*qcdZWeight*0.9135
+				genW_pt_NoneHandling = ak.fill_none(gen_W.pt,-999)
+				ewkWWeight = kFactor.getEWKW(ak.firsts(genW_pt_NoneHandling))	 
+				combinedWZgenpTWeight = ewkWWeight*qcdWWeight*0.9135
 			else:
 				combinedWZgenpTWeight = ak.ones_like(event_level.run)
-
-			event_level.event_weight = event_level.event_weight*combinedWZgenpTWeight #Update event_weight
+			
+			event_level["event_weight"] = event_level.event_weight*combinedWZgenpTWeight #Update event_weight
+			event_level["event_weight"] = ak.fill_none(event_level.event_weight,1) #Edge cases
 
 
 		

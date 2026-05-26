@@ -288,9 +288,12 @@ if __name__ == "__main__":
 			model_uncertainty=True,
 			comparison = "ratio",
             markersize = 10,
+            flow = "sum",
 			#linewidth=2,
 
 		)
+        ax_main.legend(fontsize=6)
+        #hep.yscale_legend(ax_main)
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")
 		plt.close()
