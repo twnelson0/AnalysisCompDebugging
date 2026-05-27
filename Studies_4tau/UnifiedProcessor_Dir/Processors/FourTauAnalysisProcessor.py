@@ -723,16 +723,25 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 					event_level = event_level[nMuon_Cond]				
 
 					#Combined pT eta and ID selection
-					pt_cond = muon[:,0].pt > 52
-					eta_cond = np.abs(muon[:,0].eta) < 2.4
-					id_selec = muon[:,0].IDSelec
-					combined_cond = pt_cond & eta_cond & id_selec
-					boostedtau = boostedtau[combined_cond]
-					AK8Jet = AK8Jet[combined_cond]
-					Jet = Jet[combined_cond]
-					electron = electron[combined_cond]
-					muon = muon[combined_cond]
-					event_level = event_level[combined_cond]	
+					mu_selec_Mask = (
+							(muon.pt > 52) &
+							(abs(muon.eta) < 2.4) &
+							(muon.IDSelec) &
+							(muon.RelIso < 0.15)
+					)
+					mu_selec_cond = ak.any(mu_selec_Mask,axis=1)
+					#pt_cond = muon[:,0].pt > 52
+					#eta_cond = np.abs(muon[:,0].eta) < 2.4
+					#id_selec = muon[:,0].IDSelec
+					#iso_selec = muon[:,0].RelIso < 0.15
+					#combined_cond = pt_cond & eta_cond & id_selec & iso_selec
+					
+					boostedtau = boostedtau[mu_selec_cond]
+					AK8Jet = AK8Jet[mu_selec_cond]
+					Jet = Jet[mu_selec_cond]
+					electron = electron[mu_selec_cond]
+					muon = muon[mu_selec_cond]
+					event_level = event_level[mu_selec_cond]	
 
 					#pT selection
 				#	pt_cond = ak.any(muon.pt > 52, axis=1)
@@ -812,16 +821,25 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				event_level = event_level[nMuon_Cond]				
 					
 				#Combined pT eta and ID selection
-				pt_cond = muon[:,0].pt > 52
-				eta_cond = np.abs(muon[:,0].eta) < 2.4
-				id_selec = muon[:,0].IDSelec
-				combined_cond = pt_cond & eta_cond & id_selec
-				boostedtau = boostedtau[combined_cond]
-				AK8Jet = AK8Jet[combined_cond]
-				Jet = Jet[combined_cond]
-				electron = electron[combined_cond]
-				muon = muon[combined_cond]
-				event_level = event_level[combined_cond]	
+				mu_selec_Mask = (
+						(muon.pt > 52) &
+						(abs(muon.eta) < 2.4) &
+						(muon.IDSelec) &
+						(muon.RelIso < 0.15)
+					)
+				mu_selec_cond = ak.any(mu_selec_Mask,axis=1)
+				#pt_cond = muon[:,0].pt > 52
+				#eta_cond = np.abs(muon[:,0].eta) < 2.4
+				#id_selec = muon[:,0].IDSelec
+				#iso_selec = muon[:,0].RelIso < 0.15
+				#combined_cond = pt_cond & eta_cond & id_selec & iso_selec
+				
+				boostedtau = boostedtau[mu_selec_cond]
+				AK8Jet = AK8Jet[mu_selec_cond]
+				Jet = Jet[mu_selec_cond]
+				electron = electron[mu_selec_cond]
+				muon = muon[mu_selec_cond]
+				event_level = event_level[mu_selec_cond]	
 
 			#	#pT Condition
 			#	pt_cond = ak.any(muon.pt > 52, axis=1)
