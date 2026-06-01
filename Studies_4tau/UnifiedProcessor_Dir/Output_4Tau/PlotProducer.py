@@ -123,16 +123,16 @@ if __name__ == "__main__":
 		all_sample_array.append(background_dict[background])
 	
 	#Make the colors easier on the eyes
-	all_sample_array = list(itertools.chain.from_iterable(all_sample_array))
-	background_list = all_sample_array #Produce list of all backgrounds rather than combining them
+	#all_sample_array = list(itertools.chain.from_iterable(all_sample_array))
+	#background_list = all_sample_array #Produce list of all backgrounds rather than combining them
 	#TABLEAU_COLORS = []
 	
 	#for background_type in background_dict.keys():
 #	for i in range(len(background_list_full)):
 #		TABLEAU_COLORS.append(cmap_array[i](np.linspace(0,1,len(background_dict[background_list_full[i]]))))
-	TABLEAU_COLORS = cmap(np.linspace(0,1,len(background_list)))
+	#TABLEAU_COLORS = cmap(np.linspace(0,1,len(background_list)))
 
-	print(TABLEAU_COLORS)
+	#print(TABLEAU_COLORS)
 	
 	#Dictinary with file names
 	trigger_name = "SingleMu_Trigger"
@@ -210,12 +210,12 @@ if __name__ == "__main__":
 
 		temp_hist_dict = dict.fromkeys(background_list) # create dictionary of histograms for each background type
 				
-		#for background_type in background_list: #When combining samples into larger categories need to restore this logic
-		for dummy_indx in range(1): #Do this for plotting all samples (Not combined)
+		for background_type in background_list: #When combining samples into larger categories need to restore this logic
+		#for dummy_indx in range(1): #Do this for plotting all samples (Not combined)
 			#print("Background type %s"%background_type)
 			background_array = []
-			#backgrounds = background_dict[background_type]
-			backgrounds = background_list #only for plotting all samples
+			backgrounds = background_dict[background_type]
+			#backgrounds = background_list #only for plotting all samples
 
 						
 			#Loop over all backgrounds

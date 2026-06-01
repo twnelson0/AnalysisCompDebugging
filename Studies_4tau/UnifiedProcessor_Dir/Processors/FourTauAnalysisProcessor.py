@@ -24,6 +24,11 @@ import glob
 import json
 from enum import Enum
 from Corrections import kFactor as kFactor
+#from Corrections import PU_Reweighting as PU_Reweight
+from Corrections.corrections import *
+
+#import warnings
+#warnings.filterwarnings("error")
 
 #Global Variables
 WScaleFactor = 1.21
@@ -205,7 +210,8 @@ def four_mass(part_arr): #Four Particle mass assuming each event has 4 particles
 		(part_arr[0].Pz + part_arr[1].Pz + part_arr[2].Pz + part_arr[3].Pz)**2)
 
 class Analysis4TauProcessor(processor.ProcessorABC):
-	def __init__(self, sumWEvents_Dict, nBoostedTaus = 0, ApplyTrigger = True, year = "2018"): #Additional arguements can be added later
+	def __init__(self, sumWEvents_Dict, nBoostedTaus = 0, ApplyTrigger = True, year = 2018): #Additional arguements can be added later
+		#Initial variables
 		self.isData = False #Default assumption is MC
 		self.nBoostedTau_Selec = nBoostedTaus #Number of tau selections
 		self.ApplyTrigger = ApplyTrigger
@@ -213,6 +219,8 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		self.sumWEvents_Dict = sumWEvents_Dict
 		self.year = year
 		#pass
+
+		#Corrections
 
 	def process(self, events):
 		vector.register_awkward()
@@ -373,8 +381,9 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		print(dataset)
 
 		if not(self.isData):
-			print("Is MC events are equal to gen weights")
+			#print("Is MC events are equal to gen weights")
 			event_level["event_weight"] = events.genWeight #Set the event weight to the gen weight
+			event_level["Pileup_nTrueInt"] = events.Pileup_nTrueInt
 		
 
 		#############
@@ -495,14 +504,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			else:
 				topPtWeight = ak.ones_like(event_level.run)
 
-			#print("Top weight: %d"%ak.num(topPtWeight,axis=0))
-			#print("Event Weight: %d"%ak.num(event_level.event_weight,axis=0))
-
-		#	print("Weights before top pT Reweighting applied: ")
-		#	print(event_level.event_weight)
 			event_level["event_weight"] = event_level.event_weight*topPtWeight #Update event_weight
-		#	print("Weights after top pT reweighting applied: ")
-		#	print(event_level.event_weight)
 		
 			#QCD EWK Corrections 
 			if ("DYJetsToLL_M-50" in dataset or "DYJetstoLL_M-4To50" in dataset):
@@ -519,22 +521,16 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				combinedWZgenpTWeight = ewkWWeight*qcdWWeight*0.9135
 			else:
 				combinedWZgenpTWeight = ak.ones_like(event_level.run)
-			
-		#	print("Count of Combined WZ Weight: %d"%ak.num(topPtWeight,axis=0))
-		#	print("Count of Event Weight: %d"%ak.num(event_level.event_weight,axis=0))
-
-			#print("Weights before k-factor corrections applied: ")
-			#print(event_level.event_weight)
+		   
 			event_level["event_weight"] = event_level.event_weight*combinedWZgenpTWeight #Update event_weight
 			event_level["event_weight"] = ak.fill_none(event_level.event_weight,1) #Edge cases
-			#print("Weights after k-factor corrections applied: ")
-			#print(event_level.event_weight)
-		#print("=============================================================")
-		#print("Weights after all selections applied: ")
-		#print(event_level.event_weight)
-		#print("Count of event weight: %d"%ak.num(event_level.event_weight,axis=0))
-		#drop_test = ak.ravel(ak.fill_none(event_level.event_weight,-9999999))
-		#print("Count of events after drop none: %d"%ak.num(drop_test[drop_test != -9999999],axis=0))
+			#Pile Up Reweighting
+			#PU_reweight = PU_Reweight.getPUSF(event_level.Pileup_nTrueInt, era = str(2018), var = 'nominal')
+			PU_reweight = getPUSF(event_level.Pileup_nTrueInt, era = str(2018), var = 'nominal')
+			event_level["event_weight"] = event_level.event_weight*PU_reweight
+
+			#Muon SF
+			
 
 		#############
 		#Cut Selections

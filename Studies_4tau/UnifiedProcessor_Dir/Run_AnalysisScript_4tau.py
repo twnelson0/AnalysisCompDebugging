@@ -27,6 +27,10 @@ import Corrections
 import cowtools.jobqueue
 import cloudpickle
 
+#import warnings
+#warnings.filterwarnings("error")
+
+
 #X509 function (for HTC)
 def move_X509():
 	try:
@@ -52,54 +56,50 @@ if __name__ == "__main__":
 	run_on_condor = True
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	
-	#Xrootd setup
-	_x509_path = move_X509()
-	print(f"x509 path: {_x509_path}")
-	htc_log_err_dir = "/scratch/twnelson/ControlPlot_HTC/Run_" + str(time.localtime()[0]) + "_" + str(time.localtime()[1]) + "_" + str(time.localtime()[2]) + "_" + str(time.localtime()[3]) + f".{time.localtime()[4]:02d}"
-	os.makedirs(htc_log_err_dir)
-
-	cluster = HTCondorCluster(
-			cores=1,
-			memory="4 GB",
-			disk="2 GB",
-			death_timeout = '60',
-            #python = "/usr/local/bin/python3",
-			job_extra_directives={
-				"+JobFlavour": '"tomorrow"',
-				"log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
-				"output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
-				"error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
-				"should_transfer_files": "yes",
-				"when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
-				"transfer_executable": "false",
-			#	"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
-			#	"Requirements": "HasSingularityJobStart",
-				
-				#"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"',
-				#"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
-				"Requirements": "HasSingularityJobStart",
-				#"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10",
-				"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.30-py3.10",
-				"InitialDir": f'/scratch/{os.environ["USER"]}',
-				'transfer_input_files': f"{_x509_path}",
-
-			},
-			job_script_prologue = [
-				"export XRD_RUNFORKHANDLER=1",
-				f"export X509_USER_PROXY={_x509_path}",
-			]
-	)
-	cluster.adapt(minimum=1, maximum=500)
-
-#	cluster = cowtools.jobqueue.GetCondorClient(
-#					memory = "4 GB",
-#					disk = "2 GB",
-#					max_workers=500,
-#					container_image = "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"
-#				)
-	
 	if (run_on_condor):
 		print("Run on Condor")
+		#Xrootd setup
+		_x509_path = move_X509()
+		print(f"x509 path: {_x509_path}")
+		htc_log_err_dir = "/scratch/twnelson/ControlPlot_HTC/Run_" + str(time.localtime()[0]) + "_" + str(time.localtime()[1]) + "_" + str(time.localtime()[2]) + "_" + str(time.localtime()[3]) + f".{time.localtime()[4]:02d}"
+		os.makedirs(htc_log_err_dir)
+
+		cluster = HTCondorCluster(
+				cores=1,
+				memory="4 GB",
+				disk="2 GB",
+				death_timeout = '60',
+				#python = "/usr/local/bin/python3",
+				job_extra_directives={
+					"+JobFlavour": '"tomorrow"',
+					"log": "dask_job_output.$(PROCESS).$(CLUSTER).log",
+					"output": "dask_job_output.$(PROCESS).$(CLUSTER).out",
+					"error": "dask_job_output.$(PROCESS).$(CLUSTER).err",
+					"should_transfer_files": "yes",
+					"when_to_transfer_ouput": "ON_EXIT_OR_EVICT",
+					"transfer_executable": "false",
+				#	"+SingularityImage": '"/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.25-py3.10"',
+					
+					"Requirements": "HasSingularityJobStart",
+					"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.30-py3.10",
+					"InitialDir": f'/scratch/{os.environ["USER"]}',
+					'transfer_input_files': f"{_x509_path}",
+
+				},
+				job_script_prologue = [
+					"export XRD_RUNFORKHANDLER=1",
+					f"export X509_USER_PROXY={_x509_path}",
+				]
+		)
+		cluster.adapt(minimum=1, maximum=500)
+
+	#	cluster = cowtools.jobqueue.GetCondorClient(
+	#					memory = "4 GB",
+	#					disk = "2 GB",
+	#					max_workers=500,
+	#					container_image = "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask-cc7:latest-py3.10"
+	#				)
+
 		runner = processor.Runner(
 			executor = processor.DaskExecutor(client=Client(cluster),status=False),
 			#executor = processor.DaskExecutor(client=cluster,status=False),
@@ -113,6 +113,8 @@ if __name__ == "__main__":
 		#Pass modules to HTC
 		cloudpickle.register_pickle_by_value(AnalysisProcessor)
 		cloudpickle.register_pickle_by_value(Corrections)
+		#cloudpickle.register_pickle_by_value(Corrections.kFactor)
+		#cloudpickle.register_pickle_by_value(Corrections.PU_Reweighting)
     
 	else: #Iterative runner
 		print("Run Iteratively")
@@ -295,16 +297,19 @@ if __name__ == "__main__":
 		#print(sumWEvents_Dict)
 		#print(file_dict)
 		start_time = time.time()
+		if (run_on_condor):
+			print(f"https://cms02.hep.wisc.edu:8009/user/{os.environ['USER']}/{cluster.dashboard_link}")
 		fourtau_out = runner(file_dict, treename="Events", processor_instance=AnalysisProcessor.Analysis4TauProcessor(sumWEvents_Dict = sumWEvents_Dict, nBoostedTaus = n_taus, ApplyTrigger = True)) #Modified for NanoAOD (changd treename)
 		end_time = time.time()
-		
 		time_running = end_time-start_time
 		print("It takes about %.1f s to run the coffea processor with %d boosted tau selections"%(time_running,n_taus))
 		
         #Save coffea file
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_Test.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_FixedMuonSelec_WithQCD.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_V3_FixedMuonReq_IsoReq.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_V3_FixedMuonReq_IsoReq.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_WithPU_Reweighting_Test.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_WithPU_Reweighting.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_kFactorWeight_Test.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	
