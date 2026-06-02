@@ -247,16 +247,16 @@ if __name__ == "__main__":
 						plt.close()
 						
 				if (hist_name != "Electron_tau_dR_Arr" and hist_name != "Muon_tau_dR_Arr"):
-				#	if (background == backgrounds[0]):
-				#		crnt_hist = coffea_input[background][hist_name][{"region": args.ControlRegion}]
-				#	else:
-				#		crnt_hist += coffea_input[background][hist_name][{"region": args.ControlRegion}]
-				#	if (background == backgrounds[-1]):
-				#		temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
+					if (background == backgrounds[0]):
+						crnt_hist = coffea_input[background][hist_name][{"region": args.ControlRegion}]
+					else:
+						crnt_hist += coffea_input[background][hist_name][{"region": args.ControlRegion}]
+					if (background == backgrounds[-1]):
+						temp_hist_dict[background_type] = crnt_hist #Try to fix stacking bug
 					
 					#These are for plotting all samples only
-					crnt_hist = coffea_input[background][hist_name][{"region": args.ControlRegion}]
-					temp_hist_dict[background] = crnt_hist #Try to fix stacking bug
+					#crnt_hist = coffea_input[background][hist_name][{"region": args.ControlRegion}]
+					#temp_hist_dict[background] = crnt_hist #Try to fix stacking bug
 
 				else: #lepton-tau delta R 
 					coffea_input[background][hist_name].plot1d(ax=ax2)
@@ -290,8 +290,8 @@ if __name__ == "__main__":
 		fig, ax_main, ax_comp = hep.comp.data_model(
 			data_hist = coffea_input["Data_Mu"][hist_name][{"region": args.ControlRegion}],
 			stacked_components = background_array,
-			#stacked_colors = TABLEAU_COLORS[:len(background_list)],
-			stacked_colors = TABLEAU_COLORS,
+			stacked_colors = TABLEAU_COLORS[:len(background_list)],
+			#stacked_colors = TABLEAU_COLORS,
 			stacked_labels = background_list,
 			xlabel = axis_label,
 			model_uncertainty=True,
@@ -301,7 +301,7 @@ if __name__ == "__main__":
 			#linewidth=2,
 
 		)
-		ax_main.legend(fontsize = 4)
+		ax_main.legend(fontsize = 14)
 		hep.yscale_legend(ax_main)
 		hep.cms.label(data=True, ax = ax_main, text = "2018 Data Preliminary")	
 		plt.savefig(four_tau_names[hist_name] + "_" + str(args.NumberTau) + "TauSelec")

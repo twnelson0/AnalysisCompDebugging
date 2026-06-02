@@ -561,37 +561,38 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 	#	h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
 	#	h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
 
-	#	#Flag conditions
-	#	Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
-	#	flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
-	#	
-	#	for flag in Flag_Array:
-	#		flag_cond = flag_cond & event_level[flag]
-	#	
-	#	boostedtau = boostedtau[flag_cond]
-	#	AK8Jet = AK8Jet[flag_cond]
-	#	Jet = Jet[flag_cond]
-	#	electron = electron[flag_cond]
-	#	muon = muon[flag_cond]
-	#	event_level = event_level[flag_cond]	
+		#Noise Filters 
+		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
+		flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
+		
+		for flag in Flag_Array:
+			flag_cond = flag_cond & event_level[flag]
+		
+		boostedtau = boostedtau[flag_cond]
+		AK8Jet = AK8Jet[flag_cond]
+		Jet = Jet[flag_cond]
+		electron = electron[flag_cond]
+		muon = muon[flag_cond]
+		event_level = event_level[flag_cond]	
 
 	#	#Fill post flag selections entries in skim and N-1 histograms
 	#	n_FlagSelec = np.size(event_level.nFatJet)
 	#	h_CutFlow.fill("FlagReq",weight=n_FlagSelec)
 	#	h_NMinus1.fill("FlagReq",weight=n_FatJet - n_FlagSelec)
 
-	#	#PV selections
-	#	ndof_cond = event_level.PV_ndof > 4
-	#	PVz_cond = np.abs(event_level.PV_z) < 24
-	#	PVr_cond = np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2
-	#	PV_Cond = np.bitwise_and(ndof_cond,np.bitwise_and(PVz_cond,PVr_cond))
-	#	
-	#	boostedtau = boostedtau[PV_Cond]
-	#	AK8Jet = AK8Jet[PV_Cond]
-	#	Jet = Jet[PV_Cond]
-	#	electron = electron[PV_Cond]
-	#	muon = muon[PV_Cond]
-	#	event_level = event_level[PV_Cond]	
+		#PV selections
+		ndof_cond = event_level.PV_ndof > 4
+		PVz_cond = np.abs(event_level.PV_z) < 24
+		PVr_cond = np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2
+		#PV_Cond = np.bitwise_and(ndof_cond,np.bitwise_and(PVz_cond,PVr_cond))
+		PV_Cond = ndof_cond & PVz_cond & PVr_cond
+		
+		boostedtau = boostedtau[PV_Cond]
+		AK8Jet = AK8Jet[PV_Cond]
+		Jet = Jet[PV_Cond]
+		electron = electron[PV_Cond]
+		muon = muon[PV_Cond]
+		event_level = event_level[PV_Cond]	
 
 	#	#Fill post PV selection entries in skim and N-1 histograms
 	#	n_PVSelec = np.size(event_level.nFatJet)
