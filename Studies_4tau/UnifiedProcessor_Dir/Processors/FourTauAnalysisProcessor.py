@@ -4,11 +4,12 @@ import hist
 from hist import intervals
 import matplotlib.pyplot as plt
 import numpy as np
-import mplhep as hep
 from coffea import processor, nanoevents
 from coffea.nanoevents import NanoEventsFactory, NanoAODSchema, BaseSchema
 from coffea.nanoevents.methods import candidate, vector
 from coffea import util
+from coffea.lumi_tools import LumiMask
+import correctionlib
 from math import pi
 import numba 
 import pandas as pd
@@ -26,6 +27,7 @@ from enum import Enum
 from Corrections import kFactor as kFactor
 #from Corrections import PU_Reweighting as PU_Reweight
 from Corrections.corrections import *
+from Data.data_paths import GOLDEN_JSON
 
 #import warnings
 #warnings.filterwarnings("error")
@@ -221,6 +223,9 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#pass
 
 		#Corrections
+		self.lumi_mask = {
+			"2018": LumiMask(jsonfile=GOLDEN_JSON[str(self.year)].expanduser())
+		}
 
 	def process(self, events):
 		vector.register_awkward()
@@ -529,9 +534,33 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			PU_reweight = getPUSF(event_level.Pileup_nTrueInt, era = str(2018), var = 'nominal')
 			event_level["event_weight"] = event_level.event_weight*PU_reweight
 
-			#Muon SF
-			
+			#Muon ID SF
 
+			#Muon Trigger SF
+
+		#Data Only Corrections
+		if (self.isData):
+			print("Applying Goldon JSON corrections")
+			#Apply LUMI mask to data
+			json_map = {
+					"2018": "Data/GoldenJSON/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"
+			}
+			if (str(self.year) not in json_map):
+				raise ValueError("Unknown year %s"%str(self.year))
+			lumi_mask_arr = LumiMask(json_map[str(self.year)])(events.run, events.luminosityBlock)
+			#lumi_mask_arr = self.lumi_mask[str(self.year)](events.run, events.luminosityBlock)
+			print("Lumi Mask selection: ")
+			print(lumi_mask_arr)
+
+			#Apply lumi mask selection
+		#	boostedtau = boostedtau[lumi_mask_arr]
+		#	AK8Jet = AK8Jet[lumi_mask_arr]
+		#	Jet = Jet[lumi_mask_arr]
+		#	electron = electron[lumi_mask_arr]
+		#	muon = muon[lumi_mask_arr]
+		#	event_level = event_level[lumi_mask_arr]	
+
+			
 		#############
 		#Cut Selections
 		#############
@@ -1216,11 +1245,11 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				region_cond = ak.ones_like(event_level.event_num) == 1
 				#print("Sum of true entries: " + str(ak.sum(region_cond)))
 			
-			print("Event Weights: ")
-			print(event_level[ak.ravel(region_cond)].event_weight)
+			#print("Event Weights: ")
+			#print(event_level[ak.ravel(region_cond)].event_weight)
 
-			print("Number of boosted tau pT")
-			print(boostedtau.pt)
+			#print("Number of boosted tau pT")
+			#print(boostedtau.pt)
 		
 			#Boosted Taus
 			#h_boostedtau_pT_Trigger.fill(ak.ravel(boostedtau[ak.ravel(region_cond)].pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(boostedtau[ak.ravel(region_cond)].pt))[0]), region = region)
