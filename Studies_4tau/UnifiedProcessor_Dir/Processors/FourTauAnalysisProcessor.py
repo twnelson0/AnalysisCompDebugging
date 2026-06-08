@@ -9,7 +9,6 @@ from coffea.nanoevents import NanoEventsFactory, NanoAODSchema, BaseSchema
 from coffea.nanoevents.methods import candidate, vector
 from coffea import util
 from coffea.lumi_tools import LumiMask
-import correctionlib
 from math import pi
 import numba 
 import pandas as pd
@@ -223,6 +222,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#pass
 
 		#Corrections
+		print("Pulling Corrections")
 		self.lumi_mask = {
 			"2018": LumiMask(jsonfile=GOLDEN_JSON[str(self.year)].expanduser())
 		}
@@ -534,7 +534,23 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			PU_reweight = getPUSF(event_level.Pileup_nTrueInt, era = str(2018), var = 'nominal')
 			event_level["event_weight"] = event_level.event_weight*PU_reweight
 
-			#Muon ID SF
+			#Muon SF
+
+		if (self.isData):
+			#GOLDENJSON selection
+			#print("Is Data")
+			#print("This is where Golden JSON stuff will occur")
+			#print("Current Directory")
+			lumi_mask_arr = self.lumi_mask[str(self.year)](events.run, events.luminosityBlock)
+			
+			#Apply lumi mask selection to objects
+			boostedtau = boostedtau[lumi_mask_arr]
+			AK8Jet = AK8Jet[lumi_mask_arr]
+			Jet = Jet[lumi_mask_arr]
+			electron = electron[lumi_mask_arr]
+			muon = muon[lumi_mask_arr]
+			event_level = event_level[lumi_mask_arr]	
+			
 
 			#Muon Trigger SF
 

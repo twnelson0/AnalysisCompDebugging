@@ -140,7 +140,7 @@ if __name__ == "__main__":
 	#Single MuonA debugging production
 	SingleMu_2018A_Debug = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0456_skim_4TauFixed_NonEmpty/singleFileSkimForSubmission-NANO_NANO_*.root")
 	#SingleMu_2018A_Debug = np.random.choice(SingleMu_2018A_Debug, 10)
-	SingleMu_2018A_Debug = SingleMu_2018A_Debug[:10]
+	SingleMu_2018A_Debug = SingleMu_2018A_Debug[:20] 
 	#print(SingleMu_2018A_Debug)
 
 
@@ -205,6 +205,15 @@ if __name__ == "__main__":
 	QCD_HT1000To1500 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT1000to1500_23April26_0536_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
 	QCD_HT1500To2000 = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT1500to2000_23April26_0539_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
 	QCD_HT2000ToInf = glob.glob(Skimmed_4tau_loc_MC + "QCD_HT2000toInf_23April26_0541_skim_FourTauSkim/singleFileSkimForSubmission-NANO_NANO_*.root")
+
+	#Debugging MC
+	DYJets_Debug = DYJetsToLL_M50_HT1200to2500_2018[:20]
+
+	file_dict_data_mc_mix = {
+		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in SingleMu_2018A_Debug],
+		"DYJetsToLL_M-50_HT-1200to2500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJets_Debug],
+	}
+
 
 	file_dict_data_test = {
 		#"Data_Mu" : [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
@@ -278,8 +287,9 @@ if __name__ == "__main__":
 		}
 	
 	#Set file dictionary and list of backgrounds prior to running processor
-	file_dict = file_dict_data_test
-	#file_dict = file_dict_full
+	#file_dict = file_dict_data_test
+	file_dict = file_dict_full
+	#file_dict = file_dict_data_mc_mix
 	#file_dict = file_dict_Test_Reweighting
 
 	#Pull in the weight and event count prior to skimming information
@@ -310,6 +320,8 @@ if __name__ == "__main__":
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_FixedMuonSelec_WithQCD.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_V3_FixedMuonReq_IsoReq.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_WithPU_Reweighting_Test.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_With_NoisePVCorrections_GoldenJSON_Test2.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_kFactorWeight_Test.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_With_GoldeonJSON_Req.coffea")
 		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_TestGoldenJSON.coffea")
 		util.save(fourtau_out, outfile)

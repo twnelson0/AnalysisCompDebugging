@@ -19,6 +19,7 @@ Studies_4tau/UnifiedProcessor_Dir/PlottingEnv
 
 #Output file ignore exceptions
 !ZorW_NLO_corrections.root
+!pileup_*.root
 
 #Note files not needed to be saved
 Simple_CrossSec.txt
