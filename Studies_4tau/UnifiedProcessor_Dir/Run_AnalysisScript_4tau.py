@@ -6,14 +6,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import mplhep as hep
 from coffea import processor, nanoevents
-from coffea.nanoevents import NanoEventsFactory, NanoAODSchema, BaseSchema
-from coffea.nanoevents.methods import candidate, vector
+from coffea.nanoevents import BaseSchema
 from coffea import util
 from math import pi
 import numba 
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
-import vector
 import os
 import time
 import datetime
@@ -24,6 +22,7 @@ import glob
 import json
 from Processors import FourTauAnalysisProcessor as AnalysisProcessor
 import Corrections
+#import Data
 import cowtools.jobqueue
 import cloudpickle
 
@@ -53,7 +52,7 @@ def move_X509():
 
 if __name__ == "__main__":
 	#Condor related stuff
-	run_on_condor = True
+	run_on_condor = False 
 	os.environ["CONDOR_CONFIG"] = "/etc/condor/condor_config"
 	
 	if (run_on_condor):
@@ -83,7 +82,7 @@ if __name__ == "__main__":
 					"Requirements": "HasSingularityJobStart",
 					"container_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-base-almalinux9:0.7.30-py3.10",
 					"InitialDir": f'/scratch/{os.environ["USER"]}',
-					'transfer_input_files': f"{_x509_path}",
+					'transfer_input_files': f'{os.environ["PWD"]}, {_x509_path}',
 
 				},
 				job_script_prologue = [
@@ -113,6 +112,7 @@ if __name__ == "__main__":
 		#Pass modules to HTC
 		cloudpickle.register_pickle_by_value(AnalysisProcessor)
 		cloudpickle.register_pickle_by_value(Corrections)
+		#cloudpickle.register_pickle_by_value(Data)
 		#cloudpickle.register_pickle_by_value(Corrections.kFactor)
 		#cloudpickle.register_pickle_by_value(Corrections.PU_Reweighting)
     
@@ -322,5 +322,7 @@ if __name__ == "__main__":
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_WithPU_Reweighting_Test.coffea")
 		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_With_NoisePVCorrections_GoldenJSON_Test2.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_kFactorWeight_Test.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_With_GoldeonJSON_Req.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_TestGoldenJSON.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	
