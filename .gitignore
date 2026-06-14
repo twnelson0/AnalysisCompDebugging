@@ -20,7 +20,7 @@ Studies_4tau/UnifiedProcessor_Dir/PlottingEnv
 #Output file ignore exceptions
 !ZorW_NLO_corrections.root
 !pileup_*.root
-
+!Studies_4tau/UnifiedProcessor_Dir/Corrections/muonefficiencies/Run2/UL/2018/*
 #Note files not needed to be saved
 Simple_CrossSec.txt
 Full_CrossSecDict.txt

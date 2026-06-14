@@ -297,7 +297,7 @@ if __name__ == "__main__":
 			model_uncertainty=True,
 			comparison = "ratio",
             markersize = 10,
-			#flow = "sum",
+			flow = "sum",
 			#linewidth=2,
 
 		)

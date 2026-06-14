@@ -26,6 +26,7 @@ from enum import Enum
 from Corrections import kFactor as kFactor
 #from Corrections import PU_Reweighting as PU_Reweight
 from Corrections.corrections import *
+from Corrections.muons import *
 from Data.data_paths import GOLDEN_JSON
 
 #import warnings
@@ -222,9 +223,17 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#pass
 
 		#Corrections
-		print("Pulling Corrections")
+		#print("Pulling Corrections")
 		self.lumi_mask = {
 			"2018": LumiMask(jsonfile=GOLDEN_JSON[str(self.year)].expanduser())
+		}
+
+		self.MuonID = {
+			"2018": Muon_ID(str(self.year)),
+		}
+		
+		self.MuonTrigger = {
+			"2018": Muon_Trigger(str(self.year)),
 		}
 
 	def process(self, events):
@@ -325,8 +334,8 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				"E": np.sqrt(events.Muon_pt**2 + (events.Muon_pt/np.tan(2*np.arctan(np.exp(-events.Muon_eta))))**2 + events.Muon_mass**2),
 				"nMu": events.nMuon,
 				"mass": events.Muon_mass, 
-				#"IDSelec": events.Muon_mediumId,
-				"IDSelec": events.Muon_tightId,
+				"IDSelec": events.Muon_mediumId,
+				#"IDSelec": events.Muon_tightId,
 				"D0": events.Muon_dxy,
 				"Dz": events.Muon_dz,
 				"LooseId": events.Muon_looseId,
@@ -418,7 +427,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		h_electron_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"e $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		h_electron_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"e Leading $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		h_muon_pT_Trigger = hist.Hist.new.Regular(15,0,600, label = r"$\mu$ $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
-		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(40,0,400, label = r"$\mu$ Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
+		h_Leadingmuon_pT_Trigger = hist.Hist.new.Regular(10,0,500, label = r"$\mu$ Leading $p_T$ [GeV]",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		h_muon_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"$\mu$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		h_Leadingmuon_eta_Trigger = hist.Hist.new.Regular(20,-4,4, label = r"$\mu$ $\eta$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
 		h_muon_phi_Trigger = hist.Hist.new.Regular(20,-pi,pi, label = r"$\mu$ $\phi$",overflow = True).StrCat(region_array, growth=False, name = "region").Weight()
@@ -454,15 +463,15 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#Add cutflow and N-1 tables
 		if (self.ApplyTrigger):
 			h_CutFlow = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingBoostedTau","SubleadingBoostedTau","3rdLeadingBoostedTau","4thLeadingBoostedTau","Trigger","VisMassSelec","Higgs_dR"]).Double()
-			h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingBoostedTau","SubleadingBoostedTau","3rdLeadingBoostedTau","4thLeadingBoostedTau","Trigger","VisMassSelec","Higgs_dR"]).Double()
+			#h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingBoostedTau","SubleadingBoostedTau","3rdLeadingBoostedTau","4thLeadingBoostedTau","Trigger","VisMassSelec","Higgs_dR"]).Double()
 		else:
 			h_CutFlow = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingBoostedTau","SubleadingBoostedTau","3rdLeadingBoostedTau","4thLeadingBoostedTau","VisMassSelec","Higgs_dR"]).Double()
-			h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingBoostedTau","SubleadingBoostedTau","3rdLeadingBoostedTau","4thLeadingBoostedTau","VisMassSelec","Higgs_dR"]).Double()
+			#h_NMinus1 = hist.Hist.new.StrCategory(["SkimOnly","METCut","nFatJetReq","FlagReq","PVSelec","LeadingBoostedTau","SubleadingBoostedTau","3rdLeadingBoostedTau","4thLeadingBoostedTau","VisMassSelec","Higgs_dR"]).Double()
 
 		#Fill initial entries in skim and N-1 histograms
 		n_Skim = np.size(event_level.nFatJet)
 		h_CutFlow.fill("SkimOnly",weight=n_Skim)
-		h_NMinus1.fill("SkimOnly",weight=0)
+		#h_NMinus1.fill("SkimOnly",weight=0)
 		
 		#Obtain the cross section scale factor	
 		if (self.isData):
@@ -489,9 +498,9 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		#############
 		#Corrections
 		#############
-		METPhiCorrections = METPhi_Corrections(uncorrMET_pt = event_level.MET_pt,uncorrMET_phi = event_level.MET_Phi, run_num = event_level.run, isData = self.isData, nPV = event_level.Num_PV, year=2018)
-		event_level["MET_pt"]= METPhiCorrections["MET_pt_corr"]
-		event_level["MET_Phi"]= METPhiCorrections["MET_phi_corr"]
+	#	METPhiCorrections = METPhi_Corrections(uncorrMET_pt = event_level.MET_pt,uncorrMET_phi = event_level.MET_Phi, run_num = event_level.run, isData = self.isData, nPV = event_level.Num_PV, year=2018)
+	#	event_level["MET_pt"]= METPhiCorrections["MET_pt_corr"]
+	#	event_level["MET_Phi"]= METPhiCorrections["MET_phi_corr"]
 
 		#Corrections to be applied to inidiviual backgrounds
 		if (not(self.isData)): 
@@ -534,8 +543,22 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			PU_reweight = getPUSF(event_level.Pileup_nTrueInt, era = str(2018), var = 'nominal')
 			event_level["event_weight"] = event_level.event_weight*PU_reweight
 
-			#Muon SF
+			#Muon SFs
+			#Muon ID Set
+			muon_SF_Map = (muon.pt > 50) & (abs(muon.eta) < 2.4)
+			n_Muon = ak.num(muon[muon_SF_Map])
+			MuonID_SF = self.MuonID["2018"]["NUM_probe_TightRelTkIso_DEN_MediumIDProbes"].evaluate(abs(ak.to_numpy(ak.flatten(muon[muon_SF_Map].eta))),ak.to_numpy(ak.flatten(muon[muon_SF_Map].pt)),"nominal")	
 
+			#Muon Trigger SF
+			MuonTrigger_SF = self.MuonTrigger["2018"]["NUM_HLT_DEN_MediumIDTightRelIsoProbes"].evaluate(abs(ak.to_numpy(ak.flatten(muon[muon_SF_Map].eta))),ak.to_numpy(ak.flatten(muon[muon_SF_Map].pt)),"nominal")
+
+			#Combine Muon and Trigger scale factors
+			MuonSF = MuonID_SF*MuonTrigger_SF
+			MuonSF = ak.unflatten(MuonSF,n_Muon)
+			Muon_Weight = ak.prod(MuonSF,axis=-1)
+			event_level["event_weight"] = event_level.event_weight*Muon_Weight
+		
+		#Data Corrections (may need to move around and futz with where this is)
 		if (self.isData):
 			#GOLDENJSON selection
 			#print("Is Data")
@@ -550,193 +573,6 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			electron = electron[lumi_mask_arr]
 			muon = muon[lumi_mask_arr]
 			event_level = event_level[lumi_mask_arr]	
-			
-
-			#Muon Trigger SF
-
-		#Data Only Corrections
-		if (self.isData):
-			print("Applying Goldon JSON corrections")
-			#Apply LUMI mask to data
-			json_map = {
-					"2018": "Data/GoldenJSON/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"
-			}
-			if (str(self.year) not in json_map):
-				raise ValueError("Unknown year %s"%str(self.year))
-			lumi_mask_arr = LumiMask(json_map[str(self.year)])(events.run, events.luminosityBlock)
-			#lumi_mask_arr = self.lumi_mask[str(self.year)](events.run, events.luminosityBlock)
-			print("Lumi Mask selection: ")
-			print(lumi_mask_arr)
-
-			#Apply lumi mask selection
-		#	boostedtau = boostedtau[lumi_mask_arr]
-		#	AK8Jet = AK8Jet[lumi_mask_arr]
-		#	Jet = Jet[lumi_mask_arr]
-		#	electron = electron[lumi_mask_arr]
-		#	muon = muon[lumi_mask_arr]
-		#	event_level = event_level[lumi_mask_arr]	
-
-			
-		#############
-		#Cut Selections
-		#############
-		#MET selection
-	#	boostedtau = boostedtau[event_level.MET_pt > 100]
-	#	AK8Jet = AK8Jet[event_level.MET_pt > 100]
-	#	Jet = Jet[event_level.MET_pt > 100]
-	#	electron = electron[event_level.MET_pt > 100]
-	#	muon = muon[event_level.MET_pt > 100]
-	#	event_level = event_level[event_level.MET_pt > 100]	
-
-	#	#Fill post MET entries in skim and N-1 histograms
-	#	n_MET = np.size(event_level.nFatJet)
-	#	h_CutFlow.fill("METCut",weight=n_MET)
-	#	h_NMinus1.fill("METCut",weight=n_Skim - n_MET)	
-
-	#	#Impose all events have at least one fat Jet
-	#	boostedtau = boostedtau[event_level.nFatJet > 0]
-	#	AK8Jet = AK8Jet[event_level.nFatJet > 0]
-	#	Jet = Jet[event_level.nFatJet > 0]
-	#	electron = electron[event_level.nFatJet > 0]
-	#	muon = muon[event_level.nFatJet > 0]
-	#	event_level = event_level[event_level.nFatJet > 0]	
-
-	#	#Fill post FatJet entries in skim and N-1 histograms
-	#	n_FatJet = np.size(event_level.nFatJet)
-	#	h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
-	#	h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
-
-		#Noise Filters 
-		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
-		flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
-		
-		for flag in Flag_Array:
-			flag_cond = flag_cond & event_level[flag]
-		
-		boostedtau = boostedtau[flag_cond]
-		AK8Jet = AK8Jet[flag_cond]
-		Jet = Jet[flag_cond]
-		electron = electron[flag_cond]
-		muon = muon[flag_cond]
-		event_level = event_level[flag_cond]	
-
-	#	#Fill post flag selections entries in skim and N-1 histograms
-	#	n_FlagSelec = np.size(event_level.nFatJet)
-	#	h_CutFlow.fill("FlagReq",weight=n_FlagSelec)
-	#	h_NMinus1.fill("FlagReq",weight=n_FatJet - n_FlagSelec)
-
-		#PV selections
-		ndof_cond = event_level.PV_ndof > 4
-		PVz_cond = np.abs(event_level.PV_z) < 24
-		PVr_cond = np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2
-		#PV_Cond = np.bitwise_and(ndof_cond,np.bitwise_and(PVz_cond,PVr_cond))
-		PV_Cond = ndof_cond & PVz_cond & PVr_cond
-		
-		boostedtau = boostedtau[PV_Cond]
-		AK8Jet = AK8Jet[PV_Cond]
-		Jet = Jet[PV_Cond]
-		electron = electron[PV_Cond]
-		muon = muon[PV_Cond]
-		event_level = event_level[PV_Cond]	
-
-	#	#Fill post PV selection entries in skim and N-1 histograms
-	#	n_PVSelec = np.size(event_level.nFatJet)
-	#	h_CutFlow.fill("PVSelec",weight=n_PVSelec)
-	#	h_NMinus1.fill("PVSelec",weight=n_FlagSelec - n_PVSelec)
-
-		#n_PreTrigger = n_PVSelec #Set number of events left before trigger seleciton to PV selection	
-		n_PreTrigger = n_Skim #Set number of events left before trigger seleciton to PV selection	
-		#Temp values of the Tau selections
-		n_LeadBoostedTau = -1
-		n_SubLeadBoostedTau = -1
-		n_3rdLeadBoostedTau = -1
-		n_4thLeadBoostedTau = -1
-
-        #Boosted tau selections
-		if (self.nBoostedTau_Selec > 0):
-			#Impose selections boosted taus
-			pT_Cond = boostedtau.pt > 30
-			eta_Cond = np.abs(boostedtau.eta) < 2.3
-			decayMode_Cond = boostedtau.decay >= 0.5
-			DBT_Iso_Cond = boostedtau.DBT >= 0.8 #0.85
-			#DBT_Iso_Cond = boostedtau.DBT >= 0.5 
-			
-			boostedtau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
-			boostedtau = boostedtau[boostedtau_selec_cond] #Apply selections to all individual taus
-		
-			#Require events have at least 1 boosted tau
-			lead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 1
-				
-			boostedtau = boostedtau[lead_boostedtau_cond]
-			AK8Jet = AK8Jet[lead_boostedtau_cond]
-			Jet = Jet[lead_boostedtau_cond]
-			electron = electron[lead_boostedtau_cond]
-			muon = muon[lead_boostedtau_cond]
-			event_level = event_level[lead_boostedtau_cond]
-
-			#Fill post leading tau selection entries in skim and N-1 histograms
-			n_LeadBoostedTau = np.size(event_level.nFatJet)
-			h_CutFlow.fill("LeadingBoostedTau",weight=n_LeadBoostedTau)
-			h_NMinus1.fill("LeadingBoostedTau",weight=n_PreTrigger - n_LeadBoostedTau)
-
-			n_PreTrigger = n_LeadBoostedTau				
-			
-			#Impose selections on Subleading boosted tau
-			if (self.nBoostedTau_Selec > 1):
-				#Require events have at least 2 boosted tau
-				sublead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 2
-					
-				boostedtau = boostedtau[sublead_boostedtau_cond]
-				AK8Jet = AK8Jet[sublead_boostedtau_cond]
-				Jet = Jet[sublead_boostedtau_cond]
-				electron = electron[sublead_boostedtau_cond]
-				muon = muon[sublead_boostedtau_cond]
-				event_level = event_level[sublead_boostedtau_cond]
-
-				#Fill post subl-leading tau selection entries in skim and N-1 histograms
-				n_SubLeadBoostedTau = np.size(event_level.nFatJet)
-				h_CutFlow.fill("SubleadingBoostedTau",weight=n_SubLeadBoostedTau)
-				h_NMinus1.fill("SubleadingBoostedTau",weight=n_LeadBoostedTau - n_SubLeadBoostedTau)
-
-				n_PreTrigger = n_SubLeadBoostedTau				
-			
-			#Impose selections on third-leading boosted tau
-			if (self.nBoostedTau_Selec > 2):
-				#Require events have at least 2 boosted tau
-				thirdlead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 3
-					
-				boostedtau = boostedtau[thirdlead_boostedtau_cond]
-				AK8Jet = AK8Jet[thirdlead_boostedtau_cond]
-				Jet = Jet[thirdlead_boostedtau_cond]
-				electron = electron[thirdlead_boostedtau_cond]
-				muon = muon[thirdlead_boostedtau_cond]
-				event_level = event_level[thirdlead_boostedtau_cond]
-
-				#Fill post 3rd leading tau selection entries in skim and N-1 histograms
-				n_3rdLeadBoostedTau = np.size(event_level.nFatJet)
-				h_CutFlow.fill("3rdLeadingBoostedTau",weight=n_3rdLeadBoostedTau)
-				h_NMinus1.fill("3rdLeadingBoostedTau",weight=n_SubLeadBoostedTau - n_3rdLeadBoostedTau)
-
-				n_PreTrigger = n_3rdLeadBoostedTau				
-			
-			#Impose selections on fourth-leading boosted tau
-			if (self.nBoostedTau_Selec > 3):
-				#Require events have at least 2 boosted tau
-				fourthlead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 4
-					
-				boostedtau = boostedtau[fourthlead_boostedtau_cond]
-				AK8Jet = AK8Jet[fourthlead_boostedtau_cond]
-				Jet = Jet[fourthlead_boostedtau_cond]
-				electron = electron[fourthlead_boostedtau_cond]
-				muon = muon[fourthlead_boostedtau_cond]
-				event_level = event_level[fourthlead_boostedtau_cond]
-
-				#Fill post 4th leading tau selection entries in skim and N-1 histograms
-				n_4thLeadBoostedTau = np.size(event_level.nFatJet)
-				h_CutFlow.fill("4thLeadingBoostedTau",weight=n_4thLeadBoostedTau)
-				h_NMinus1.fill("4thLeadingBoostedTau",weight=n_3rdLeadBoostedTau - n_4thLeadBoostedTau)
-
-				n_PreTrigger = n_4thLeadBoostedTau				
 		
 		#############
 		#Trigger and Offline Cuts
@@ -882,6 +718,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				electron = electron[mu_selec_cond]
 				muon = muon[mu_selec_cond]
 				event_level = event_level[mu_selec_cond]	
+				GenPart = GenPart[mu_selec_cond]
 
 			#	#pT Condition
 			#	pt_cond = ak.any(muon.pt > 52, axis=1)
@@ -950,7 +787,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			#Fill post trigger entries in skim and N-1 histograms
 			n_Trigger = np.size(event_level.nFatJet)
 			h_CutFlow.fill("Trigger",weight=n_Trigger)
-			h_NMinus1.fill("Trigger",weight=n_PreTrigger - n_Trigger)
+			#h_NMinus1.fill("Trigger",weight=n_PreTrigger - n_Trigger)
 
 		#Force muon selection to check if that is the cause of the imbalance
 		if (not(self.ApplyTrigger)):
@@ -963,6 +800,172 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			electron = electron[Muon_Events]
 			muon = muon[Muon_Events]
 			event_level = event_level[Muon_Events]
+
+		
+
+
+			
+		#############
+		#Cut Selections
+		#############
+		#MET selection
+	#	boostedtau = boostedtau[event_level.MET_pt > 100]
+	#	AK8Jet = AK8Jet[event_level.MET_pt > 100]
+	#	Jet = Jet[event_level.MET_pt > 100]
+	#	electron = electron[event_level.MET_pt > 100]
+	#	muon = muon[event_level.MET_pt > 100]
+	#	event_level = event_level[event_level.MET_pt > 100]	
+
+	#	#Fill post MET entries in skim and N-1 histograms
+	#	n_MET = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("METCut",weight=n_MET)
+	#	h_NMinus1.fill("METCut",weight=n_Skim - n_MET)	
+
+	#	#Impose all events have at least one fat Jet
+	#	boostedtau = boostedtau[event_level.nFatJet > 0]
+	#	AK8Jet = AK8Jet[event_level.nFatJet > 0]
+	#	Jet = Jet[event_level.nFatJet > 0]
+	#	electron = electron[event_level.nFatJet > 0]
+	#	muon = muon[event_level.nFatJet > 0]
+	#	event_level = event_level[event_level.nFatJet > 0]	
+
+	#	#Fill post FatJet entries in skim and N-1 histograms
+	#	n_FatJet = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("nFatJetReq",weight=n_FatJet)
+	#	h_NMinus1.fill("nFatJetReq",weight=n_MET - n_FatJet)
+
+		#Noise Filters 
+		Flag_Array = ["Flag_goodVertices", "Flag_globalSuperTightHalo2016Filter", "Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_BadPFMuonFilter", "Flag_BadPFMuonDzFilter", "Flag_hfNoisyHitsFilter", "Flag_eeBadScFilter", "Flag_ecalBadCalibFilter"]
+		flag_cond = event_level[Flag_Array[0]] #Initialize the condition as the first flag since logical and it with itself will act like an identiy operator
+		
+		for flag in Flag_Array:
+			flag_cond = flag_cond & event_level[flag]
+		
+		boostedtau = boostedtau[flag_cond]
+		AK8Jet = AK8Jet[flag_cond]
+		Jet = Jet[flag_cond]
+		electron = electron[flag_cond]
+		muon = muon[flag_cond]
+		event_level = event_level[flag_cond]	
+
+	#	#Fill post flag selections entries in skim and N-1 histograms
+	#	n_FlagSelec = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("FlagReq",weight=n_FlagSelec)
+	#	h_NMinus1.fill("FlagReq",weight=n_FatJet - n_FlagSelec)
+
+		#PV selections
+		ndof_cond = event_level.PV_ndof > 4
+		PVz_cond = np.abs(event_level.PV_z) < 24
+		PVr_cond = np.sqrt(event_level.PV_x**2 + event_level.PV_y**2) < 2
+		#PV_Cond = np.bitwise_and(ndof_cond,np.bitwise_and(PVz_cond,PVr_cond))
+		PV_Cond = ndof_cond & PVz_cond & PVr_cond
+		
+		boostedtau = boostedtau[PV_Cond]
+		AK8Jet = AK8Jet[PV_Cond]
+		Jet = Jet[PV_Cond]
+		electron = electron[PV_Cond]
+		muon = muon[PV_Cond]
+		event_level = event_level[PV_Cond]	
+
+	#	#Fill post PV selection entries in skim and N-1 histograms
+	#	n_PVSelec = np.size(event_level.nFatJet)
+	#	h_CutFlow.fill("PVSelec",weight=n_PVSelec)
+	#	h_NMinus1.fill("PVSelec",weight=n_FlagSelec - n_PVSelec)
+
+		#n_PreTrigger = n_PVSelec #Set number of events left before trigger seleciton to PV selection	
+		n_PreTrigger = n_Skim #Set number of events left before trigger seleciton to PV selection	
+		#Temp values of the Tau selections
+		n_LeadBoostedTau = -1
+		n_SubLeadBoostedTau = -1
+		n_3rdLeadBoostedTau = -1
+		n_4thLeadBoostedTau = -1
+
+        #Boosted tau selections
+		if (self.nBoostedTau_Selec > 0):
+			#Impose selections boosted taus
+			pT_Cond = boostedtau.pt > 30
+			eta_Cond = np.abs(boostedtau.eta) < 2.3
+			decayMode_Cond = boostedtau.decay >= 0.5
+			DBT_Iso_Cond = boostedtau.DBT >= 0.8 #0.85
+			#DBT_Iso_Cond = boostedtau.DBT >= 0.5 
+			
+			boostedtau_selec_cond = pT_Cond & eta_Cond & decayMode_Cond & DBT_Iso_Cond
+			boostedtau = boostedtau[boostedtau_selec_cond] #Apply selections to all individual taus
+		
+			#Require events have at least 1 boosted tau
+			lead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 1
+				
+			boostedtau = boostedtau[lead_boostedtau_cond]
+			AK8Jet = AK8Jet[lead_boostedtau_cond]
+			Jet = Jet[lead_boostedtau_cond]
+			electron = electron[lead_boostedtau_cond]
+			muon = muon[lead_boostedtau_cond]
+			event_level = event_level[lead_boostedtau_cond]
+
+			#Fill post leading tau selection entries in skim and N-1 histograms
+			n_LeadBoostedTau = np.size(event_level.nFatJet)
+			h_CutFlow.fill("LeadingBoostedTau",weight=n_LeadBoostedTau)
+			#h_NMinus1.fill("LeadingBoostedTau",weight=n_PreTrigger - n_LeadBoostedTau)
+
+			#n_PreTrigger = n_LeadBoostedTau				
+			
+			#Impose selections on Subleading boosted tau
+			if (self.nBoostedTau_Selec > 1):
+				#Require events have at least 2 boosted tau
+				sublead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 2
+					
+				boostedtau = boostedtau[sublead_boostedtau_cond]
+				AK8Jet = AK8Jet[sublead_boostedtau_cond]
+				Jet = Jet[sublead_boostedtau_cond]
+				electron = electron[sublead_boostedtau_cond]
+				muon = muon[sublead_boostedtau_cond]
+				event_level = event_level[sublead_boostedtau_cond]
+
+				#Fill post subl-leading tau selection entries in skim and N-1 histograms
+				n_SubLeadBoostedTau = np.size(event_level.nFatJet)
+				h_CutFlow.fill("SubleadingBoostedTau",weight=n_SubLeadBoostedTau)
+				#h_NMinus1.fill("SubleadingBoostedTau",weight=n_LeadBoostedTau - n_SubLeadBoostedTau)
+
+				#n_PreTrigger = n_SubLeadBoostedTau				
+			
+			#Impose selections on third-leading boosted tau
+			if (self.nBoostedTau_Selec > 2):
+				#Require events have at least 2 boosted tau
+				thirdlead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 3
+					
+				boostedtau = boostedtau[thirdlead_boostedtau_cond]
+				AK8Jet = AK8Jet[thirdlead_boostedtau_cond]
+				Jet = Jet[thirdlead_boostedtau_cond]
+				electron = electron[thirdlead_boostedtau_cond]
+				muon = muon[thirdlead_boostedtau_cond]
+				event_level = event_level[thirdlead_boostedtau_cond]
+
+				#Fill post 3rd leading tau selection entries in skim and N-1 histograms
+				n_3rdLeadBoostedTau = np.size(event_level.nFatJet)
+				h_CutFlow.fill("3rdLeadingBoostedTau",weight=n_3rdLeadBoostedTau)
+				#h_NMinus1.fill("3rdLeadingBoostedTau",weight=n_SubLeadBoostedTau - n_3rdLeadBoostedTau)
+
+				#n_PreTrigger = n_3rdLeadBoostedTau				
+			
+			#Impose selections on fourth-leading boosted tau
+			if (self.nBoostedTau_Selec > 3):
+				#Require events have at least 2 boosted tau
+				fourthlead_boostedtau_cond = ak.num(boostedtau,axis=1) >= 4
+					
+				boostedtau = boostedtau[fourthlead_boostedtau_cond]
+				AK8Jet = AK8Jet[fourthlead_boostedtau_cond]
+				Jet = Jet[fourthlead_boostedtau_cond]
+				electron = electron[fourthlead_boostedtau_cond]
+				muon = muon[fourthlead_boostedtau_cond]
+				event_level = event_level[fourthlead_boostedtau_cond]
+
+				#Fill post 4th leading tau selection entries in skim and N-1 histograms
+				n_4thLeadBoostedTau = np.size(event_level.nFatJet)
+				h_CutFlow.fill("4thLeadingBoostedTau",weight=n_4thLeadBoostedTau)
+				#h_NMinus1.fill("4thLeadingBoostedTau",weight=n_3rdLeadBoostedTau - n_4thLeadBoostedTau)
+
+				#n_PreTrigger = n_4thLeadBoostedTau				
+		
 
 		
 		#############
@@ -1386,7 +1389,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 
 				#Store the Mini Cutflow and N-1 Table 
 				"Mini_Cutflow": h_CutFlow,
-				"Mini_NMinus1": h_NMinus1,
+				#"Mini_NMinus1": h_NMinus1,
 
 				#Multiplicites
 			#	"ZMult": h_ZMult,
