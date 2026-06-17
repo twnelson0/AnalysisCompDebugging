@@ -136,11 +136,18 @@ if __name__ == "__main__":
 	MET_2018B = glob.glob(Skimmed_4tau_loc_Data + "MET_Run2018B_14April26_1334_skim_4Tau_Selections/singleFileSkimForSubmission-NANO_NANO_*.root") 
 	MET_2018C = glob.glob(Skimmed_4tau_loc_Data + "MET_Run2018C_14April26_1331_skim_4Tau_Selections/singleFileSkimForSubmission-NANO_NANO_*.root") 
 	MET_2018D = glob.glob(Skimmed_4tau_loc_Data + "MET_Run2018D_14April26_1343_skim_4Tau_Selections/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	
+	JetHT_2018A = glob.glob(Skimmed_4tau_loc_Data + "JetHT_Run2018A_13January26_1203_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	JetHT_2018B = glob.glob(Skimmed_4tau_loc_Data + "JetHT_Run2018B_13January26_1228_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	JetHT_2018C = glob.glob(Skimmed_4tau_loc_Data + "JetHT_Run2018C_13January26_1240_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+	JetHT_2018D = glob.glob(Skimmed_4tau_loc_Data + "JetHT_Run2018D_13January26_1130_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_*.root") 
+
 
 	#Single MuonA debugging production
 	SingleMu_2018A_Debug = glob.glob("/hdfs/store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0456_skim_4TauFixed_NonEmpty/singleFileSkimForSubmission-NANO_NANO_*.root")
 	#SingleMu_2018A_Debug = np.random.choice(SingleMu_2018A_Debug, 10)
 	SingleMu_2018A_Debug = SingleMu_2018A_Debug[:20] 
+	JetHT_2018A_Debug = JetHT_2018A[:20]
 	#print(SingleMu_2018A_Debug)
 
 
@@ -211,6 +218,7 @@ if __name__ == "__main__":
 
 	file_dict_data_mc_mix = {
 		"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in SingleMu_2018A_Debug],
+		"Data_HT": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in JetHT_2018A_Debug],
 		"DYJetsToLL_M-50_HT-1200to2500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in DYJets_Debug],
 	}
 
@@ -219,7 +227,8 @@ if __name__ == "__main__":
 		#"Data_Mu" : [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/SingleMu_Run2018A.root"]
 		#"Data_Mu": [Skimmed_4tau_base_Data + "SingleMu_Run2018A_15January26_0751_skim_Jan26Skim/singleFileSkimForSubmission-NANO_NANO_*.root"]
 		#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in SingleMu_2018A_Debug],
-		"Data_Mu": [file for file in SingleMu_2018A_Debug] 
+		#"Data_Mu": [file for file in SingleMu_2018A_Debug] 
+        "Data_HT": ["root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/Skimmed_Files/2018/Data/JetHT_Run2018D_13January26_1130_skim_Newskim/singleFileSkimForSubmission-NANO_NANO_865.root"]
 		#"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//store/user/twnelson/HH4Tau_EtAl/SkimDebugging/SingleMu_Run2018A_24March26_0937_skim_NullSkimming/singleFileSkimForSubmission-NANO_NANO_402.root"] #Run a single file offline
 	}
 
@@ -284,7 +293,8 @@ if __name__ == "__main__":
 			"QCD_HT1000to1500": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT1000To1500],
 			"QCD_HT1500to2000": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT1500To2000],
 			"QCD_HT2000toInf": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in QCD_HT2000ToInf],
-			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMu_2018A, np.append(SingleMu_2018B, np.append(SingleMu_2018C,SingleMu_2018D)))]
+			"Data_Mu": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(SingleMu_2018A, np.append(SingleMu_2018B, np.append(SingleMu_2018C,SingleMu_2018D)))],
+            "Data_HT": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(JetHT_2018A, np.append(JetHT_2018B, np.append(JetHT_2018C,JetHT_2018D)))],
 			#"Data_MET": ["root://cmsxrootd.hep.wisc.edu//" + file[6:] for file in np.append(MET_2018A, np.append(MET_2018B, np.append(MET_2018C,MET_2018D)))]
 		}
 	
@@ -324,7 +334,8 @@ if __name__ == "__main__":
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_WithPU_Reweighting_Test.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_With_NoisePVCorrections_GoldenJSON_Test2.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_kFactorWeight_Test.coffea")
-		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_MuonIDTrigger.coffea")
+		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_WithSingleMuTrigger_WithQCD_TightBoostedTau_Corrections_MuonIDTrigger.coffea")
+		outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_BothTriggers_WithQCD_TightBoostedTau_Corrections_MuonIDTriggevr.coffea")
 		#outfile = os.path.join(os.getcwd() + "/Output_4Tau/", f"output_{n_taus}_boosted_tau_selec_SingleMuData_4TauSamples_TestGoldenJSON.coffea")
 		util.save(fourtau_out, outfile)
 		print(f"Saved output to {outfile}")	

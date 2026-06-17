@@ -195,9 +195,9 @@ if __name__ == "__main__":
 	coffea_input["Data_Mu"]["Mini_Cutflow"].plot1d(ax = axcut)
 	plt.savefig("Data_Cutflow_Plot.png")
     
-	figcut, axcut = plt.subplots()
-	coffea_input["Data_Mu"]["Mini_NMinus1"].plot1d(ax = axcut)
-	plt.savefig("Data_NMinus_Plot.png")
+	#figcut, axcut = plt.subplots()
+	#coffea_input["Data_Mu"]["Mini_NMinus1"].plot1d(ax = axcut)
+	#plt.savefig("Data_NMinus_Plot.png")
 	
 	#Dictionaries of histograms for background, signal and data
 	hist_dict_background = dict.fromkeys(four_tau_hist_list)
