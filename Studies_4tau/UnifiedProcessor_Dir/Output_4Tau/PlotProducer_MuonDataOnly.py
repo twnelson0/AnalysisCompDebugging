@@ -176,42 +176,11 @@ if __name__ == "__main__":
 
 	#Print the abount of data
 	print("=============================================")
-	print("Number of data events after all selections: %d"%(coffea_input["Data_Mu"]["Event_Count"] + coffea_input["Data_HT"]["Event_Count"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of data events after 4tau selection: %d"%(coffea_input["Data_Mu"]["n_4thLeadBoostedTau"] + coffea_input["Data_HT"]["n_4thLeadBoostedTau"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of data events after visable mass selection: %d"%(coffea_input["Data_Mu"]["n_VisMass"] + coffea_input["Data_HT"]["n_VisMass"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of data events after topology selection: %d"%(coffea_input["Data_Mu"]["n_Higgs_dR"] + coffea_input["Data_HT"]["n_Higgs_dR"]))
+	print("Number of Muon data events after all selections: %d"%(coffea_input["Data_Mu"]["Event_Count"]))
 	print("=============================================")
 	
 	print("=============================================")
-	print("Number of muon data events after all selections: %d"%(coffea_input["Data_Mu"]["Event_Count"]))
-	print("=============================================")
-	print("=============================================")
 	print("Number of Muon data events after 4tau selection: %d"%(coffea_input["Data_Mu"]["n_4thLeadBoostedTau"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of Muon data events after visable mass selection: %d"%(coffea_input["Data_Mu"]["n_VisMass"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of Muon data events after topology selection: %d"%(coffea_input["Data_Mu"]["n_Higgs_dR"]))
-	print("=============================================")
-    
-	print("=============================================")
-	print("Number of JetHT data events after all selections: %d"%(coffea_input["Data_HT"]["Event_Count"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of JetHT data events after 4tau selection: %d"%(coffea_input["Data_HT"]["n_4thLeadBoostedTau"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of JetHT data events after visable mass selection: %d"%(coffea_input["Data_HT"]["n_VisMass"]))
-	print("=============================================")
-	print("=============================================")
-	print("Number of JetHT data events after topology selection: %d"%(coffea_input["Data_HT"]["n_Higgs_dR"]))
 	print("=============================================")
 
 	#print("Number of events prior to selections: %d"%coffea_input["Data_Mu"]["n_Skim"])
@@ -303,9 +272,9 @@ if __name__ == "__main__":
 		
 		#Obtain data distributions
 		#print("==================Hist %s================"%hist_name)
-		#hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name][{"region": args.ControlRegion}] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
+		hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name][{"region": args.ControlRegion}] #.fill("Data",coffea_input["Data_SingleMuon"][hist_name]) 
 		#hist_dict_data[hist_name] += coffea_input["Data_HT"][hist_name][{"region": args.ControlRegion}]
-		hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name][{"region": args.ControlRegion}] + coffea_input["Data_HT"][hist_name][{"region": args.ControlRegion}]
+		#hist_dict_data[hist_name] = coffea_input["Data_Mu"][hist_name][{"region": args.ControlRegion}] + coffea_input["Data_HT"][hist_name][{"region": args.ControlRegion}]
 		background_stack = hist_dict_background[hist_name] #hist_dict_background[hist_name].stack("background")
 		#signal_stack = hist_dict_signal[hist_name].stack("signal")
 		

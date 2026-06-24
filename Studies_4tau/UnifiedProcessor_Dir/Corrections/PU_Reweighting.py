@@ -31,6 +31,7 @@ pu_w_down = 66000
 #Get current working directory
 cwd = os.path.dirname(__file__)
 pu_path = f'{cwd}/pileup/'
+#pu_path = r'Corrections/pileup/'
 
 MCPUfile = {'2016pre':pu_path + 'pileup_2016BF.root', '2016post':pu_path + 'pileup_2016GH.root', 
 		'2017':pu_path + 'pileup_2017_shifts.root', '2018':pu_path + 'pileup_2018_shifts.root'}
@@ -56,7 +57,8 @@ era_origin_dict = {'2016pre': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certificati
 	'2018': pu_path}
 
 ### Load histograms and get lookup tables (extractors are not working here...)
-for era in ['2016pre','2016post','2017','2018']:
+for era in ['2018']:
+#for era in ['2016pre','2016post','2017','2018']:
   PUfunc[era] = {}
   with uproot.open(MCPUfile[era]) as fMC:
     hMC = fMC['pileup']

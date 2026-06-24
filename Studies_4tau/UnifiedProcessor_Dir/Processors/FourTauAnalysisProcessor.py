@@ -578,6 +578,8 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 		if (self.ApplyTrigger):
 			if (self.isData):
 				if ("Data_Mu" == dataset):
+				#	print("Applying Single Muon Trigger (Muon Data)")
+				#	print("Event Count before Trigger+Selections: %d"%ak.num(event_level.HT,axis=0))
 					#HLT Trigger(s)
 					trigger_cond = event_level.Mu_Trigger
 		
@@ -612,9 +614,14 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 					electron = electron[mu_selec_cond]
 					muon = muon[mu_selec_cond]
 					event_level = event_level[mu_selec_cond]	
+					
+				#	print("Single Muon Trigger and Selections Applied To Dataset %s"%dataset)
+				#	print("Event Count after Trigger+Selections: %d"%ak.num(event_level.HT,axis=0))
 
 				#JetHT Data
-				if ("Data_JetHT" == dataset):
+				if ("Data_HT" == dataset):
+				#	print("Applying JetHT Trigger (Data JetHT)")
+				#	print("Event Count before Trigger+Selections: %d"%ak.num(event_level.HT,axis=0))
 					#HLT Trigger(s)
 					boostedtau = boostedtau[event_level.METHTMHT_Trigger]
 					AK8Jet = AK8Jet[event_level.METHTMHT_Trigger]
@@ -627,7 +634,7 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 					HT_Cond = event_level.HT > 550
 					MET_Cond = event_level.MET_pt > 110
 					MHT_Cond = event_level.MHT > 110
-					HTMETMHT_Selec = HT_Cond & MET_cond & MHT_Cond
+					HTMETMHT_Selec = HT_Cond & MET_Cond & MHT_Cond
 			   	
 					boostedtau = boostedtau[HTMETMHT_Selec]
 					AK8Jet = AK8Jet[HTMETMHT_Selec]
@@ -635,43 +642,54 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 					electron = electron[HTMETMHT_Selec]
 					muon = muon[HTMETMHT_Selec]
 					event_level = event_level[HTMETMHT_Selec]
+					
+				#	print("JetHT Trigger and Selections Applied To Dataset %s"%dataset)
+				#	print("Event Count after Trigger+Selections: %d"%ak.num(event_level.HT,axis=0))
 			else: #Apply Triggers to MC
 				#HLT Trigger(s)
+				print("About to Apply both sets of triggers to MC")
+				print("Event Count before Trigger+Selections: %d"%ak.num(event_level.HT,axis=0))
+				init_event_count = ak.num(event_level.HT,axis=0) #Store initial number of events
 				trigger_cond_mu = event_level.Mu_Trigger
 		
-				boostedtau = boostedtau[trigger_cond_mu]
-				AK8Jet = AK8Jet[trigger_cond_mu]
-				Jet = Jet[trigger_cond_mu]
-				electron = electron[trigger_cond_mu]
-				muon = muon[trigger_cond_mu]
-				event_level = event_level[trigger_cond_mu]
+				boostedtau_mu =  boostedtau[trigger_cond_mu]
+				AK8Jet_mu =  AK8Jet[trigger_cond_mu]
+				Jet_mu =  Jet[trigger_cond_mu]
+				electron_mu =  electron[trigger_cond_mu]
+				muon_mu =  muon[trigger_cond_mu]
+				GenPart_mu = GenPart[trigger_cond_mu]
+				event_level_mu =  event_level[trigger_cond_mu]
 
 				#Muon Trigger offline selection
-				nMuon_Cond = ak.any(muon.nMu > 0, axis = 1) 
-				boostedtau = boostedtau[nMuon_Cond]
-				AK8Jet = AK8Jet[nMuon_Cond]
-				Jet = Jet[nMuon_Cond]
-				electron = electron[nMuon_Cond]
-				muon = muon[nMuon_Cond]
-				event_level = event_level[nMuon_Cond]				
+				nMuon_Cond = ak.any(muon_mu.nMu > 0, axis = 1) 
+				boostedtau_mu = boostedtau_mu[nMuon_Cond]
+				AK8Jet_mu = AK8Jet_mu[nMuon_Cond]
+				Jet_mu = Jet_mu[nMuon_Cond]
+				electron_mu = electron_mu[nMuon_Cond]
+				muon_mu = muon_mu[nMuon_Cond]
+				GenPart_mu = GenPart_mu[nMuon_Cond]
+				event_level_mu = event_level_mu[nMuon_Cond]				
 					
 				#Combined pT eta and ID selection
 				mu_selec_Mask = (
-						(muon.pt > 52) &
-						(abs(muon.eta) < 2.4) &
-						(muon.IDSelec) &
-						(muon.RelIso < 0.15)
+						(muon_mu.pt > 52) &
+						(abs(muon_mu.eta) < 2.4) &
+						(muon_mu.IDSelec) &
+						(muon_mu.RelIso < 0.15)
 					)
 				mu_selec_cond = ak.any(mu_selec_Mask,axis=1)
 				
-				boostedtau_Mu = boostedtau[mu_selec_cond]
-				AK8Jet_Mu = AK8Jet[mu_selec_cond]
-				Jet_Mu = Jet[mu_selec_cond]
-				electron_Mu = electron[mu_selec_cond]
-				muon_Mu = muon[mu_selec_cond]
-				event_level_Mu = event_level[mu_selec_cond]	
-				GenPart_Mu = GenPart[mu_selec_cond]
-
+				boostedtau_mu = boostedtau_mu[mu_selec_cond]
+				AK8Jet_mu = AK8Jet_mu[mu_selec_cond]
+				Jet_mu = Jet_mu[mu_selec_cond]
+				electron_mu = electron_mu[mu_selec_cond]
+				muon_mu = muon_mu[mu_selec_cond]
+				event_level_mu = event_level_mu[mu_selec_cond]	
+				GenPart_mu = GenPart_mu[mu_selec_cond]
+				
+				#print("Single Muon Trigger and Selections Applied To MC %s"%dataset)
+				#print("Event Count after Trigger+Selections: %d"%ak.num(event_level_mu.HT,axis=0))
+				mu_trigger_event_count = ak.num(event_level_mu.HT,axis=0)
 
 				#Fail Single Muon trigger and pass Jet HT Trigger
 				boostedtau_HT = boostedtau[np.bitwise_not(event_level.Mu_Trigger) & event_level.METHTMHT_Trigger]
@@ -696,21 +714,32 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				event_level_HT = event_level_HT[HTMETMHT_Selec]
 
 				#Memory management
-				boostedtau = ak.concatenate((boostedtau_Mu,boostedtau_HT))
-				AK8Jet = ak.concatenate((AK8Jet_Mu,AK8Jet_HT))
-				Jet = ak.concatenate((Jet_Mu,Jet_HT))
-				electron = ak.concatenate((electron_Mu,electron_HT))
-				muon = ak.concatenate((muon_Mu,muon_HT))
-				GenPart = ak.concatenate((GenPart_Mu, GenPart_HT))
-				event_level = ak.concatenate((event_level_Mu,event_level_HT))
+				boostedtau = ak.concatenate((boostedtau_mu,boostedtau_HT))
+				AK8Jet = ak.concatenate((AK8Jet_mu,AK8Jet_HT))
+				Jet = ak.concatenate((Jet_mu,Jet_HT))
+				electron = ak.concatenate((electron_mu,electron_HT))
+				muon = ak.concatenate((muon_mu,muon_HT))
+				GenPart = ak.concatenate((GenPart_mu, GenPart_HT))
+				event_level = ak.concatenate((event_level_mu,event_level_HT))
+				
+			#	print("JetHT Trigger and Selections Applied To MC %s"%dataset)
+			#	print("Event Count after Trigger+Selections: %d"%ak.num(event_level_HT.HT,axis=0))
+				HT_trigger_event_count = ak.num(event_level_HT.HT,axis=0)
 
-				del boostedtau_Mu, boostedtau_HT
-				del AK8Jet_Mu, AK8Jet_HT
-				del Jet_Mu, Jet_HT
-				del electron_Mu, electron_HT
-				del muon_Mu, muon_HT
-				del GenPart_Mu, GenPart_HT
-				del event_level_Mu, event_level_HT
+				#Verify event counts make sense
+				if (init_event_count < HT_trigger_event_count + mu_trigger_event_count):
+					print("Counts don't make sense, have more events prior to trigger than after trigger")
+					print("Count before trigger: %d"%init_event_count)
+					print("Single Muon Selection count: %d"%mu_trigger_event_count)
+					print("Jet HT selection count: %d"%HT_trigger_event_count)
+
+				del boostedtau_mu, boostedtau_HT
+				del AK8Jet_mu, AK8Jet_HT
+				del Jet_mu, Jet_HT
+				del electron_mu, electron_HT
+				del muon_mu, muon_HT
+				del GenPart_mu, GenPart_HT
+				del event_level_mu, event_level_HT
 
 			#Fill post trigger entries in skim and N-1 histograms
 			n_Trigger = np.size(event_level.nFatJet)
@@ -963,11 +992,10 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			#Fill post visable mass entries in skim and N-1 histograms
 			n_VisMass = np.size(event_level.nFatJet)
 			h_CutFlow.fill("VisMassSelec",weight=n_VisMass)
-			#h_NMinus1.fill("VisMassSelec",weight=n_Trigger - n_VisMass)
-		
+	   	#h_NMinus1.fill("VisMassSelec",weight=n_Trigger - n_VisMass)
+	   
 
 		if (ak.num(event_level.MET_pt,axis=0) > 0): #Only do this if there are any events left
-
 			#Topology selection
 			topo_cond = leading_higgs.deltaR(nextleading_higgs) >= 2
 			
@@ -1137,6 +1165,71 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 
 			FourTau_Mass_Arr = four_mass([boostedtau[:,0],boostedtau[:,1],boostedtau[:,2],boostedtau[:,3]])
 
+		#############
+		#Store Parquet Files
+		############
+	#	if (ak.num(event_level.HT,axis=0) > 0):
+	#		var_nn = ak.zip( #Variables to be exported to .parquet file
+	#			{
+	#				"radion_pt": radionPT_Arr,
+	#				"vis_mass": LeadingHiggs_mass_Arr,
+	#				"vis_mass2": SubLeadingHiggs_mass_Arr,
+	#				"radion_eta": Radion_Reco.eta,
+	#				"higgs1_dr": leading_dR_Arr,
+	#				"higgs2_dr": nextleading_dR_Arr,
+	#				"dphi_H1": phi_leading,
+	#				"dphi_H2": phi_subleading,
+	#				"dphi_H1_MET": leadingHiggs_MET_dPhi_Arr,
+	#				"dphi_H2_MET": subleadingHiggs_MET_dPhi_Arr,
+	#				"dr_HH": diHiggs_dR_Arr, 
+	#				"dphi_HH": Higgs_DeltaPhi_Arr,
+	#				"dr_H1_Rad": leadingHiggs_Rad_dR,
+	#				"dr_H2_Rad": subleadingHiggs_Rad_dR,
+	#				"dphi_rad_MET": radionMET_dPhi,
+	#				"H1OS": event_level.LeadingPair_Charge,
+	#				"H2OS": event_level.SubleadingPair_Charge,
+	#				"ZMult": ak.ravel(event_level.ZMult), 
+	#				"numBJet": event_level.nBJets,
+	#				"RecoRadion_Mass": FourTau_Mass_Arr,
+	#				"LeadingTau_pT": boostedtau[:,0].pt,
+	#				"weight": event_level.event_weight*CrossSec_Weight,
+	#			}
+	#		)
+            
+            #Save parquet files
+	#       if not(self.isData):
+	#           file_name = dataset + "_BoostedTau.parquet"
+	#           if (dataset != "Signal"):
+	#               if (mass == "2000"):
+	#                   file_name = dataset  + ".parquet"
+	#                   #file_name = dataset  + "_MVA.parquet"
+	#                   if (os.path.isfile(file_name)): #Append to existing parquet file
+	#                       file_data = ak.from_parquet(file_name)
+	#                       var_nn = ak.concatenate([file_data,var_nn])
+	#                       ak.to_parquet(var_nn,file_name)
+	#                   else:
+	#                       if (ak.num(FourTau_Mass_Arr,axis=0) > 0):
+	#                           ak.to_parquet(var_nn,file_name) #Create parquet file
+	#                   #print("Background")
+	#           else:
+	#               file_name = dataset + "_mass_" + self.massVal + "GeV.parquet"
+	#               if (os.path.isfile(file_name)): #Append to existing parquet file
+	#                   file_data = ak.from_parquet(file_name)
+	#                   var_nn = ak.concatenate([file_data,var_nn])
+	#                   ak.to_parquet(var_nn,file_name)
+	#               else:
+	#                   ak.to_parquet(var_nn,file_name) #Create parquet file
+	#       else:
+	#           file_name = (dataset + "_MVA.parquet")
+	#           if (mass == "2000"):
+	#               if (os.path.isfile(file_name)): #Append to existing parquet file
+	#                   file_data = ak.from_parquet(file_name)
+	#                   var_nn = ak.concatenate([file_data,var_nn])
+	#                   ak.to_parquet(var_nn,file_name)
+	#               else:
+	#                   if (ak.num(FourTau_Mass_Arr,axis=0)>0):
+	#                       ak.to_parquet(var_nn,file_name) #Create parquet file
+		
 		
 		#############
 		#Fill histograms
@@ -1193,32 +1286,6 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 			
 			#Muons
 			h_muon_pT_Trigger.fill(ak.ravel(muon[ak.ravel(region_cond)].pt),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(muon[ak.ravel(region_cond)].pt))[0]), region = region)
-			#Metaporically groaning
-		#	print("Leading Muon Length (in region): %d"%ak.num(ak.ravel(ak.firsts(muon[ak.ravel(region_cond)].pt)),axis=0))
-		#	print("Muon pT before condition applied:")
-		#	print(muon.pt)
-		#	print("Electron pT before condition applied:")
-		#	print(electron.pt)
-		#	print("Boosted Tau pT before condition applied:")
-		#	print(boostedtau.pt)
-		#	print("Muon pT before after condition applied:")
-		#	print(muon[ak.ravel(region_cond)].pt)
-		#	print("Region_Cond: %d"%ak.num(ak.ravel(region_cond),axis=0))
-		#	print("Region_Cond:")
-		#	print(ak.ravel(region_cond))
-		#	print("Weight Length: %d"%ak.num(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),axis=0))
-		#	print("Number of events with boosted taus: %d"%ak.num(boostedtau.pt,axis=0))
-		#	print(boostedtau.pt)
-		#	print("Number of events with muons: %d"%ak.num(muon.pt,axis=0))
-		#	print(muon.pt)
-		#	print("Number of events with electrons: %d"%ak.num(electron.pt,axis=0))
-		#	print(electron.pt)
-		#	print("Number of events with Jets: %d"%ak.num(Jet.pt,axis=0))
-		#	print(Jet.pt)
-		#	print("Number of events with Events: %d"%ak.num(event_level.MET_pt,axis=0))
-		#	print(event_level.MET_pt)
-            #if (ak.num(ak.ravel(muon.pt)))
-			#h_Leadingmuon_pT_Trigger.fill(ak.ravel(ak.firsts(muon[ak.ravel(region_cond)].pt)),weight=ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight), region = region)
 			h_muon_eta_Trigger.fill(ak.ravel(muon[ak.ravel(region_cond)].eta),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(muon[ak.ravel(region_cond)].eta))[0]), region = region)
 			#h_Leadingmuon_eta_Trigger.fill(ak.ravel(ak.firsts(muon[region_cond].eta)),weight=ak.ravel(event_level[region_cond].event_weight*CrossSec_Weight), region = region)
 			h_muon_phi_Trigger.fill(ak.ravel(muon[ak.ravel(region_cond)].phi),weight=ak.ravel(ak.broadcast_arrays(ak.ravel(event_level[ak.ravel(region_cond)].event_weight*CrossSec_Weight),ak.ones_like(muon[ak.ravel(region_cond)].phi))[0]), region = region)
@@ -1264,8 +1331,8 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				"n_3rdLeadBoostedTau": n_3rdLeadBoostedTau,
 				"n_4thLeadBoostedTau": n_4thLeadBoostedTau,
 				"n_Trigger": n_Trigger,
-				#"n_VisMass": n_VisMass,
-				#"n_Higgs_dR": n_DeltaR,
+				"n_VisMass": n_VisMass,
+				"n_Higgs_dR": n_DeltaR,
 				
 				#Boosted Tau kineamtic distirubtions
 				"boostedtau_pt_Trigg": h_boostedtau_pT_Trigger,
@@ -1276,6 +1343,9 @@ class Analysis4TauProcessor(processor.ProcessorABC):
 				"boostedtau_eta_Trigg": h_boostedtau_eta_Trigger,
 				"boostedtau_phi_Trigg": h_boostedtau_phi_Trigger,
 				"boostedtau_iso_Trigg": h_boostedtau_raw_iso_Trigger,
+
+				#Store Leading Boosted tau pt For the purposes of quanitative statistical comparisions
+				#"LeadingBoostedTau_pt_Array": ak.ravel(boostedtau.pt),
 				
 				#Electron kineamtic distirubtions
 				"electron_pt_Trigg": h_electron_pT_Trigger,
